@@ -1,0 +1,109 @@
+{
+  "rolling": false,
+  "name": "Frivolous offer",
+  "endDate": "2016-10-16T00:00:00Z",
+  "lastUpdated": "2016-09-23T15:04:25Z",
+  "price": 100,
+  "key": "cedaaf28-3ae8-4676-aae7-100a1fb5079f",
+  "dateCreated": "2016-09-23T13:15:28Z",
+  "bundleContextless": {
+    "id": 11,
+    "name": "Bundle for Offer Frivolous offer",
+    "dataGroups": {
+      "facebook": [
+        {
+          "name": "profile_picture",
+          "table": {
+            "name": "profile_picture",
+            "source": "facebook",
+            "lastUpdated": "2016-08-03T09:13:22Z",
+            "id": 35,
+            "dateCreated": "2016-08-03T09:13:22Z",
+            "fields": [
+              {
+                "name": "height",
+                "lastUpdated": "2016-08-03T09:13:22Z",
+                "id": 71,
+                "dateCreated": "2016-08-03T09:13:22Z",
+                "tableId": 35
+              },
+              {
+                "name": "is_silhouette",
+                "lastUpdated": "2016-08-03T09:13:22Z",
+                "id": 72,
+                "dateCreated": "2016-08-03T09:13:22Z",
+                "tableId": 35
+              },
+              {
+                "name": "width",
+                "lastUpdated": "2016-08-03T09:13:22Z",
+                "id": 73,
+                "dateCreated": "2016-08-03T09:13:22Z",
+                "tableId": 35
+              },
+              {
+                "name": "url",
+                "lastUpdated": "2016-08-03T09:13:22Z",
+                "id": 74,
+                "dateCreated": "2016-08-03T09:13:22Z",
+                "tableId": 35
+              }
+            ]
+          },
+          "data": [
+            {
+              "name": "default_Thu Sep 15 2016 09:55:26 GMT+0000 (UTC)",
+              "lastUpdated": "2016-09-15T09:55:26Z",
+              "id": 38464,
+              "dateCreated": "2016-09-15T09:55:26Z",
+              "tables": [
+                {
+                  "name": "profile_picture",
+                  "source": "facebook",
+                  "lastUpdated": "2016-08-03T09:13:22Z",
+                  "id": 35,
+                  "dateCreated": "2016-08-03T09:13:22Z",
+                  "fields": [
+                    {
+                      "name": "height",
+                      "lastUpdated": "2016-08-03T09:13:22Z",
+                      "id": 71,
+                      "dateCreated": "2016-08-03T09:13:22Z",
+                      "tableId": 35,
+                      "values": [
+                        {
+                          "id": 154838,
+                          "dateCreated": "2016-09-15T09:55:26Z",
+                          "lastUpdated": "2016-09-15T09:55:26Z",
+                          "value": "320"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "width",
+                      "lastUpdated": "2016-08-03T09:13:22Z",
+                      "id": 73,
+                      "dateCreated": "2016-08-03T09:13:22Z",
+                      "tableId": 35,
+                      "values": [
+                        {
+                          "id": 154841,
+                          "dateCreated": "2016-09-15T09:55:26Z",
+                          "lastUpdated": "2016-09-15T09:55:26Z",
+                          "value": "320"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "kind": "contextless",
+  "startDate": "2016-09-15T00:00:00Z",
+  "sell": true
+}
