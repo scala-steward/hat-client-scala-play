@@ -24,6 +24,14 @@ case class ApiDataRecord(
   name: String,
   tables: Option[Seq[ApiDataTable]])
 
+object ApiDataRecord {
+  def flattenRecordValues(record: ApiDataRecord): Map[String, Any] = {
+    Map(record.tables.getOrElse(Seq()).map { table =>
+      table.name -> ApiDataTable.flattenTableValues(table)
+    }: _*)
+  }
+}
+
 case class ApiDataTable(
   id: Option[Int],
   dateCreated: Option[LocalDateTime],
@@ -32,6 +40,34 @@ case class ApiDataTable(
   source: String,
   fields: Option[Seq[ApiDataField]],
   subTables: Option[Seq[ApiDataTable]])
+
+object ApiDataTable {
+  /*
+   * Reformats API Data table with values to a format where field/subtable name is an object key and values or subtables are the values
+   */
+  def flattenTableValues(dataTable: ApiDataTable): Map[String, Any] = {
+    val fieldObjects = dataTable.fields.map { fields =>
+      Map[String, Any](
+        fields flatMap { field =>
+          val maybeValues = field.values match {
+            case Some(values) if values.isEmpty     => None
+            case Some(values) if values.length == 1 => Some(values.head.value)
+            case Some(values)                       => Some(values.map(_.value))
+            case None                               => None
+          }
+          maybeValues.map { values => field.name -> values }
+        }: _*)
+    }
+
+    val subtableObjects = dataTable.subTables.map { subtables =>
+      Map[String, Any](subtables map { subtable =>
+        subtable.name -> flattenTableValues(subtable)
+      }: _*)
+    }
+
+    fieldObjects.getOrElse(Map()) ++ subtableObjects.getOrElse(Map())
+  }
+}
 
 case class ApiDataValue(
   id: Option[Int],
