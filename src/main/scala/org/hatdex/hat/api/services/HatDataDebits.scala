@@ -13,6 +13,7 @@ import org.hatdex.hat.api.json.DataDebitFormats
 import org.hatdex.hat.api.models.ApiDataDebitOut
 import play.api.Logger
 import play.api.http.Status._
+import play.api.libs.json.{ JsError, JsSuccess }
 import play.api.libs.ws._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -33,19 +34,19 @@ trait HatDataDebits {
       .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
-    futureResponse.map { response =>
+    futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          val jsResponse = response.json.validate[ApiDataDebitOut] recover {
-            case e =>
+          response.json.validate[ApiDataDebitOut] match {
+            case s: JsSuccess[ApiDataDebitOut] => Future.successful(s.get)
+            case e: JsError =>
               logger.error(s"Error parsing successful Data Debit value response: ${e}")
-              throw new RuntimeException(s"Error parsing successful Data Debit value response: ${e}")
+              Future.failed(new RuntimeException(s"Error parsing successful Data Debit value response: ${e}"))
           }
-          // Convert to ApiDataDebitOut - if validation has failed, it will have thrown an error already
-          jsResponse.get
+        // Convert to ApiDataDebitOut - if validation has failed, it will have thrown an error already
         case _ =>
           logger.error(s"Fetching Data Debit $dataDebitId values from $hatAddress failed, $response, ${response.body}")
-          throw new RuntimeException(s"Fetching Data Debit $dataDebitId values from $hatAddress failed")
+          Future.failed(new RuntimeException(s"Fetching Data Debit $dataDebitId values from $hatAddress failed"))
       }
     }
   }
