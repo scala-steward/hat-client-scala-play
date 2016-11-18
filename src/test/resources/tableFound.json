@@ -1,0 +1,30 @@
+{
+  "name": "events",
+  "source": "calendar",
+  "lastUpdated": "2016-11-01T12:01:52Z",
+  "id": 58,
+  "dateCreated": "2016-11-01T12:01:52Z",
+  "fields": [
+    {
+      "name": "calendarName",
+      "lastUpdated": "2016-11-01T12:01:52Z",
+      "id": 196,
+      "dateCreated": "2016-11-01T12:01:52Z",
+      "tableId": 58
+    },
+    {
+      "name": "startDate",
+      "lastUpdated": "2016-11-01T12:01:52Z",
+      "id": 197,
+      "dateCreated": "2016-11-01T12:01:52Z",
+      "tableId": 58
+    },
+    {
+      "name": "endDate",
+      "lastUpdated": "2016-11-01T12:01:52Z",
+      "id": 198,
+      "dateCreated": "2016-11-01T12:01:52Z",
+      "tableId": 58
+    }
+  ]
+}

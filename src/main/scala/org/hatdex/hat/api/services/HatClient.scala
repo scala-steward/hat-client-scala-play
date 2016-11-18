@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 import play.api.libs.ws.WSClient
 
-class HatClient(val ws: WSClient, val hatAddress: String, override val schema: String) extends HatAuthentication with HatDataDebits {
+class HatClient(val ws: WSClient, val hatAddress: String, override val schema: String) extends HatAuthentication with HatDataDebits with HatDataTables {
   @Inject def this(ws: WSClient, hatAddress: String) = this(ws, hatAddress, "https://")
 
   val logger = play.api.Logger(this.getClass)

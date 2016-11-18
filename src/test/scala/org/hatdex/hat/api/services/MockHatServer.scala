@@ -8,7 +8,10 @@
 package org.hatdex.hat.api.services
 
 import akka.util.ByteString
+import org.hatdex.hat.api.json.HatJsonFormats
+import org.hatdex.hat.api.models.ApiDataTable
 import play.api.http.HttpEntity
+import play.api.libs.json.{ JsError, JsSuccess }
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.routing.sird._
@@ -18,6 +21,8 @@ import play.core.server.Server
 import scala.io.Source._
 
 object MockHatServer {
+
+  import HatJsonFormats._
 
   def withMockHatServerClient[T](block: WSClient => T): T = {
     Server.withRouter() {
@@ -59,6 +64,54 @@ object MockHatServer {
         maybeAccessToken match {
           case Some(token) if token == validAccessToken => Results.Forbidden.sendEntity(HttpEntity.Strict(ByteString(ddUnauthorizedMessage), Some("application/json")))
           case _                                        => Results.Unauthorized.sendResource("authInvalid.json").as("application/json")
+        }
+      }
+      case GET(p"/data/table") => Action { request =>
+        val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
+        val maybeTableName = request.getQueryString("name")
+        val maybeTableSource = request.getQueryString("source")
+
+        val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("validAccessToken")).mkString
+
+        (maybeTableName, maybeTableSource, maybeAccessToken) match {
+          case (Some("events"), Some("calendar"), Some(token)) if token == validAccessToken => Results.Ok.sendResource("tableFound.json").as("application/json")
+          case (Some(_), Some(_), Some(token)) if token == validAccessToken => Results.NotFound.sendResource("tableNotFound.json").as("application/json")
+          case _ => Results.Unauthorized.sendResource("authInvalid.json").as("application/json")
+        }
+      }
+      case GET(p"/data/table/${ int(id) }") => Action { request =>
+        val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
+
+        val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("validAccessToken")).mkString
+
+        (id, maybeAccessToken) match {
+          case (58, Some(token)) if token == validAccessToken => Results.Ok.sendResource("tableFound.json").as("application/json")
+          case (_, Some(token)) if token == validAccessToken => Results.NotFound.sendResource("tableIdNotFound.json").as("application/json")
+          case _ => Results.Unauthorized.sendResource("authInvalid.json").as("application/json")
+        }
+      }
+      case POST(p"/data/table") => Action { request =>
+        val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
+        request.body.asJson.map { bodyJson =>
+          bodyJson.validate[ApiDataTable] match {
+            case s: JsSuccess[ApiDataTable] =>
+              val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("validAccessToken")).mkString
+              val expectedJson = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("expectedTableValue.json")).mkString
+
+              val response = (s.toString, maybeAccessToken) match {
+                case (body, Some(token)) if token == validAccessToken && body == expectedJson =>
+                  Results.Ok.sendResource("tableFound.json").as("application/json")
+                case (body, Some(token)) if token == validAccessToken =>
+                  Results.BadRequest.sendResource("").as("application/json")
+                case _ =>
+                  Results.Unauthorized.sendResource("authInvalid.json").as("application/json")
+              }
+              response
+            case e: JsError => Results.BadRequest.sendResource("")
+            case _          => Results.BadRequest.sendResource("")
+          }
+        } getOrElse {
+          Results.BadRequest.sendResource("Not JSON!")
         }
       }
     } { implicit port =>
