@@ -8,7 +8,7 @@
 package org.hatdex.hat.api.services
 
 import org.hatdex.hat.api.json.HatJsonFormats
-import org.hatdex.hat.api.models.{ ApiDataField, ApiDataTable }
+import org.hatdex.hat.api.models.ApiDataTable
 import play.api.http.Status._
 import play.api.Logger
 import play.api.libs.json.Json
@@ -106,7 +106,6 @@ trait HatDataTables {
           }
           jsResponse.get
         case _ =>
-          logger.info(s"Debug me ${response.status}")
           logger.error(s"Creating new table ${tableStructure.source} ${tableStructure.name} for $hatAddress failed, $response, ${response.body}")
           throw new RuntimeException(s"Creating new table ${tableStructure.source} ${tableStructure.name} for $hatAddress failed")
       }
