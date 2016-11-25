@@ -10,7 +10,7 @@ package org.hatdex.hat.api.services
 import org.hatdex.hat.api.models.ApiRecordValues
 import play.api.http.Status._
 import play.api.Logger
-import play.api.libs.json.Json
+import play.api.libs.json.{ JsError, JsSuccess, Json }
 import play.api.libs.ws._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -32,19 +32,18 @@ trait HatDataRecords {
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(records))
 
-    futureResponse.map { response =>
+    futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          val jsResponse = response.json.validate[Seq[ApiRecordValues]] recover {
-            case e =>
+          response.json.validate[Seq[ApiRecordValues]] match {
+            case s: JsSuccess[Seq[ApiRecordValues]] => Future.successful(s.get)
+            case e: JsError =>
               logger.error(s"Error parsing response from a successful data records post: $e")
-              throw new RuntimeException(s"Error parsing response from a successful data records post: $e")
+              Future.failed(new RuntimeException(s"Error parsing response from a successful data records post: $e"))
           }
-
-          jsResponse.get
         case _ =>
           logger.error(s"Creating ${records.length} new records for $hatAddress failed, $response, ${response.body}")
-          throw new RuntimeException(s"Creating ${records.length} new records for $hatAddress failed")
+          Future.failed(new RuntimeException(s"Creating ${records.length} new records for $hatAddress failed"))
       }
     }
   }

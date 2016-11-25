@@ -16,7 +16,6 @@ import org.specs2.matcher.MatchResult
 import org.specs2.mutable.Specification
 import play.api.libs.json.Json
 import play.api.mvc.Results
-import play.api.Logger
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

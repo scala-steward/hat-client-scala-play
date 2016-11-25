@@ -11,7 +11,7 @@ import org.hatdex.hat.api.json.HatJsonFormats
 import org.hatdex.hat.api.models.ApiDataTable
 import play.api.http.Status._
 import play.api.Logger
-import play.api.libs.json.Json
+import play.api.libs.json.{ JsError, JsSuccess, Json }
 import play.api.libs.ws._
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -33,22 +33,22 @@ trait HatDataTables {
       .withQueryString("name" -> name, "source" -> source)
 
     val futureResponse: Future[WSResponse] = request.get()
-    futureResponse.map { response =>
+
+    futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          val jsResponse = response.json.validate[ApiDataTable] recover {
-            case e =>
-              logger.error(s"Error parsing successful Data Table value response: ${e}")
-              throw new RuntimeException(s"Error parsing successful Data Table value response: ${e}")
+          response.json.validate[ApiDataTable] match {
+            case s: JsSuccess[ApiDataTable] => Future.successful(s.get)
+            case e: JsError =>
+              logger.error(s"Error parsing successful Data Table value response: $e")
+              Future.failed(new RuntimeException(s"Error parsing successful Data Table value response: $e"))
           }
-
-          jsResponse.get
         case NOT_FOUND =>
           logger.warn(s"Table $source $name not found")
-          throw new RuntimeException(s"Table $source $name not found")
+          Future.failed(new RuntimeException(s"Table $source $name not found"))
         case _ =>
           logger.error(s"Fetching $source $name Data Table for $hatAddress failed, $response, ${response.body}")
-          throw new RuntimeException(s"Fetching $source $name Data Table for $hatAddress failed")
+          Future.failed(new RuntimeException(s"Fetching $source $name Data Table for $hatAddress failed"))
       }
     }
   }
@@ -61,32 +61,25 @@ trait HatDataTables {
       .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
-    futureResponse.map { response =>
+
+    futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          val jsResponse = response.json.validate[ApiDataTable] recover {
-            case e =>
-              logger.error(s"Error parsing successful Data Table value response: ${e}")
-              throw new RuntimeException(s"Error parsing successful Data Table value response: ${e}")
+          response.json.validate[ApiDataTable] match {
+            case s: JsSuccess[ApiDataTable] => Future.successful(s.get)
+            case e: JsError =>
+              logger.error(s"Error parsing successful Data Table value response: $e")
+              Future.failed(new RuntimeException(s"Error parsing successful Data Table value response: $e"))
           }
-          jsResponse.get
         case NOT_FOUND =>
           logger.warn(s"Table id=$id not found")
-          throw new RuntimeException(s"Table id=$id not found")
+          Future.failed(new RuntimeException(s"Table id=$id not found"))
         case _ =>
           logger.error(s"Fetching Data Table id=$id for $hatAddress failed, $response, ${response.body}")
-          throw new RuntimeException(s"Fetching Data Table id=$id for $hatAddress failed")
+          Future.failed(new RuntimeException(s"Fetching Data Table id=$id for $hatAddress failed"))
       }
     }
   }
-
-  //    def randomFunction(): Unit = {
-  //      val fields = Seq(ApiDataField(None, None, None, None, "fieldName", None))
-  //      val subfields = Seq(ApiDataField(None, None, None, None, "uselessField", None))
-  //      val subtables = Seq(ApiDataTable(None, None, None, "subtableName", "tableSource", Some(subfields), None))
-  //      val table = ApiDataTable(None, None, None, "tableName", "tableSource", Some(fields), Some(subtables))
-  //      createDataTable("asdasd", table)
-  //    }
 
   def createDataTable(access_token: String, tableStructure: ApiDataTable)(implicit ec: ExecutionContext): Future[ApiDataTable] = {
     logger.debug(s"Post new Data Table to $hatAddress")
@@ -96,18 +89,19 @@ trait HatDataTables {
       .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(tableStructure))
-    futureResponse.map { response =>
+
+    futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          val jsResponse = response.json.validate[ApiDataTable] recover {
-            case e =>
+          response.json.validate[ApiDataTable] match {
+            case s: JsSuccess[ApiDataTable] => Future.successful(s.get)
+            case e: JsError =>
               logger.error(s"Error parsing response from successful post of a new Data Table: $e")
-              throw new RuntimeException(s"Error parsing response from successful post of a new Data Table: $e")
+              Future.failed(new RuntimeException(s"Error parsing response from successful post of a new Data Table: $e"))
           }
-          jsResponse.get
         case _ =>
           logger.error(s"Creating new table ${tableStructure.source} ${tableStructure.name} for $hatAddress failed, $response, ${response.body}")
-          throw new RuntimeException(s"Creating new table ${tableStructure.source} ${tableStructure.name} for $hatAddress failed")
+          Future.failed(new RuntimeException(s"Creating new table ${tableStructure.source} ${tableStructure.name} for $hatAddress failed"))
       }
     }
   }
