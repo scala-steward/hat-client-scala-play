@@ -1,0 +1,9 @@
+{
+  "name": "events",
+  "source": "calendar",
+  "fields": [
+    { "name": "calendarName" },
+    { "name": "startDate" },
+    { "name": "endDate" }
+  ]
+}

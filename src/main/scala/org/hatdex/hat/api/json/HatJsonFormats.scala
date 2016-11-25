@@ -66,6 +66,8 @@ trait HatJsonFormats extends UuidMarshalling with LocalDateTimeMarshalling {
     }
   }
 
+  implicit val ApiRecordValuesFormat = Json.format[ApiRecordValues]
+
   implicit val dataSourceDatasetFormat = Json.format[DataSourceDataset]
   implicit val dataSourceStructureFormat = Json.format[DataSourceStructure]
 
