@@ -92,7 +92,7 @@ trait HatDataTables {
 
     futureResponse.flatMap { response =>
       response.status match {
-        case OK =>
+        case CREATED =>
           response.json.validate[ApiDataTable] match {
             case s: JsSuccess[ApiDataTable] => Future.successful(s.get)
             case e: JsError =>

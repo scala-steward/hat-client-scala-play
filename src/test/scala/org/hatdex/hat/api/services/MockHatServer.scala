@@ -100,7 +100,7 @@ object MockHatServer {
 
               val response = (s.get, maybeAccessToken) match {
                 case (body, Some(token)) if token == validAccessToken && body == expectedTable =>
-                  Results.Ok.sendResource("tableFound.json").as("application/json")
+                  Results.Created.sendResource("tableFound.json").as("application/json")
                 case (body, Some(token)) if token == validAccessToken =>
                   Results.BadRequest.sendResource("").as("application/json")
                 case _ =>
@@ -124,7 +124,7 @@ object MockHatServer {
 
               val response = (s.get, maybeAccessToken) match {
                 case (body, Some(token)) if token == validAccessToken && body == expectedRecord =>
-                  Results.Ok.sendResource("recordsPosted.json").as("application/json")
+                  Results.Created.sendResource("recordsPosted.json").as("application/json")
                 case (body, Some(token)) if token == validAccessToken =>
                   Results.BadRequest.sendResource("").as("application/json")
                 case _ =>
