@@ -67,6 +67,20 @@ object ApiDataTable {
 
     fieldObjects.getOrElse(Map()) ++ subtableObjects.getOrElse(Map())
   }
+
+  def extractValues(dataTable: ApiDataTable): List[ApiDataValue] = {
+    val fieldValues = dataTable.fields.map { fields =>
+      fields.toList.flatMap { field =>
+        field.values.getOrElse(List())
+      }
+    } getOrElse List()
+
+    val subtableValues = dataTable.subTables.map { subtables =>
+      subtables.toList.flatMap(extractValues)
+    } getOrElse List()
+
+    fieldValues ++ subtableValues
+  }
 }
 
 case class ApiDataValue(
