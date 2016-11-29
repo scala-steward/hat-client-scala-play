@@ -34,7 +34,7 @@ trait HatDataRecords {
 
     futureResponse.flatMap { response =>
       response.status match {
-        case OK =>
+        case CREATED =>
           response.json.validate[Seq[ApiRecordValues]] match {
             case s: JsSuccess[Seq[ApiRecordValues]] => Future.successful(s.get)
             case e: JsError =>
