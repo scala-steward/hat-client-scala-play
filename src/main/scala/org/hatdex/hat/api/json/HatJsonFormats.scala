@@ -15,7 +15,7 @@ import play.api.libs.json._
 
 import scala.util.{ Failure, Success, Try }
 
-trait HatJsonFormats extends UuidMarshalling with LocalDateTimeMarshalling {
+trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDateTimeMarshalling {
   implicit val userReads = Json.format[User]
   implicit val accessTokenFormat = Json.format[AccessToken]
 
@@ -106,6 +106,9 @@ trait HatJsonFormats extends UuidMarshalling with LocalDateTimeMarshalling {
 
   implicit val errorMessage: Format[ErrorMessage] = Json.format[ErrorMessage]
   implicit val successResponse: Format[SuccessResponse] = Json.format[SuccessResponse]
+
+  implicit val apiRelationshipFormat: Format[ApiRelationship] = Json.format[ApiRelationship]
+  implicit val apiGenericIdFormat: Format[ApiGenericId] = Json.format[ApiGenericId]
 }
 
 object HatJsonFormats extends HatJsonFormats

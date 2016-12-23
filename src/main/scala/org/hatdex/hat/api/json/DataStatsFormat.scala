@@ -33,4 +33,4 @@ trait DataStatsFormat extends HatJsonFormats {
   }
 }
 
-object DataStatsFormat
+object DataStatsFormat extends DataStatsFormat
