@@ -8,7 +8,7 @@
 package org.hatdex.hat.api.json
 
 import org.hatdex.hat.api.models.ComparisonOperators.ComparisonOperator
-import org.hatdex.hat.api.models._
+import org.hatdex.hat.api.models.{ ApiBundleDataSourceStructure, _ }
 import org.joda.time.LocalDateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -71,10 +71,14 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
   implicit val dataSourceDatasetFormat = Json.format[DataSourceDataset]
   implicit val dataSourceStructureFormat = Json.format[DataSourceStructure]
 
-  implicit val ApiBundleTableCondition = Json.format[ApiBundleTableCondition]
-  implicit val ApiBundleTableSlice = Json.format[ApiBundleTableSlice]
-  implicit val ApiBundleTableFormat = Json.format[ApiBundleTable]
-  implicit val ApiBundleCombinationFormat = Json.format[ApiBundleCombination]
+  implicit val ApiBundleDataSourceFieldFormat: Format[ApiBundleDataSourceField] = (
+    (__ \ "name").format[String] and
+    (__ \ "description").format[String] and
+    (__ \ "fields").lazyFormatNullable(implicitly[Format[List[ApiBundleDataSourceField]]])
+  )(ApiBundleDataSourceField.apply, unlift(ApiBundleDataSourceField.unapply))
+
+  implicit val ApiBundleDataSourceDatasetFormat = Json.format[ApiBundleDataSourceDataset]
+  implicit val ApiBundleDataSourceStructureFormat = Json.format[ApiBundleDataSourceStructure]
   implicit val ApiBundleContextlessFormat = Json.format[ApiBundleContextless]
 
   implicit val ApiBundleContextPropertySelection = Json.format[ApiBundleContextPropertySelection]

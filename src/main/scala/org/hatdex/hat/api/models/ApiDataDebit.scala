@@ -18,6 +18,7 @@ case class ApiDataDebit(
   name: String,
   startDate: LocalDateTime,
   endDate: LocalDateTime,
+  enabled: Option[Boolean],
   rolling: Boolean,
   sell: Boolean,
   price: Float,
@@ -37,4 +38,5 @@ case class ApiDataDebitOut(
   price: Float,
   kind: String,
   bundleContextless: Option[ApiBundleContextlessData],
-  bundleContextual: Option[Seq[ApiEntity]])
+  bundleContextual: Option[Seq[ApiEntity]]
+)

@@ -7,4 +7,13 @@
 
 package org.hatdex.hat.api.models
 
-case class HatService(title: String, description: String, logoUrl: String, url: String, authUrl: String, browser: Boolean)
+case class HatService(
+  title: String,
+  description: String,
+  logoUrl: String,
+  url: String,
+  authUrl: String,
+  browser: Boolean,
+  category: String,
+  setup: Boolean,
+  loginAvailable: Boolean)

@@ -73,12 +73,16 @@ case class ApiBundleCombination(
   bundleTableField: Option[ApiDataField],
   operator: Option[ComparisonOperator])
 
+case class ApiBundleDataSourceField(name: String, description: String, fields: Option[List[ApiBundleDataSourceField]])
+case class ApiBundleDataSourceDataset(name: String, description: String, fields: List[ApiBundleDataSourceField])
+case class ApiBundleDataSourceStructure(source: String, datasets: List[ApiBundleDataSourceDataset])
+
 case class ApiBundleContextless(
   id: Option[Int],
   dateCreated: Option[LocalDateTime],
   lastUpdated: Option[LocalDateTime],
   name: String,
-  sources: Option[Seq[DataSourceStructure]])
+  sources: Option[Seq[ApiBundleDataSourceStructure]])
 
 case class ApiBundleContextlessDatasetData(
   name: String,
