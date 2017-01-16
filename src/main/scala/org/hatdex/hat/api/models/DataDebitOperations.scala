@@ -27,4 +27,5 @@ object DataDebitOperations {
   case class Enable() extends DataDebitOperation
   case class Disable() extends DataDebitOperation
   case class GetValues() extends DataDebitOperation
+  case class Roll() extends DataDebitOperation
 }

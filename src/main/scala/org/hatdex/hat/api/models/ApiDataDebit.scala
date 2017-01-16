@@ -33,6 +33,7 @@ case class ApiDataDebitOut(
   name: String,
   startDate: LocalDateTime,
   endDate: LocalDateTime,
+  enabled: Option[Boolean],
   rolling: Boolean,
   sell: Boolean,
   price: Float,
