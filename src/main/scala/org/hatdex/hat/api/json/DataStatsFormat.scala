@@ -17,8 +17,8 @@ trait DataStatsFormat extends HatJsonFormats {
 
   implicit val dataStatsFormat: Format[DataStats] = new Format[DataStats] {
     def reads(json: JsValue): JsResult[DataStats] = (json \ "statsType").as[String] match {
-      case "dataDebit"  => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
-      case "dataCredit" => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
+      case "datadebit"  => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
+      case "datacredit" => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
       case "storage"    => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
       case statsType    => JsError(s"Unexpected JSON value $statsType in $json")
     }
