@@ -64,9 +64,6 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
 
   implicit val ApiRecordValuesFormat = Json.format[ApiRecordValues]
 
-  implicit val dataSourceDatasetFormat = Json.format[DataSourceDataset]
-  implicit val dataSourceStructureFormat = Json.format[DataSourceStructure]
-
   implicit val ApiBundleDataSourceFieldFormat: Format[ApiBundleDataSourceField] = (
     (__ \ "name").format[String] and
     (__ \ "description").format[String] and
@@ -87,8 +84,6 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     (__ \ "entities").formatNullable[Seq[ApiBundleContextEntitySelection]] and
     (__ \ "bundles").lazyFormatNullable(implicitly[Format[Seq[ApiBundleContext]]]))(ApiBundleContext.apply, unlift(ApiBundleContext.unapply))
 
-  implicit val ApiDataDebitFormat = Json.format[ApiDataDebit]
-
   implicit val DataFieldStatsFormat = Json.format[DataFieldStats]
   implicit val DataTableStatsFormat: Format[DataTableStats] = (
     (__ \ "name").format[String] and
@@ -96,11 +91,6 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     (__ \ "fields").format[Seq[DataFieldStats]] and
     (__ \ "subTables").lazyFormatNullable(implicitly[Format[Seq[DataTableStats]]]) and
     (__ \ "valueCount").format[Int])(DataTableStats.apply, unlift(DataTableStats.unapply))
-
-  implicit val dataSourceFieldFormat: Format[DataSourceField] = (
-    (__ \ "name").format[String] and
-    (__ \ "description").format[String] and
-    (__ \ 'fields).lazyFormatNullable(implicitly[Format[List[DataSourceField]]]))(DataSourceField.apply, unlift(DataSourceField.unapply))
 
   implicit val errorMessage: Format[ErrorMessage] = Json.format[ErrorMessage]
   implicit val successResponse: Format[SuccessResponse] = Json.format[SuccessResponse]

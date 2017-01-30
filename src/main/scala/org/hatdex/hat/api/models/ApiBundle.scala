@@ -28,9 +28,9 @@ object ComparisonOperators {
   def fromString(value: String): ComparisonOperator = {
     Vector(
       equal, notEqual, greaterThan, lessThan, like //      dateGreaterThan, dateLessThan,
-      //      dateWeekdayGreaterThan, dateWeekdayLessThan,
-      //      dateHourGreaterThan, dateHourLessThan
-      ).find(_.toString == value).get
+    //      dateWeekdayGreaterThan, dateWeekdayLessThan,
+    //      dateHourGreaterThan, dateHourLessThan
+    ).find(_.toString == value).get
   }
 
   val comparisonOperators: Set[ComparisonOperator] = Set(equal, notEqual, greaterThan, lessThan, like)

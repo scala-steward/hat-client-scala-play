@@ -36,6 +36,7 @@ trait DataDebitFormats extends HatJsonFormats with LocalDateTimeMarshalling {
   implicit val apiOrganisationFormat: Format[ApiOrganisation] = Json.format[ApiOrganisation]
   implicit val apiEntityFormat: Format[ApiEntity] = Json.format[ApiEntity]
 
+  implicit val apiDataDebitFormat: Format[ApiDataDebit] = Json.format[ApiDataDebit]
   implicit val apiDataDebitOutFormat: Format[ApiDataDebitOut] = Json.format[ApiDataDebitOut]
 
 }
