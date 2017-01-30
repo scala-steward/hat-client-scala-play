@@ -28,9 +28,9 @@ object ComparisonOperators {
   def fromString(value: String): ComparisonOperator = {
     Vector(
       equal, notEqual, greaterThan, lessThan, like //      dateGreaterThan, dateLessThan,
-    //      dateWeekdayGreaterThan, dateWeekdayLessThan,
-    //      dateHourGreaterThan, dateHourLessThan
-    ).find(_.toString == value).get
+      //      dateWeekdayGreaterThan, dateWeekdayLessThan,
+      //      dateHourGreaterThan, dateHourLessThan
+      ).find(_.toString == value).get
   }
 
   val comparisonOperators: Set[ComparisonOperator] = Set(equal, notEqual, greaterThan, lessThan, like)
@@ -61,7 +61,9 @@ case class ApiBundleTable(
   name: String,
   table: ApiDataTable, // Used to tag which table is bundled
   slices: Option[Seq[ApiBundleTableSlice]],
-  data: Option[Seq[ApiDataRecord]]) // Data is optional, only used on the outbound
+  data: Option[Seq[ApiDataRecord]])
+
+// Data is optional, only used on the outbound
 
 case class ApiBundleCombination(
   id: Option[Int],
@@ -87,7 +89,9 @@ case class ApiBundleContextless(
 case class ApiBundleContextlessDatasetData(
   name: String,
   table: ApiDataTable, // Used to tag which table is bundled
-  data: Option[Seq[ApiDataRecord]]) // Data is optional, only used on the outbound
+  data: Option[Seq[ApiDataRecord]])
+
+// Data is optional, only used on the outbound
 
 case class ApiBundleContextlessData(
   id: Int,

@@ -44,8 +44,7 @@ trait HatJsonUtilities {
       "id" -> Json.toJson(record.id.get),
       "name" -> Json.toJson(record.name),
       "lastUpdated" -> Json.toJson(record.lastUpdated.getOrElse(LocalDateTime.now()).toDateTime.toString()),
-      "data" -> JsObject(recordDataTables)
-    ))
+      "data" -> JsObject(recordDataTables)))
   }
 }
 

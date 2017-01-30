@@ -39,5 +39,4 @@ case class ApiDataDebitOut(
   price: Float,
   kind: String,
   bundleContextless: Option[ApiBundleContextlessData],
-  bundleContextual: Option[Seq[ApiEntity]]
-)
+  bundleContextual: Option[Seq[ApiEntity]])

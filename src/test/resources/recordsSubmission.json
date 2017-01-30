@@ -1,24 +1,44 @@
 [
   {
-  "record": { "lastUpdated": "2015-11-22T21:24:44Z", "name": "kitchenElectricityRow" },
-    "values":
-    [
-      { "field": { "id": 10, "name": "month2014" },
+    "record": {
+      "lastUpdated": "2015-11-22T21:24:44Z",
+      "name": "kitchenElectricityRow"
+    },
+    "values": [
+      {
+        "field": {
+          "id": 10,
+          "name": "month2014"
+        },
         "value": "september2014"
       },
-      { "field": { "id": 11, "name": "month2015" },
+      {
+        "field": {
+          "id": 11,
+          "name": "month2015"
+        },
         "value": "september2015"
       }
     ]
   },
   {
-    "record": { "lastUpdated": "2015-11-23T21:24:44Z", "name": "kitchenElectricityRow" },
-    "values":
-    [
-      { "field": { "id": 10, "name": "month2014" },
+    "record": {
+      "lastUpdated": "2015-11-23T21:24:44Z",
+      "name": "kitchenElectricityRow"
+    },
+    "values": [
+      {
+        "field": {
+          "id": 10,
+          "name": "month2014"
+        },
         "value": "october2014"
       },
-      { "field": { "id": 11, "name": "month2015" },
+      {
+        "field": {
+          "id": 11,
+          "name": "month2015"
+        },
         "value": "october2015"
       }
     ]
