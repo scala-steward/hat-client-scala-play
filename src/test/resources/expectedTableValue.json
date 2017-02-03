@@ -2,8 +2,14 @@
   "name": "events",
   "source": "calendar",
   "fields": [
-    { "name": "calendarName" },
-    { "name": "startDate" },
-    { "name": "endDate" }
+    {
+      "name": "calendarName"
+    },
+    {
+      "name": "startDate"
+    },
+    {
+      "name": "endDate"
+    }
   ]
 }

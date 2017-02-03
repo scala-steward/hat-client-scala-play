@@ -10,7 +10,7 @@ package org.hatdex.hat.api.json
 import org.hatdex.hat.api.models.{ DataCreditStats, DataDebitStats, DataStats, DataStorageStats }
 import play.api.libs.json._
 
-trait DataStatsFormat extends HatJsonFormats {
+trait DataStatsFormat extends DataDebitFormats {
   implicit val dataDebitStatsFormat = Json.format[DataDebitStats]
   implicit val dataCreditStatsFormat = Json.format[DataCreditStats]
   implicit val dataStorageStatsFormat = Json.format[DataStorageStats]

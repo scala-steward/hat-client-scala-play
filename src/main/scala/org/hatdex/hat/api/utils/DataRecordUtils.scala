@@ -45,7 +45,6 @@ trait DataRecordUtils {
       "id" -> record.id.get,
       "name" -> record.name,
       "lastUpdated" -> record.lastUpdated.getOrElse(LocalDateTime.now()).toDateTime.toString(),
-      "data" -> recordDataTables
-    )
+      "data" -> recordDataTables)
   }
 }
