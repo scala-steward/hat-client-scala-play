@@ -12,7 +12,7 @@ import play.api.libs.json._
 
 trait LocalDateTimeMarshalling {
   implicit object DefaultJodaLocalDateTimeWrites extends Writes[org.joda.time.LocalDateTime] {
-    def writes(d: org.joda.time.LocalDateTime): JsValue = JsString(d.toString)
+    def writes(d: org.joda.time.LocalDateTime): JsValue = JsString(d.toDateTime.toString)
   }
 
   implicit val jodaISODateReads: Reads[org.joda.time.LocalDateTime] = new Reads[org.joda.time.LocalDateTime] {
