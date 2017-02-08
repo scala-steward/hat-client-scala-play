@@ -34,4 +34,4 @@ Use SBT to publish the project as a local package for including in other project
 
 Using it then becomes as simple as:
 
-    libraryDependencies ++= "org.hatdex" %% "hat" % version
+    libraryDependencies ++= "org.hatdex" %% "hat-client-scala-play" % version
