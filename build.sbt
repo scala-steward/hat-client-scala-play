@@ -9,3 +9,10 @@ libraryDependencies ++= Seq(
   Library.Specs2.mock,
   Library.Specs2.core
 )
+
+//publishMavenStyle := false
+
+publishTo := {
+  val prefix = if (isSnapshot.value) "snapshots" else "releases"
+  Some(s3resolver.value("HAT Library Artifacts " + prefix, s3("library-artifacts-" + prefix + ".hubofallthings.com")) withMavenPatterns)
+}

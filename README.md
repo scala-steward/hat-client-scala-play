@@ -8,6 +8,15 @@ serializers and deserializers for them.
 
 It relies on Play-WS for an asynchronous HTTP client.
 
+## Usage
+
+The library artifacts are hosted on AWS S3:
+ 
+    resolvers += "HAT Library Artifacts Releases" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-releases.hubofallthings.com"
+    // Or for SNAPSHOTS:
+    // "HAT Library Artifacts Snapshots" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-snapshots.hubofallthings.com"
+    libraryDependencies ++= "org.hatdex" %% "hat-client-scala-play" % 2.2.0
+
 To use the client, it is sufficient to create a new one with minimal configuration:
 
     new HatClient(wsClient, hatAddress, schema)
@@ -25,13 +34,3 @@ The client is non-blocking and is built around standard Scala Futures. For examp
       accessToken <- hat.authenticateForToken(dataShopperUsername, dataShopperPassword)
       values <- hat.dataDebitValues(dataDebitId)
     } yield values
-
-## Publishing locally
-
-Use SBT to publish the project as a local package for including in other projects:
-
-    sbt publishLocal
-
-Using it then becomes as simple as:
-
-    libraryDependencies ++= "org.hatdex" %% "hat-client-scala-play" % version
