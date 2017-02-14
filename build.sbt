@@ -7,7 +7,8 @@ libraryDependencies ++= Seq(
   Library.Play.specs2,
   Library.Specs2.matcherExtra,
   Library.Specs2.mock,
-  Library.Specs2.core
+  Library.Specs2.core,
+  Library.Utils.jodaTime
 )
 
 //publishMavenStyle := false

@@ -36,5 +36,9 @@ object Dependencies {
       val matcherExtra = "org.specs2" %% "specs2-matcher-extra" % version
       val mock = "org.specs2" %% "specs2-mock" % version
     }
+
+    object Utils {
+      val jodaTime = "joda-time" % "joda-time" % "2.9.2"
+    }
   }
 }
