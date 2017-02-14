@@ -99,6 +99,15 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
 
   implicit val apiRelationshipFormat: Format[ApiRelationship] = Json.format[ApiRelationship]
   implicit val apiGenericIdFormat: Format[ApiGenericId] = Json.format[ApiGenericId]
+
+  implicit val apiHatFileStatusReads: Reads[HatFileStatus.Status] = __.read[String].map(HatFileStatus.Status.valueOf)
+  implicit val apiHatFileStatusWrites: Writes[HatFileStatus.Status] = new Writes[HatFileStatus.Status] {
+    def writes(stats: HatFileStatus.Status): JsValue = {
+      Json.toJson(stats.toString)
+    }
+  }
+
+  implicit val apiHatFileFormat: Format[ApiHatFile] = Json.format[ApiHatFile]
 }
 
 object HatJsonFormats extends HatJsonFormats
