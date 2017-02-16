@@ -26,23 +26,13 @@ package org.hatdex.hat.api.models
 import org.joda.time.DateTime
 
 object HatFileStatus {
-  sealed trait Status
-  object Status {
-    def valueOf(value: String): Status = {
-      value match {
-        case "Initialized" => HatFileStatus.Initialized
-        case "New"         => HatFileStatus.New
-        case "Completed"   => HatFileStatus.Completed
-        case "Deleted"     => HatFileStatus.Deleted
-        case _             => throw new IllegalArgumentException("Unrecognised HatFileStatus")
-      }
-    }
+  sealed trait Status {
+    val status: String
   }
-
-  case object New extends Status
-  case object Initialized extends Status
-  case object Completed extends Status
-  case object Deleted extends Status
+  case class New(status: String = "New") extends Status
+  case class Initialized(status: String = "Initialized") extends Status
+  case class Completed(size: Long, status: String = "Completed") extends Status
+  case class Deleted(status: String = "Deleted") extends Status
 }
 
 case class ApiHatFile(
