@@ -23,6 +23,8 @@
  */
 
 package org.hatdex.hat.api.models
+import java.util.UUID
+
 import org.joda.time.DateTime
 
 object HatFileStatus {
@@ -35,6 +37,8 @@ object HatFileStatus {
   case class Deleted(status: String = "Deleted") extends Status
 }
 
+case class ApiHatFilePermissions(userId: UUID, contentReadable: Boolean)
+
 case class ApiHatFile(
   fileId: Option[String],
   name: String,
@@ -46,4 +50,5 @@ case class ApiHatFile(
   description: Option[String],
   sourceURL: Option[String],
   status: Option[HatFileStatus.Status],
-  contentUrl: Option[String] = None)
+  contentUrl: Option[String] = None,
+  permissions: Option[Seq[ApiHatFilePermissions]] = None)

@@ -131,6 +131,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     }
   }
 
+  implicit val apiHatFilePermissionFormat: Format[ApiHatFilePermissions] = Json.format[ApiHatFilePermissions]
   implicit val apiHatFileFormat: Format[ApiHatFile] = Json.format[ApiHatFile]
 }
 
