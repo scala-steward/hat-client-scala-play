@@ -51,4 +51,5 @@ case class ApiHatFile(
   sourceURL: Option[String],
   status: Option[HatFileStatus.Status],
   contentUrl: Option[String] = None,
+  contentPublic: Option[Boolean] = Some(false),
   permissions: Option[Seq[ApiHatFilePermissions]] = None)
