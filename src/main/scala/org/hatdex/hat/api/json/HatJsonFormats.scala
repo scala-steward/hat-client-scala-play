@@ -27,8 +27,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     (__ \ "lastUpdated").formatNullable[LocalDateTime] and
     (__ \ "tableId").formatNullable[Int] and
     (__ \ "name").format[String] and
-    (__ \ "values").lazyFormatNullable(implicitly[Format[Seq[ApiDataValue]]])
-  )(ApiDataField.apply, unlift(ApiDataField.unapply))
+    (__ \ "values").lazyFormatNullable(implicitly[Format[Seq[ApiDataValue]]]))(ApiDataField.apply, unlift(ApiDataField.unapply))
 
   implicit val ApiDataTableFormat: Format[ApiDataTable] = (
     (__ \ "id").formatNullable[Int] and
@@ -37,16 +36,14 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     (__ \ "name").format[String] and
     (__ \ "source").format[String] and
     (__ \ "fields").formatNullable[Seq[ApiDataField]] and
-    (__ \ "subTables").lazyFormatNullable(implicitly[Format[Seq[ApiDataTable]]])
-  )(ApiDataTable.apply, unlift(ApiDataTable.unapply))
+    (__ \ "subTables").lazyFormatNullable(implicitly[Format[Seq[ApiDataTable]]]))(ApiDataTable.apply, unlift(ApiDataTable.unapply))
 
   implicit val ApiDataRecordFormat: Format[ApiDataRecord] = (
     (__ \ "id").formatNullable[Int] and
     (__ \ "dateCreated").formatNullable[LocalDateTime] and
     (__ \ "lastUpdated").formatNullable[LocalDateTime] and
     (__ \ "name").format[String] and
-    (__ \ "tables").formatNullable[Seq[ApiDataTable]]
-  )(ApiDataRecord.apply, unlift(ApiDataRecord.unapply))
+    (__ \ "tables").formatNullable[Seq[ApiDataTable]])(ApiDataRecord.apply, unlift(ApiDataRecord.unapply))
 
   implicit val ApiDataValueFormat: Format[ApiDataValue] = (
     (__ \ "id").formatNullable[Int] and
@@ -54,8 +51,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     (__ \ "lastUpdated").formatNullable[LocalDateTime] and
     (__ \ "value").format[String] and
     (__ \ "field").formatNullable[ApiDataField] and
-    (__ \ "record").formatNullable[ApiDataRecord]
-  )(ApiDataValue.apply, unlift(ApiDataValue.unapply))
+    (__ \ "record").formatNullable[ApiDataRecord])(ApiDataValue.apply, unlift(ApiDataValue.unapply))
 
   implicit val comparisonOperatorReads: Format[ComparisonOperator] = new Format[ComparisonOperator] {
     def reads(json: JsValue): JsResult[ComparisonOperator] = Try(ComparisonOperators.fromString(json.as[String])) match {
@@ -73,8 +69,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
   implicit val ApiBundleDataSourceFieldFormat: Format[ApiBundleDataSourceField] = (
     (__ \ "name").format[String] and
     (__ \ "description").format[String] and
-    (__ \ "fields").lazyFormatNullable(implicitly[Format[List[ApiBundleDataSourceField]]])
-  )(ApiBundleDataSourceField.apply, unlift(ApiBundleDataSourceField.unapply))
+    (__ \ "fields").lazyFormatNullable(implicitly[Format[List[ApiBundleDataSourceField]]]))(ApiBundleDataSourceField.apply, unlift(ApiBundleDataSourceField.unapply))
 
   implicit val ApiBundleDataSourceDatasetFormat = Json.format[ApiBundleDataSourceDataset]
   implicit val ApiBundleDataSourceStructureFormat = Json.format[ApiBundleDataSourceStructure]
@@ -89,8 +84,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     (__ \ "lastUpdated").formatNullable[LocalDateTime] and
     (__ \ "name").format[String] and
     (__ \ "entities").formatNullable[Seq[ApiBundleContextEntitySelection]] and
-    (__ \ "bundles").lazyFormatNullable(implicitly[Format[Seq[ApiBundleContext]]])
-  )(ApiBundleContext.apply, unlift(ApiBundleContext.unapply))
+    (__ \ "bundles").lazyFormatNullable(implicitly[Format[Seq[ApiBundleContext]]]))(ApiBundleContext.apply, unlift(ApiBundleContext.unapply))
 
   implicit val DataFieldStatsFormat = Json.format[DataFieldStats]
   implicit val DataTableStatsFormat: Format[DataTableStats] = (
@@ -98,8 +92,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     (__ \ "source").format[String] and
     (__ \ "fields").format[Seq[DataFieldStats]] and
     (__ \ "subTables").lazyFormatNullable(implicitly[Format[Seq[DataTableStats]]]) and
-    (__ \ "valueCount").format[Int]
-  )(DataTableStats.apply, unlift(DataTableStats.unapply))
+    (__ \ "valueCount").format[Int])(DataTableStats.apply, unlift(DataTableStats.unapply))
 
   implicit val errorMessage: Format[ErrorMessage] = Json.format[ErrorMessage]
   implicit val successResponse: Format[SuccessResponse] = Json.format[SuccessResponse]

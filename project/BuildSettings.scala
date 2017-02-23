@@ -18,7 +18,7 @@ object BasicSettings extends AutoPlugin {
 
   override def projectSettings = Seq(
     organization := "org.hatdex",
-    version := "2.2.0",
+    version := "2.3.0-SNAPSHOT",
     resolvers ++= Dependencies.resolvers,
     scalaVersion := Dependencies.Versions.scalaVersion,
     crossScalaVersions := Dependencies.Versions.crossScala,
@@ -65,7 +65,7 @@ object CodeFormatter extends AutoPlugin {
       .setPreference(DoubleIndentClassDeclaration, true)
       .setPreference(AlignSingleLineCaseStatements, true)
       .setPreference(CompactControlReadability, true)
-      .setPreference(DanglingCloseParenthesis, Preserve))
+      .setPreference(DanglingCloseParenthesis, Prevent))
 
   override def trigger = allRequirements
 
