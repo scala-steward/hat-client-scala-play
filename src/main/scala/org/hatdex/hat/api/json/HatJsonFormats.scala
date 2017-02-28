@@ -10,7 +10,7 @@
 package org.hatdex.hat.api.json
 
 import org.hatdex.hat.api.models.ComparisonOperators.ComparisonOperator
-import org.hatdex.hat.api.models.{ ApiBundleDataSourceStructure, _ }
+import org.hatdex.hat.api.models._
 import org.joda.time.LocalDateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -126,6 +126,24 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
 
   implicit val apiHatFilePermissionFormat: Format[ApiHatFilePermissions] = Json.format[ApiHatFilePermissions]
   implicit val apiHatFileFormat: Format[ApiHatFile] = Json.format[ApiHatFile]
+
+  implicit val statusKindNumericFormat: Format[StatusKind.Numeric] = Json.format[StatusKind.Numeric]
+  implicit val statusKindTextFormat: Format[StatusKind.Text] = Json.format[StatusKind.Text]
+  implicit val hatStatusKindFormat: Format[StatusKind.Kind] = new Format[StatusKind.Kind] {
+    def reads(json: JsValue): JsResult[StatusKind.Kind] = (json \ "kind").as[String] match {
+      case "Numeric" => Json.fromJson[StatusKind.Numeric](json)(statusKindNumericFormat)
+      case "Text"    => Json.fromJson[StatusKind.Text](json)(statusKindTextFormat)
+      case kind      => JsError(s"Unexpected JSON value $kind in $json")
+    }
+
+    def writes(stats: StatusKind.Kind): JsValue = {
+      stats match {
+        case ds: StatusKind.Numeric => Json.toJson(ds)(statusKindNumericFormat)
+        case ds: StatusKind.Text    => Json.toJson(ds)(statusKindTextFormat)
+      }
+    }
+  }
+  implicit val hatStatusFormat: Format[HatStatus] = Json.format[HatStatus]
 }
 
 object HatJsonFormats extends HatJsonFormats
