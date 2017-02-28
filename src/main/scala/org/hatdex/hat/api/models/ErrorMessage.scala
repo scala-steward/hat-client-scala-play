@@ -9,4 +9,4 @@
 
 package org.hatdex.hat.api.models
 
-case class ErrorMessage(message: String, cause: String)
+case class ErrorMessage(message: String, cause: String, details: Option[Seq[String]] = None)
