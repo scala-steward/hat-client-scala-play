@@ -11,6 +11,8 @@ package org.hatdex.hat.api.models
 
 import org.joda.time.LocalDateTime
 
+import scala.collection.immutable.HashMap
+
 case class DataFieldStats(
   name: String,
   tableName: String,
@@ -27,8 +29,13 @@ case class DataTableStats(
 sealed abstract class DataStats(
   statsType: String,
   time: LocalDateTime,
-  dataTableStats: Option[Seq[DataTableStats]],
   logEntry: String)
+
+trait StatsForTables {
+  val time: LocalDateTime
+  val user: User
+  val dataTableStats: Option[Seq[DataTableStats]]
+}
 
 case class DataCreditStats(
   statsType: String = "datacredit",
@@ -36,7 +43,7 @@ case class DataCreditStats(
   time: LocalDateTime,
   user: User,
   dataTableStats: Option[Seq[DataTableStats]],
-  logEntry: String) extends DataStats("datacredit", time, dataTableStats, logEntry)
+  logEntry: String) extends DataStats("datacredit", time, logEntry) with StatsForTables
 
 case class DataDebitStats(
   statsType: String = "datadebit",
@@ -45,10 +52,18 @@ case class DataDebitStats(
   time: LocalDateTime,
   user: User,
   dataTableStats: Option[Seq[DataTableStats]],
-  logEntry: String) extends DataStats("datadebit", time, dataTableStats, logEntry)
+  logEntry: String) extends DataStats("datadebit", time, logEntry) with StatsForTables
 
 case class DataStorageStats(
   statsType: String = "storage",
   time: LocalDateTime,
   dataTableStats: Seq[DataTableStats],
-  logEntry: String) extends DataStats("storage", time, Some(dataTableStats), logEntry)
+  logEntry: String) extends DataStats("storage", time, logEntry)
+
+case class InboundDataStats(
+  statsType: String = "inbound",
+  time: LocalDateTime,
+  user: User,
+  endpoint: String,
+  counts: HashMap[String, Long],
+  logEntry: String) extends DataStats("inbound", time, logEntry)

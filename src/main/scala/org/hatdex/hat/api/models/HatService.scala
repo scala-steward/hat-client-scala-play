@@ -11,6 +11,7 @@ package org.hatdex.hat.api.models
 
 case class HatService(
   title: String,
+  namespace: String,
   description: String,
   logoUrl: String,
   url: String,
