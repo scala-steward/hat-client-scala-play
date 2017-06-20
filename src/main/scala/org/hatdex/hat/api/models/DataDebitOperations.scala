@@ -12,6 +12,7 @@ package org.hatdex.hat.api.models
 object DataDebitOperations {
   sealed trait DataDebitOperation
   case class Create() extends DataDebitOperation
+  case class Change() extends DataDebitOperation
   case class Enable() extends DataDebitOperation
   case class Disable() extends DataDebitOperation
   case class GetValues() extends DataDebitOperation

@@ -60,10 +60,26 @@ case class DataStorageStats(
   dataTableStats: Seq[DataTableStats],
   logEntry: String) extends DataStats("storage", time, logEntry)
 
+sealed trait RichDataStats {
+  val user: User
+  val stats: Seq[EndpointStats]
+}
+
+case class EndpointStats(
+  endpoint: String,
+  propertyStats: HashMap[String, Long])
+
 case class InboundDataStats(
   statsType: String = "inbound",
   time: LocalDateTime,
   user: User,
-  endpoint: String,
-  counts: HashMap[String, Long],
-  logEntry: String) extends DataStats("inbound", time, logEntry)
+  stats: Seq[EndpointStats],
+  logEntry: String) extends DataStats("inbound", time, logEntry) with RichDataStats
+
+case class OutboundDataStats(
+  statsType: String = "outbound",
+  time: LocalDateTime,
+  user: User,
+  dataDebitId: String,
+  stats: Seq[EndpointStats],
+  logEntry: String) extends DataStats("outbound", time, logEntry) with RichDataStats

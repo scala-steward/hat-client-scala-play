@@ -35,10 +35,13 @@ trait DataStatsFormat extends DataDebitFormats {
 
   implicit val mapFormat: Format[HashMap[String, Long]] = Format(mapReads, mapWrites)
 
+  implicit val endpointStatsFormat: Format[EndpointStats] = Json.format[EndpointStats]
+
   private implicit val dataDebitStatsFormat = Json.format[DataDebitStats]
   private implicit val dataCreditStatsFormat = Json.format[DataCreditStats]
   private implicit val dataStorageStatsFormat = Json.format[DataStorageStats]
   private implicit val inboundDataStatsFormat = Json.format[InboundDataStats]
+  private implicit val outboundDataStatsFormat = Json.format[OutboundDataStats]
 
   implicit val dataStatsFormat: Format[DataStats] = new Format[DataStats] {
     def reads(json: JsValue): JsResult[DataStats] = (json \ "statsType").as[String] match {
@@ -46,15 +49,17 @@ trait DataStatsFormat extends DataDebitFormats {
       case "datacredit" => Json.fromJson[DataCreditStats](json)(dataCreditStatsFormat)
       case "storage"    => Json.fromJson[DataStorageStats](json)(dataStorageStatsFormat)
       case "inbound"    => Json.fromJson[InboundDataStats](json)(inboundDataStatsFormat)
+      case "outbound"   => Json.fromJson[OutboundDataStats](json)(outboundDataStatsFormat)
       case statsType    => JsError(s"Unexpected JSON value $statsType in $json")
     }
 
     def writes(stats: DataStats): JsValue = {
       stats match {
-        case ds: DataDebitStats   => Json.toJson(ds)(dataDebitStatsFormat)
-        case ds: DataCreditStats  => Json.toJson(ds)(dataCreditStatsFormat)
-        case ds: DataStorageStats => Json.toJson(ds)(dataStorageStatsFormat)
-        case ds: InboundDataStats => Json.toJson(ds)(inboundDataStatsFormat)
+        case ds: DataDebitStats    => Json.toJson(ds)(dataDebitStatsFormat)
+        case ds: DataCreditStats   => Json.toJson(ds)(dataCreditStatsFormat)
+        case ds: DataStorageStats  => Json.toJson(ds)(dataStorageStatsFormat)
+        case ds: InboundDataStats  => Json.toJson(ds)(inboundDataStatsFormat)
+        case ds: OutboundDataStats => Json.toJson(ds)(outboundDataStatsFormat)
       }
     }
   }
