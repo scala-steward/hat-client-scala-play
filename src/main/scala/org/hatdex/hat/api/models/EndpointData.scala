@@ -143,6 +143,7 @@ case class EndpointQuery(
 case class PropertyQuery(
   endpoints: List[EndpointQuery],
   orderBy: Option[String],
+  ordering: Option[String],
   limit: Int)
 
 case class EndpointDataBundle(
