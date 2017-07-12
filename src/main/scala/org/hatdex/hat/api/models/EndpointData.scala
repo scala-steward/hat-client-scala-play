@@ -4,16 +4,25 @@ import java.util.UUID
 
 import org.hatdex.hat.api.json.HatJsonFormats
 import org.joda.time.LocalDateTime
+import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 trait RichDataJsonFormats extends HatJsonFormats {
 
-  implicit val endpointDataFormat: Format[EndpointData] = (
-    (__ \ "endpoint").format[String] and
-    (__ \ "recordId").formatNullable[UUID] and
-    (__ \ "data").format[JsValue] and
-    (__ \ "links").lazyFormatNullable(implicitly[Format[Seq[EndpointData]]]))(EndpointData.apply, unlift(EndpointData.unapply))
+  val endpointDataWrites: Writes[EndpointData] = (
+    (__ \ "endpoint").write[String] and
+    (__ \ "recordId").writeNullable[UUID] and
+    (__ \ "data").write[JsValue] and
+    (__ \ "links").lazyWriteNullable(implicitly[Format[Seq[EndpointData]]]))(unlift(EndpointData.unapply))
+
+  val endpointDataReads: Reads[EndpointData] = (
+    (__ \ "endpoint").read[String].filter(ValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
+    (__ \ "recordId").readNullable[UUID] and
+    (__ \ "data").read[JsValue] and
+    (__ \ "links").lazyReadNullable(implicitly[Reads[Seq[EndpointData]]]))(EndpointData.apply _)
+
+  implicit val endpointDataFormat: Format[EndpointData] = Format(endpointDataReads, endpointDataWrites)
 
   private val fieldTransDateTimeExtractFormat = Json.format[FieldTransformation.DateTimeExtract]
   private val fieldTransTimestampExtractFormat = Json.format[FieldTransformation.TimestampExtract]
@@ -65,18 +74,41 @@ trait RichDataJsonFormats extends HatJsonFormats {
 
   implicit val endpointQueryFilterFormat: Format[EndpointQueryFilter] = Json.format[EndpointQueryFilter]
 
-  implicit val endpointQueryFormat: Format[EndpointQuery] = (
-    (__ \ "endpoint").format[String] and
-    (__ \ "mapping").formatNullable[JsValue] and
-    (__ \ "filters").formatNullable[Seq[EndpointQueryFilter]] and
-    (__ \ "links").lazyFormatNullable(implicitly[Format[Seq[EndpointQuery]]]))(EndpointQuery.apply, unlift(EndpointQuery.unapply))
+  val endpointQueryRead: Reads[EndpointQuery] = (
+    (__ \ "endpoint").read[String].filter(ValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
+    (__ \ "mapping").readNullable[JsValue] and
+    (__ \ "filters").readNullable[Seq[EndpointQueryFilter]] and
+    (__ \ "links").lazyReadNullable(implicitly[Format[Seq[EndpointQuery]]]))(EndpointQuery.apply _)
+
+  val endpointQueryWrites: Writes[EndpointQuery] = (
+    (__ \ "endpoint").write[String] and
+    (__ \ "mapping").writeNullable[JsValue] and
+    (__ \ "filters").writeNullable[Seq[EndpointQueryFilter]] and
+    (__ \ "links").lazyWriteNullable(implicitly[Format[Seq[EndpointQuery]]]))(unlift(EndpointQuery.unapply))
+
+  implicit val endpointQueryFormat: Format[EndpointQuery] = Format(endpointQueryRead, endpointQueryWrites)
 
   implicit val propertyQueryFormat: Format[PropertyQuery] = Json.format[PropertyQuery]
 
-  implicit val endpointDatabundleFormat: Format[EndpointDataBundle] = Json.format[EndpointDataBundle]
+  val endpointDatabundleRead: Reads[EndpointDataBundle] = (
+    (__ \ "name").read[String].filter(ValidationError("Bundle name invalid"))(_.matches("[0-9a-z-]+")) and
+    (__ \ "bundle").read[Map[String, PropertyQuery]])(EndpointDataBundle.apply _)
+
+  val endpointDatabundleWrite: Writes[EndpointDataBundle] = Json.writes[EndpointDataBundle]
+
+  implicit val endpointDatabundleFormat: Format[EndpointDataBundle] = Format(endpointDatabundleRead, endpointDatabundleWrite)
+
   implicit val debitBundleFormat: Format[DebitBundle] = Json.format[DebitBundle]
   implicit val dataDebitRequestFormat: Format[DataDebitRequest] = Json.format[DataDebitRequest]
-  implicit val dataDebitFormat: Format[RichDataDebit] = Json.format[RichDataDebit]
+
+  val dataDebitReads: Reads[RichDataDebit] = (
+    (__ \ "dataDebitKey").read[String].filter(ValidationError("Data Debit Key invalid"))(_.matches("[0-9a-z-]+")) and
+    (__ \ "dateCreated").read[LocalDateTime] and
+    (__ \ "client").read[User] and
+    (__ \ "bundles").read[Seq[DebitBundle]])(RichDataDebit.apply _)
+  val dataDebitWrites: Writes[RichDataDebit] = Json.writes[RichDataDebit]
+
+  implicit val dataDebitFormat: Format[RichDataDebit] = Format(dataDebitReads, dataDebitWrites)
 
 }
 
