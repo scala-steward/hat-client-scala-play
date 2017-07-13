@@ -91,7 +91,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   implicit val propertyQueryFormat: Format[PropertyQuery] = Json.format[PropertyQuery]
 
   val endpointDatabundleRead: Reads[EndpointDataBundle] = (
-    (__ \ "name").read[String].filter(ValidationError("Bundle name invalid"))(_.matches("[0-9a-z-]+")) and
+    (__ \ "name").read[String].filter(ValidationError("Bundle name invalid"))(_.matches("[0-9a-zA-Z-]+")) and
     (__ \ "bundle").read[Map[String, PropertyQuery]])(EndpointDataBundle.apply _)
 
   val endpointDatabundleWrite: Writes[EndpointDataBundle] = Json.writes[EndpointDataBundle]
@@ -102,7 +102,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   implicit val dataDebitRequestFormat: Format[DataDebitRequest] = Json.format[DataDebitRequest]
 
   val dataDebitReads: Reads[RichDataDebit] = (
-    (__ \ "dataDebitKey").read[String].filter(ValidationError("Data Debit Key invalid"))(_.matches("[0-9a-z-]+")) and
+    (__ \ "dataDebitKey").read[String].filter(ValidationError("Data Debit Key invalid"))(_.matches("[0-9a-zA-Z-]+")) and
     (__ \ "dateCreated").read[LocalDateTime] and
     (__ \ "client").read[User] and
     (__ \ "bundles").read[Seq[DebitBundle]])(RichDataDebit.apply _)
