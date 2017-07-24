@@ -92,6 +92,25 @@ trait HatAuthentication {
     }
   }
 
+  def updateAccount(access_token: String, hatUser: User)(implicit ec: ExecutionContext): Future[UUID] = {
+    val request: WSRequest = ws.url(s"$schema$hatAddress/users/user/${hatUser.userId}/update")
+      .withVirtualHost(hatAddress)
+      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+
+    logger.debug(s"Update account request ${request.uri}")
+    val futureResponse: Future[WSResponse] = request.put(Json.toJson(hatUser))
+    futureResponse.map { response =>
+      response.status match {
+        case CREATED =>
+          logger.info(s"Account for ${hatUser.name} on HAT $hatAddress updated")
+          hatUser.userId
+        case _ =>
+          logger.error(s"Account updating for ${hatUser.name} on HAT $hatAddress failed, $response, ${response.body}")
+          throw new RuntimeException(s"Account updating for ${hatUser.name} failed")
+      }
+    }
+  }
+
   def enableAccount(access_token: String, userId: UUID)(implicit ec: ExecutionContext): Future[Boolean] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/users/user/$userId/enable")
       .withVirtualHost(hatAddress)
