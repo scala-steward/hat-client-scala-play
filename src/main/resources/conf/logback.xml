@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <!--<statusListener class="ch.qos.logback.core.status.NopStatusListener" />-->
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%-5level] [%date{MM/dd/YYYY HH:mm:ss}] [%logger{1}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNCCONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="CONSOLE" />
+    </appender>
+
+
+    <root level="WARN">
+        <appender-ref ref="ASYNCCONSOLE" />
+    </root>
+
+    <logger name="akka.event.slf4j.Slf4jLogger" level="WARN">
+        <appender-ref ref="ASYNCCONSOLE"/>
+    </logger>
+
+    <logger name="org.hatdex.hat" level="WARN" additivity="false">
+        <appender-ref ref="ASYNCCONSOLE"/>
+    </logger>
+
+
+    <logger name="com.ning.http.client" level="WARN" additivity="false">
+        <appender-ref ref="ASYNCCONSOLE"/>
+    </logger>
+
+    <logger name="play.api.libs.ws" level="ERROR" additivity="false">
+        <appender-ref ref="ASYNCCONSOLE"/>
+    </logger>
+    
+    <logger name="org.asynchttpclient" level="INFO" additivity="false">
+        <appender-ref ref="ASYNCCONSOLE"/>
+    </logger>
+
+    <logger name="io.netty.handler" level="INFO" additivity="false">
+        <appender-ref ref="ASYNCCONSOLE"/>
+    </logger>
+
+</configuration>

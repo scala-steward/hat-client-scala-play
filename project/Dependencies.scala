@@ -38,7 +38,7 @@ object Dependencies {
     }
 
     object Utils {
-      val jodaTime = "joda-time" % "joda-time" % "2.9.2"
+      val jodaTime = "joda-time" % "joda-time" % "2.9.9"
     }
   }
 }

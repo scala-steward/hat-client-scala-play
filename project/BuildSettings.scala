@@ -22,6 +22,24 @@ object BasicSettings extends AutoPlugin {
     resolvers ++= Dependencies.resolvers,
     scalaVersion := Dependencies.Versions.scalaVersion,
     crossScalaVersions := Dependencies.Versions.crossScala,
+    name := "HAT Client",
+    description := "HAT HTTP API wrapper in Scala",
+    licenses += ("Mozilla Public License 2.0", url("https://www.mozilla.org/en-US/MPL/2.0")),
+    scmInfo := Some(
+      ScmInfo(
+        url("https://github.com/Hub-of-all-Things/hat-client-scala-play"),
+        "scm:git@github.com:Hub-of-all-Things/hat-client-scala-play.git"
+      )
+    ),
+    homepage := Some(url("https://hubofallthings.com")),
+    developers := List(
+      Developer(
+        id    = "AndriusA",
+        name  = "Andrius Aucinas",
+        email = "andrius@smart-e.org",
+        url   = url("http://smart-e.org")
+      )
+    ),
     scalacOptions ++= Seq(
       "-deprecation", // Emit warning and location for usages of deprecated APIs.
       "-feature", // Emit warning and location for usages of features that should be imported explicitly.

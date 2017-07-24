@@ -17,6 +17,7 @@ class HatClient(val ws: WSClient, val hatAddress: String, override val schema: S
     with HatDataDebits
     with HatDataTables
     with HatDataRecords
+    with HatRichData
     with HatSystem {
   @Inject def this(ws: WSClient, hatAddress: String) = this(ws, hatAddress, "https://")
 

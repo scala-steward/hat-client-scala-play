@@ -9,11 +9,14 @@
 
 package org.hatdex.hat.api.services
 
+import java.util.UUID
+
 import akka.util.ByteString
 import org.hatdex.hat.api.json.HatJsonFormats
-import org.hatdex.hat.api.models.{ ApiRecordValues, ApiDataTable }
+import org.hatdex.hat.api.models.{ ApiDataTable, ApiRecordValues, EndpointData, ErrorMessage }
+import play.api.Logger
 import play.api.http.HttpEntity
-import play.api.libs.json.{ JsError, JsSuccess, Json }
+import play.api.libs.json._
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import play.api.routing.sird._
@@ -24,7 +27,9 @@ import scala.io.Source._
 
 object MockHatServer {
 
-  import HatJsonFormats._
+  import org.hatdex.hat.api.models.RichDataJsonFormats._
+
+  private val logger = Logger(this.getClass)
 
   def withMockHatServerClient[T](block: WSClient => T): T = {
     Server.withRouter() {
@@ -140,6 +145,43 @@ object MockHatServer {
           Results.BadRequest.sendResource("Not JSON!")
         }
       }
+      case POST(p"/api/v2/data/$namespace/$endpoint") => Action { request =>
+        logger.info(s"POST /api/v2/data/$namespace/$endpoint")
+        val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
+        request.body.asJson.map {
+          case array: JsArray =>
+            val result = array.value.map(EndpointData(s"$namespace/$endpoint", Some(UUID.randomUUID), _, None))
+            Results.Created.sendEntity(HttpEntity.Strict(ByteString(Json.toJson(result).toString()), Some("application/json")))
+          case value: JsValue =>
+            val result = EndpointData(s"$namespace/$endpoint", Some(UUID.randomUUID), value, None)
+            Results.Created.sendEntity(HttpEntity.Strict(ByteString(Json.toJson(result).toString()), Some("application/json")))
+        } getOrElse {
+          Results.BadRequest.sendResource("Not JSON!")
+        }
+      }
+      case GET(p"/api/v2/data/$namespace/$endpoint") => Action { request =>
+        logger.info(s"GET /api/v2/data/$namespace/$endpoint")
+        val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
+
+        val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("validAccessToken")).mkString
+
+        val temp =
+          """
+            |
+          """.stripMargin
+
+        (namespace, endpoint, maybeAccessToken) match {
+          case ("rumpel", "locations", Some(token)) if token == validAccessToken =>
+            Results.Ok.sendResource("flexiRecordsSaved.json").as("application/json")
+          case ("rumpel", _, Some(token)) if token == validAccessToken =>
+            Results.Ok.sendEntity(HttpEntity.Strict(ByteString("[]"), Some("application/json")))
+          case (_, _, Some(token)) if token == validAccessToken =>
+            Results.Forbidden.sendEntity(
+              HttpEntity.Strict(ByteString(Json.toJson(ErrorMessage("Forbidden", "Access Denied")).toString), Some("application/json")))
+          case _ => Results.Unauthorized.sendResource("authInvalid.json").as("application/json")
+        }
+      }
+
     } { implicit port =>
       WsTestClient.withClient { client =>
         block(client)

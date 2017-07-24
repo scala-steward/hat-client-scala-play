@@ -1,0 +1,53 @@
+[
+  {
+    "endpoint": "rumpel/locations",
+    "recordId": "e965e022-6613-476a-a0cd-1f587a41b148",
+    "data": {
+      "id": 85998,
+      "data": {
+        "locations": {
+          "accuracy": "10.0",
+          "latitude": "51.671358277138",
+          "longitude": "0.101014673709963",
+          "timestamp": "2017-04-23T16:11:17+0000"
+        }
+      },
+      "name": "record 1",
+      "lastUpdated": "2017-04-23T16:11:17.000Z"
+    }
+  },
+  {
+    "endpoint": "rumpel/locations",
+    "recordId": "8f7afa92-39e2-48ab-8028-f5aebaa9918e",
+    "data": {
+      "id": 85997,
+      "data": {
+        "locations": {
+          "accuracy": "1414.0",
+          "latitude": "51.6658257133844",
+          "longitude": "0.080477950927866",
+          "timestamp": "2017-04-23T16:18:04+0000"
+        }
+      },
+      "name": "record 3",
+      "lastUpdated": "2017-04-23T16:18:04.000Z"
+    }
+  },
+  {
+    "endpoint": "rumpel/locations",
+    "recordId": "fcf1a26b-e49f-4457-915b-156e14140f38",
+    "data": {
+      "id": 85996,
+      "data": {
+        "locations": {
+          "accuracy": "1414.0",
+          "latitude": "51.674001392439",
+          "longitude": "0.100905202634514",
+          "timestamp": "2017-04-23T16:12:58+0000"
+        }
+      },
+      "name": "record 2",
+      "lastUpdated": "2017-04-23T16:12:58.000Z"
+    }
+  }
+]
