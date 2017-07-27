@@ -159,6 +159,8 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     }
   }
   implicit val hatStatusFormat: Format[HatStatus] = Json.format[HatStatus]
+
+  implicit val hatServiceFormat: Format[HatService] = Json.format[HatService]
 }
 
 object HatJsonFormats extends HatJsonFormats
