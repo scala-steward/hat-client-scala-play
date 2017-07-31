@@ -61,7 +61,7 @@ trait HatApplications {
 
     futureResponse.flatMap { response =>
       response.status match {
-        case CREATED =>
+        case OK =>
           response.json.validate[HatService] match {
             case s: JsSuccess[HatService] => Future.successful(s.get)
             case e: JsError =>
