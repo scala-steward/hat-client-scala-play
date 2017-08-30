@@ -11,7 +11,18 @@ package org.hatdex.hat.api.models
 
 import java.util.UUID
 
-case class User(userId: UUID, email: String, pass: Option[String], name: String, role: String, roles: Seq[UserRole])
+case class User(
+  userId: UUID,
+  email: String,
+  pass: Option[String],
+  name: String,
+  role: String,
+  roles: Seq[UserRole]) {
+  /*
+   * Return a copy of the user's object without sensitive details
+   */
+  lazy val clean: User = this.copy(pass = None)
+}
 
 sealed abstract class UserRole(roleTitle: String) {
   def title: String = roleTitle.toLowerCase
