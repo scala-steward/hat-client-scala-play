@@ -11,7 +11,7 @@ package org.hatdex.hat.api.services
 
 import java.util.UUID
 
-import org.hatdex.hat.api.models.{ ApiRecordValues, EndpointData, ErrorMessage }
+import org.hatdex.hat.api.models.{ DataDebitRequest, EndpointData, ErrorMessage, RichDataDebit }
 import org.hatdex.hat.api.services.Errors.{ ApiException, DuplicateDataException, UnauthorizedActionException }
 import play.api.Logger
 import play.api.http.Status._
@@ -127,4 +127,6 @@ trait HatRichData {
       }
     }
   }
+
 }
+

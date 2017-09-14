@@ -17,11 +17,13 @@ import scala.collection.immutable.HashMap
 
 trait DataStatsFormat extends DataDebitFormats {
   implicit val mapReads: Reads[HashMap[String, Long]] = new Reads[HashMap[String, Long]] {
-    def reads(jv: JsValue): JsResult[HashMap[String, Long]] =
-      JsSuccess(jv.as[HashMap[String, Long]].map {
+    def reads(jv: JsValue): JsResult[HashMap[String, Long]] = {
+      val fields: Seq[(String, Long)] = jv.as[JsObject].fields.map {
         case (k, v) =>
-          k -> v.asInstanceOf[Long]
-      })
+          k -> v.as[Long]
+      }
+      JsSuccess(HashMap[String, Long](fields: _*))
+    }
   }
 
   implicit val mapWrites: Writes[HashMap[String, Long]] = new Writes[HashMap[String, Long]] {
@@ -37,11 +39,11 @@ trait DataStatsFormat extends DataDebitFormats {
 
   implicit val endpointStatsFormat: Format[EndpointStats] = Json.format[EndpointStats]
 
-  private implicit val dataDebitStatsFormat = Json.format[DataDebitStats]
-  private implicit val dataCreditStatsFormat = Json.format[DataCreditStats]
-  private implicit val dataStorageStatsFormat = Json.format[DataStorageStats]
-  private implicit val inboundDataStatsFormat = Json.format[InboundDataStats]
-  private implicit val outboundDataStatsFormat = Json.format[OutboundDataStats]
+  protected implicit val dataDebitStatsFormat: Format[DataDebitStats] = Json.format[DataDebitStats]
+  protected implicit val dataCreditStatsFormat: Format[DataCreditStats] = Json.format[DataCreditStats]
+  protected implicit val dataStorageStatsFormat: Format[DataStorageStats] = Json.format[DataStorageStats]
+  protected implicit val inboundDataStatsFormat: Format[InboundDataStats] = Json.format[InboundDataStats]
+  protected implicit val outboundDataStatsFormat: Format[OutboundDataStats] = Json.format[OutboundDataStats]
 
   implicit val dataStatsFormat: Format[DataStats] = new Format[DataStats] {
     def reads(json: JsValue): JsResult[DataStats] = (json \ "statsType").as[String] match {
