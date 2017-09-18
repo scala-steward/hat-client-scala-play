@@ -176,17 +176,18 @@ case class PropertyQuery(
   endpoints: List[EndpointQuery],
   orderBy: Option[String],
   ordering: Option[String],
-  limit: Int)
+  limit: Option[Int])
 
 case class EndpointDataBundle(
     name: String,
     bundle: Map[String, PropertyQuery]) {
 
+  // Get a flat list of endpoint queries, primarily for detecting presence of data in a bundle
   lazy val flatEndpointQueries: Seq[EndpointQuery] = bundle.values
     .flatMap(_.endpoints.flatMap(endpointQueries))
     .toSeq
 
-  def endpointQueries(endpointQuery: EndpointQuery): Seq[EndpointQuery] = {
+  private def endpointQueries(endpointQuery: EndpointQuery): Seq[EndpointQuery] = {
     endpointQuery.links
       .map(_.flatMap(endpointQueries))
       .getOrElse(Seq()) :+ endpointQuery
@@ -215,10 +216,12 @@ case class DebitBundle(
   endDate: LocalDateTime,
   rolling: Boolean,
   enabled: Boolean,
+  conditions: Option[EndpointDataBundle],
   bundle: EndpointDataBundle)
 
 case class DataDebitRequest(
   bundle: EndpointDataBundle,
+  conditions: Option[EndpointDataBundle],
   startDate: LocalDateTime,
   endDate: LocalDateTime,
   rolling: Boolean)
