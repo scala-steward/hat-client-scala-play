@@ -83,3 +83,11 @@ case class OutboundDataStats(
   dataDebitId: String,
   stats: Seq[EndpointStats],
   logEntry: String) extends DataStats("outbound", time, logEntry) with RichDataStats
+
+case class DataDebitEvent(
+  statsType: String = "datadebitEvent",
+  dataDebit: RichDataDebit,
+  operation: String,
+  time: LocalDateTime,
+  user: User,
+  logEntry: String) extends DataStats("datadebitEvent", time, logEntry)

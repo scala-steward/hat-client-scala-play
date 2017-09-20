@@ -44,15 +44,18 @@ trait DataStatsFormat extends DataDebitFormats {
   protected implicit val dataStorageStatsFormat: Format[DataStorageStats] = Json.format[DataStorageStats]
   protected implicit val inboundDataStatsFormat: Format[InboundDataStats] = Json.format[InboundDataStats]
   protected implicit val outboundDataStatsFormat: Format[OutboundDataStats] = Json.format[OutboundDataStats]
+  protected implicit val dataDebitFormat = RichDataJsonFormats.dataDebitFormat
+  protected implicit val dataEventFormat: Format[DataDebitEvent] = Json.format[DataDebitEvent]
 
   implicit val dataStatsFormat: Format[DataStats] = new Format[DataStats] {
     def reads(json: JsValue): JsResult[DataStats] = (json \ "statsType").as[String] match {
-      case "datadebit"  => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
-      case "datacredit" => Json.fromJson[DataCreditStats](json)(dataCreditStatsFormat)
-      case "storage"    => Json.fromJson[DataStorageStats](json)(dataStorageStatsFormat)
-      case "inbound"    => Json.fromJson[InboundDataStats](json)(inboundDataStatsFormat)
-      case "outbound"   => Json.fromJson[OutboundDataStats](json)(outboundDataStatsFormat)
-      case statsType    => JsError(s"Unexpected JSON value $statsType in $json")
+      case "datadebit"      => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
+      case "datacredit"     => Json.fromJson[DataCreditStats](json)(dataCreditStatsFormat)
+      case "storage"        => Json.fromJson[DataStorageStats](json)(dataStorageStatsFormat)
+      case "inbound"        => Json.fromJson[InboundDataStats](json)(inboundDataStatsFormat)
+      case "outbound"       => Json.fromJson[OutboundDataStats](json)(outboundDataStatsFormat)
+      case "datadebitEvent" => Json.fromJson[DataDebitEvent](json)(dataEventFormat)
+      case statsType        => JsError(s"Unexpected JSON value $statsType in $json")
     }
 
     def writes(stats: DataStats): JsValue = {
@@ -62,6 +65,7 @@ trait DataStatsFormat extends DataDebitFormats {
         case ds: DataStorageStats  => Json.toJson(ds)(dataStorageStatsFormat)
         case ds: InboundDataStats  => Json.toJson(ds)(inboundDataStatsFormat)
         case ds: OutboundDataStats => Json.toJson(ds)(outboundDataStatsFormat)
+        case ds: DataDebitEvent    => Json.toJson(ds)(dataEventFormat)
       }
     }
   }

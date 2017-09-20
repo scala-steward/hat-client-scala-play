@@ -109,7 +109,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   val dataDebitWrites: Writes[RichDataDebit] = Json.writes[RichDataDebit]
 
   implicit val dataDebitFormat: Format[RichDataDebit] = Format(dataDebitReads, dataDebitWrites)
-
+  implicit val dataDebitValuesFormat: Format[RichDataDebitData] = Json.format[RichDataDebitData]
 }
 
 object RichDataJsonFormats extends RichDataJsonFormats
@@ -209,6 +209,10 @@ case class RichDataDebit(
     bundles.sortBy(_.dateCreated).headOption.map(_.dateCreated).getOrElse(LocalDateTime.now())
 
 }
+
+case class RichDataDebitData(
+  conditions: Option[Map[String, Boolean]],
+  bundle: Map[String, Seq[EndpointData]])
 
 case class DebitBundle(
   dateCreated: LocalDateTime,
