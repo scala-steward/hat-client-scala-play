@@ -26,10 +26,11 @@ case class DataTableStats(
   subTables: Option[Seq[DataTableStats]],
   valueCount: Int)
 
-sealed abstract class DataStats(
-  statsType: String,
-  time: LocalDateTime,
-  logEntry: String)
+sealed trait DataStats {
+  val statsType: String
+  val time: LocalDateTime
+  val logEntry: String
+}
 
 trait StatsForTables {
   val time: LocalDateTime
@@ -38,27 +39,30 @@ trait StatsForTables {
 }
 
 case class DataCreditStats(
-  statsType: String = "datacredit",
-  operation: String,
-  time: LocalDateTime,
-  user: User,
-  dataTableStats: Option[Seq[DataTableStats]],
-  logEntry: String) extends DataStats("datacredit", time, logEntry) with StatsForTables
+    operation: String,
+    time: LocalDateTime,
+    user: User,
+    dataTableStats: Option[Seq[DataTableStats]],
+    logEntry: String) extends DataStats with StatsForTables {
+  final val statsType: String = "datacredit"
+}
 
 case class DataDebitStats(
-  statsType: String = "datadebit",
-  dataDebit: ApiDataDebit,
-  operation: String,
-  time: LocalDateTime,
-  user: User,
-  dataTableStats: Option[Seq[DataTableStats]],
-  logEntry: String) extends DataStats("datadebit", time, logEntry) with StatsForTables
+    dataDebit: ApiDataDebit,
+    operation: String,
+    time: LocalDateTime,
+    user: User,
+    dataTableStats: Option[Seq[DataTableStats]],
+    logEntry: String) extends DataStats with StatsForTables {
+  final val statsType: String = "datadebit"
+}
 
 case class DataStorageStats(
-  statsType: String = "storage",
-  time: LocalDateTime,
-  dataTableStats: Seq[DataTableStats],
-  logEntry: String) extends DataStats("storage", time, logEntry)
+    time: LocalDateTime,
+    dataTableStats: Seq[DataTableStats],
+    logEntry: String) extends DataStats {
+  final val statsType: String = "storage"
+}
 
 sealed trait RichDataStats {
   val user: User
@@ -70,24 +74,27 @@ case class EndpointStats(
   propertyStats: HashMap[String, Long])
 
 case class InboundDataStats(
-  statsType: String = "inbound",
-  time: LocalDateTime,
-  user: User,
-  stats: Seq[EndpointStats],
-  logEntry: String) extends DataStats("inbound", time, logEntry) with RichDataStats
+    time: LocalDateTime,
+    user: User,
+    stats: Seq[EndpointStats],
+    logEntry: String) extends DataStats with RichDataStats {
+  final val statsType: String = "inbound"
+}
 
 case class OutboundDataStats(
-  statsType: String = "outbound",
-  time: LocalDateTime,
-  user: User,
-  dataDebitId: String,
-  stats: Seq[EndpointStats],
-  logEntry: String) extends DataStats("outbound", time, logEntry) with RichDataStats
+    time: LocalDateTime,
+    user: User,
+    dataDebitId: String,
+    stats: Seq[EndpointStats],
+    logEntry: String) extends DataStats with RichDataStats {
+  final val statsType: String = "outbound"
+}
 
 case class DataDebitEvent(
-  statsType: String = "datadebitEvent",
-  dataDebit: RichDataDebit,
-  operation: String,
-  time: LocalDateTime,
-  user: User,
-  logEntry: String) extends DataStats("datadebitEvent", time, logEntry)
+    dataDebit: RichDataDebit,
+    operation: String,
+    time: LocalDateTime,
+    user: User,
+    logEntry: String) extends DataStats {
+  final val statsType: String = "datadebitEvent"
+}

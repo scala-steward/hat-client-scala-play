@@ -59,7 +59,7 @@ trait DataStatsFormat extends DataDebitFormats {
     }
 
     def writes(stats: DataStats): JsValue = {
-      stats match {
+      val statsJson = stats match {
         case ds: DataDebitStats    => Json.toJson(ds)(dataDebitStatsFormat)
         case ds: DataCreditStats   => Json.toJson(ds)(dataCreditStatsFormat)
         case ds: DataStorageStats  => Json.toJson(ds)(dataStorageStatsFormat)
@@ -67,6 +67,7 @@ trait DataStatsFormat extends DataDebitFormats {
         case ds: OutboundDataStats => Json.toJson(ds)(outboundDataStatsFormat)
         case ds: DataDebitEvent    => Json.toJson(ds)(dataEventFormat)
       }
+      statsJson.as[JsObject].+(("statsType", Json.toJson(stats.statsType)))
     }
   }
 }
