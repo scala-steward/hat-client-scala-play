@@ -15,6 +15,7 @@ import play.api.libs.ws.WSClient
 
 class HatClient(val ws: WSClient, val hatAddress: String, override val schema: String) extends HatAuthentication
     with HatDataDebits
+    with HatDataDebitsV2
     with HatDataTables
     with HatDataRecords
     with HatRichData
