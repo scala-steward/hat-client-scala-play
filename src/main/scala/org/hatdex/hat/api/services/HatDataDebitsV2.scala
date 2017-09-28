@@ -3,7 +3,7 @@ package org.hatdex.hat.api.services
 import org.hatdex.hat.api.models.{ DataDebitRequest, EndpointData, RichDataDebit }
 import org.hatdex.hat.api.services.Errors.{ ApiException, UnauthorizedActionException }
 import play.api.Logger
-import play.api.http.Status.{ FORBIDDEN, OK }
+import play.api.http.Status._
 import play.api.libs.json.{ JsError, JsSuccess, Json }
 import play.api.libs.ws.{ WSClient, WSRequest, WSResponse }
 
@@ -107,7 +107,7 @@ trait HatDataDebitsV2 {
 
     futureResponse.flatMap { response =>
       response.status match {
-        case OK =>
+        case CREATED =>
           response.json.validate[RichDataDebit] match {
             case s: JsSuccess[RichDataDebit] => Future.successful(s.get)
             case e: JsError =>
