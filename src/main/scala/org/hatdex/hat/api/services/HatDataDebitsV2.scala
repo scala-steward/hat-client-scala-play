@@ -1,6 +1,6 @@
 package org.hatdex.hat.api.services
 
-import org.hatdex.hat.api.models.{ DataDebitRequest, EndpointData, RichDataDebit }
+import org.hatdex.hat.api.models.{ DataDebitRequest, RichDataDebit, RichDataDebitData }
 import org.hatdex.hat.api.services.Errors.{ ApiException, UnauthorizedActionException }
 import play.api.Logger
 import play.api.http.Status._
@@ -71,7 +71,7 @@ trait HatDataDebitsV2 {
     }
   }
 
-  def getDataDebitValues(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[Map[String, Seq[EndpointData]]] = {
+  def getDataDebitValues(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[RichDataDebitData] = {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId/values")
       .withVirtualHost(hatAddress)
@@ -82,8 +82,8 @@ trait HatDataDebitsV2 {
     futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[Map[String, Seq[EndpointData]]] match {
-            case s: JsSuccess[Map[String, Seq[EndpointData]]] => Future.successful(s.get)
+          response.json.validate[RichDataDebitData] match {
+            case s: JsSuccess[RichDataDebitData] => Future.successful(s.get)
             case e: JsError =>
               val message = s"Error parsing response from a successful data debit values request: $e"
               logger.error(message)
