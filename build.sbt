@@ -2,7 +2,6 @@ import Dependencies._
 
 libraryDependencies ++= Seq(
   Library.Play.ws,
-  Library.Play.cache,
   Library.Play.test,
   Library.Play.specs2,
   Library.Specs2.matcherExtra,

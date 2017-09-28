@@ -39,7 +39,7 @@ trait HatDataDebitsV2 {
           Future.failed(UnauthorizedActionException(s"Retrieving data debit $dataDebitId from $hatAddress unauthorized"))
         case _ =>
           logger.error(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}")
-          Future.failed(new RuntimeException(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}"))
+          Future.failed(new ApiException(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}"))
       }
     }
   }
@@ -66,7 +66,7 @@ trait HatDataDebitsV2 {
           Future.failed(UnauthorizedActionException(s"Retrieving data debits from $hatAddress unauthorized"))
         case _ =>
           logger.error(s"Retrieving data debits from $hatAddress failed ${response.body}")
-          Future.failed(new RuntimeException(s"Retrieving data debits from $hatAddress failed ${response.body}"))
+          Future.failed(new ApiException(s"Retrieving data debits from $hatAddress failed ${response.body}"))
       }
     }
   }
@@ -93,7 +93,7 @@ trait HatDataDebitsV2 {
           Future.failed(UnauthorizedActionException(s"Retrieving data debit $dataDebitId values from $hatAddress unauthorized"))
         case _ =>
           logger.error(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}")
-          Future.failed(new RuntimeException(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}"))
+          Future.failed(new ApiException(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}"))
       }
     }
   }
@@ -119,7 +119,7 @@ trait HatDataDebitsV2 {
           Future.failed(UnauthorizedActionException(s"Registering data debit $dataDebitId with $hatAddress unauthorized"))
         case _ =>
           logger.error(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}")
-          Future.failed(new RuntimeException(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}"))
+          Future.failed(new ApiException(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}"))
       }
     }
   }

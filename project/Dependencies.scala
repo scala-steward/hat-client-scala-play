@@ -25,7 +25,6 @@ object Dependencies {
     object Play {
       val version = play.core.PlayVersion.current
       val ws = "com.typesafe.play" %% "play-ws" % version
-      val cache = "com.typesafe.play" %% "play-cache" % version
       val test = "com.typesafe.play" %% "play-test" % version
       val specs2 = "com.typesafe.play" %% "play-specs2" % version
     }

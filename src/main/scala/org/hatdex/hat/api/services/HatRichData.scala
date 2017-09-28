@@ -43,7 +43,7 @@ trait HatRichData {
             case s: JsSuccess[Seq[EndpointData]] => Future.successful(s.get)
             case e: JsError =>
               logger.error(s"Error parsing response from a successful data records post: $e")
-              Future.failed(new RuntimeException(s"Error parsing response from a successful data records post: $e"))
+              Future.failed(new ApiException(s"Error parsing response from a successful data records post: $e"))
           }
         case FORBIDDEN =>
           Future.failed(UnauthorizedActionException(s"Saving data for hat $hatAddress, namespsace $namespace, endpoint $endpoint forbidden"))
@@ -55,7 +55,7 @@ trait HatRichData {
           }
         case _ =>
           logger.error(s"Creating new records for $hatAddress failed, $response, ${response.body}")
-          Future.failed(new RuntimeException(s"Creating new records for $hatAddress failed unexpectedly"))
+          Future.failed(new ApiException(s"Creating new records for $hatAddress failed unexpectedly"))
       }
     }
   }
@@ -74,7 +74,7 @@ trait HatRichData {
             case s: JsSuccess[Seq[EndpointData]] => Future.successful(s.get)
             case e: JsError =>
               logger.error(s"Error parsing response from a successful data records post: $e")
-              Future.failed(new RuntimeException(s"Error parsing response from a successful data records post: $e"))
+              Future.failed(new ApiException(s"Error parsing response from a successful data records post: $e"))
           }
         case FORBIDDEN =>
           Future.failed(UnauthorizedActionException(s"Saving data for hat $hatAddress forbidden"))
@@ -86,7 +86,7 @@ trait HatRichData {
           }
         case _ =>
           logger.error(s"Creating new records for $hatAddress failed, $response, ${response.body}")
-          Future.failed(new RuntimeException(s"Creating new records for $hatAddress failed unexpectedly"))
+          Future.failed(new ApiException(s"Creating new records for $hatAddress failed unexpectedly"))
       }
     }
   }
@@ -123,7 +123,7 @@ trait HatRichData {
           Future.failed(UnauthorizedActionException(s"Retrieving data from $hatAddress, namespsace $namespace, endpoint $endpoint unauthorized"))
         case _ =>
           logger.error(s"Retrieving records for $hatAddress failed, $response, ${response.body}")
-          Future.failed(new RuntimeException(s"Retrieving records for $hatAddress failed unexpectedly"))
+          Future.failed(new ApiException(s"Retrieving records for $hatAddress failed unexpectedly"))
       }
     }
   }
