@@ -204,9 +204,18 @@ case class RichDataDebit(
 
   private implicit def dateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isAfter _)
   lazy val activeBundle: Option[DebitBundle] =
-    bundles.filter(_.enabled).sortBy(_.dateCreated).headOption
+    bundles.filter { b =>
+      b.enabled && b.startDate.isBefore(LocalDateTime.now()) &&
+        (b.endDate.isAfter(LocalDateTime.now()) || b.rolling)
+    }
+      .sortBy(_.dateCreated)
+      .headOption
+
   lazy val lastUpdated: LocalDateTime =
-    bundles.sortBy(_.dateCreated).headOption.map(_.dateCreated).getOrElse(LocalDateTime.now())
+    bundles.sortBy(_.dateCreated)
+      .headOption
+      .map(_.dateCreated)
+      .getOrElse(LocalDateTime.now())
 
 }
 
