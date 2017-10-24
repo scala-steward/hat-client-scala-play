@@ -9,20 +9,17 @@
 
 package org.hatdex.hat.api.services
 
-import org.hatdex.hat.api.json.HatJsonFormats
-import org.hatdex.hat.api.models.{ ApiRecordValues, EndpointData }
+import org.hatdex.hat.api.models.EndpointData
 import org.hatdex.hat.api.services.Errors.UnauthorizedActionException
 import org.hatdex.hat.api.services.MockHatServer.withHatClient
 import org.specs2.concurrent.ExecutionEnv
 import org.specs2.execute.Result
 import org.specs2.matcher.MatchResult
 import org.specs2.mutable.Specification
-import org.specs2.matcher.MatcherMacros
 import play.api.Logger
 import play.api.libs.json.{ JsArray, Json }
 import play.api.mvc.Results
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.io.Source._

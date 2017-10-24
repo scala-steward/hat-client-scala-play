@@ -42,60 +42,60 @@ object ComparisonOperators {
 import org.hatdex.hat.api.models.ComparisonOperators.ComparisonOperator
 
 case class ApiBundleTableCondition(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  field: ApiDataField,
-  value: String,
-  operator: ComparisonOperator)
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    field: ApiDataField,
+    value: String,
+    operator: ComparisonOperator)
 
 case class ApiBundleTableSlice(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  table: ApiDataTable,
-  conditions: Seq[ApiBundleTableCondition])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    table: ApiDataTable,
+    conditions: Seq[ApiBundleTableCondition])
 
 case class ApiBundleTable(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  name: String,
-  table: ApiDataTable, // Used to tag which table is bundled
-  slices: Option[Seq[ApiBundleTableSlice]],
-  data: Option[Seq[ApiDataRecord]])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    name: String,
+    table: ApiDataTable, // Used to tag which table is bundled
+    slices: Option[Seq[ApiBundleTableSlice]],
+    data: Option[Seq[ApiDataRecord]])
 
 // Data is optional, only used on the outbound
 
 case class ApiBundleCombination(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  name: String,
-  bundleTable: ApiBundleTable,
-  bundleJoinField: Option[ApiDataField],
-  bundleTableField: Option[ApiDataField],
-  operator: Option[ComparisonOperator])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    name: String,
+    bundleTable: ApiBundleTable,
+    bundleJoinField: Option[ApiDataField],
+    bundleTableField: Option[ApiDataField],
+    operator: Option[ComparisonOperator])
 
 case class ApiBundleDataSourceField(name: String, description: String, fields: Option[List[ApiBundleDataSourceField]])
 case class ApiBundleDataSourceDataset(name: String, description: String, fields: List[ApiBundleDataSourceField])
 case class ApiBundleDataSourceStructure(source: String, datasets: List[ApiBundleDataSourceDataset])
 
 case class ApiBundleContextless(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  name: String,
-  sources: Option[Seq[ApiBundleDataSourceStructure]])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    name: String,
+    sources: Option[Seq[ApiBundleDataSourceStructure]])
 
 case class ApiBundleContextlessDatasetData(
-  name: String,
-  table: ApiDataTable, // Used to tag which table is bundled
-  data: Option[Seq[ApiDataRecord]])
+    name: String,
+    table: ApiDataTable, // Used to tag which table is bundled
+    data: Option[Seq[ApiDataRecord]])
 
 // Data is optional, only used on the outbound
 
 case class ApiBundleContextlessData(
-  id: Int,
-  name: String,
-  dataGroups: Map[String, Seq[ApiBundleContextlessDatasetData]])
+    id: Int,
+    name: String,
+    dataGroups: Map[String, Seq[ApiBundleContextlessDatasetData]])

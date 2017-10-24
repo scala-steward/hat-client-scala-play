@@ -12,19 +12,19 @@ package org.hatdex.hat.api.models
 import org.joda.time.LocalDateTime
 
 case class ApiDataField(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  tableId: Option[Int],
-  name: String,
-  values: Option[Seq[ApiDataValue]])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    tableId: Option[Int],
+    name: String,
+    values: Option[Seq[ApiDataValue]])
 
 case class ApiDataRecord(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  name: String,
-  tables: Option[Seq[ApiDataTable]])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    name: String,
+    tables: Option[Seq[ApiDataTable]])
 
 object ApiDataRecord {
   def flattenRecordValues(record: ApiDataRecord): Map[String, Any] = {
@@ -35,13 +35,13 @@ object ApiDataRecord {
 }
 
 case class ApiDataTable(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  name: String,
-  source: String,
-  fields: Option[Seq[ApiDataField]],
-  subTables: Option[Seq[ApiDataTable]])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    name: String,
+    source: String,
+    fields: Option[Seq[ApiDataField]],
+    subTables: Option[Seq[ApiDataTable]])
 
 object ApiDataTable {
   /*
@@ -86,13 +86,13 @@ object ApiDataTable {
 }
 
 case class ApiDataValue(
-  id: Option[Int],
-  dateCreated: Option[LocalDateTime],
-  lastUpdated: Option[LocalDateTime],
-  value: String,
-  field: Option[ApiDataField],
-  record: Option[ApiDataRecord])
+    id: Option[Int],
+    dateCreated: Option[LocalDateTime],
+    lastUpdated: Option[LocalDateTime],
+    value: String,
+    field: Option[ApiDataField],
+    record: Option[ApiDataRecord])
 
 case class ApiRecordValues(
-  record: ApiDataRecord,
-  values: Seq[ApiDataValue])
+    record: ApiDataRecord,
+    values: Seq[ApiDataValue])

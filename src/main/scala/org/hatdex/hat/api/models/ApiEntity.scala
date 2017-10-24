@@ -10,9 +10,9 @@
 package org.hatdex.hat.api.models
 
 case class ApiEntity(
-  kind: String,
-  event: Option[ApiEvent],
-  person: Option[ApiPerson],
-  location: Option[ApiLocation],
-  thing: Option[ApiThing],
-  organisation: Option[ApiOrganisation])
+    kind: String,
+    event: Option[ApiEvent],
+    person: Option[ApiPerson],
+    location: Option[ApiLocation],
+    thing: Option[ApiThing],
+    organisation: Option[ApiOrganisation])

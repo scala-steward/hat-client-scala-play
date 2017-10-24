@@ -10,14 +10,14 @@
 package org.hatdex.hat.api.models
 
 case class ApiPerson(
-  id: Option[Int],
-  name: String,
-  personId: String,
-  staticProperties: Option[Seq[ApiPropertyRelationshipStatic]],
-  dynamicProperties: Option[Seq[ApiPropertyRelationshipDynamic]],
-  people: Option[Seq[ApiPersonRelationship]],
-  locations: Option[Seq[ApiLocationRelationship]],
-  organisations: Option[Seq[ApiOrganisationRelationship]])
+    id: Option[Int],
+    name: String,
+    personId: String,
+    staticProperties: Option[Seq[ApiPropertyRelationshipStatic]],
+    dynamicProperties: Option[Seq[ApiPropertyRelationshipDynamic]],
+    people: Option[Seq[ApiPersonRelationship]],
+    locations: Option[Seq[ApiLocationRelationship]],
+    organisations: Option[Seq[ApiOrganisationRelationship]])
 
 case class ApiPersonRelationship(relationshipType: String, person: ApiPerson)
 

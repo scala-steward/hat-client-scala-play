@@ -40,16 +40,16 @@ object HatFileStatus {
 case class ApiHatFilePermissions(userId: UUID, contentReadable: Boolean)
 
 case class ApiHatFile(
-  fileId: Option[String],
-  name: String,
-  source: String,
-  dateCreated: Option[DateTime],
-  lastUpdated: Option[DateTime],
-  tags: Option[Seq[String]],
-  title: Option[String],
-  description: Option[String],
-  sourceURL: Option[String],
-  status: Option[HatFileStatus.Status],
-  contentUrl: Option[String] = None,
-  contentPublic: Option[Boolean] = Some(false),
-  permissions: Option[Seq[ApiHatFilePermissions]] = None)
+    fileId: Option[String],
+    name: String,
+    source: String,
+    dateCreated: Option[DateTime],
+    lastUpdated: Option[DateTime],
+    tags: Option[Seq[String]],
+    title: Option[String],
+    description: Option[String],
+    sourceURL: Option[String],
+    status: Option[HatFileStatus.Status],
+    contentUrl: Option[String] = None,
+    contentPublic: Option[Boolean] = Some(false),
+    permissions: Option[Seq[ApiHatFilePermissions]] = None)

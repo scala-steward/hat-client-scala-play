@@ -30,7 +30,7 @@ trait HatApplications {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/application")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
 
@@ -55,7 +55,7 @@ trait HatApplications {
   def saveApplication(access_token: String, application: HatService)(implicit ec: ExecutionContext): Future[HatService] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/application")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(application))
 

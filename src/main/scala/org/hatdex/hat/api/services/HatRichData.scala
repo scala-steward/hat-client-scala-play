@@ -11,7 +11,7 @@ package org.hatdex.hat.api.services
 
 import java.util.UUID
 
-import org.hatdex.hat.api.models.{ DataDebitRequest, EndpointData, ErrorMessage, RichDataDebit }
+import org.hatdex.hat.api.models.{ EndpointData, ErrorMessage }
 import org.hatdex.hat.api.services.Errors.{ ApiException, DuplicateDataException, UnauthorizedActionException }
 import play.api.Logger
 import play.api.http.Status._
@@ -32,7 +32,7 @@ trait HatRichData {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data/$namespace/$endpoint")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(data)
 
@@ -63,7 +63,7 @@ trait HatRichData {
   def saveData(access_token: String, data: Seq[EndpointData])(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-batch")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(data))
 
@@ -104,8 +104,8 @@ trait HatRichData {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data/$namespace/$endpoint")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
-      .withQueryString(queryParameter: _*)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withQueryStringParameters(queryParameter: _*)
 
     val futureResponse: Future[WSResponse] = request.get()
 

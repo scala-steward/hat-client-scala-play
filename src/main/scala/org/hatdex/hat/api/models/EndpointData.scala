@@ -4,7 +4,6 @@ import java.util.UUID
 
 import org.hatdex.hat.api.json.HatJsonFormats
 import org.joda.time.LocalDateTime
-import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -17,7 +16,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
     (__ \ "links").lazyWriteNullable(implicitly[Format[Seq[EndpointData]]]))(unlift(EndpointData.unapply))
 
   val endpointDataReads: Reads[EndpointData] = (
-    (__ \ "endpoint").read[String].filter(ValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
+    (__ \ "endpoint").read[String].filter(JsonValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
     (__ \ "recordId").readNullable[UUID] and
     (__ \ "data").read[JsValue] and
     (__ \ "links").lazyReadNullable(implicitly[Reads[Seq[EndpointData]]]))(EndpointData.apply _)
@@ -27,7 +26,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   private val fieldTransDateTimeExtractFormat = Json.format[FieldTransformation.DateTimeExtract]
   private val fieldTransTimestampExtractFormat = Json.format[FieldTransformation.TimestampExtract]
 
-  private implicit val apiFieldTransformationFormat: Format[FieldTransformation.Transformation] = new Format[FieldTransformation.Transformation] {
+  implicit val apiFieldTransformationFormat: Format[FieldTransformation.Transformation] = new Format[FieldTransformation.Transformation] {
     def reads(json: JsValue): JsResult[FieldTransformation.Transformation] = (json \ "transformation").as[String] match {
       case "identity"         => JsSuccess(FieldTransformation.Identity())
       case "datetimeExtract"  => Json.fromJson[FieldTransformation.DateTimeExtract](json)(fieldTransDateTimeExtractFormat)
@@ -52,7 +51,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   private val filterOperatorBetweenFormat = Json.format[FilterOperator.Between]
   private val filterOperatorFindFormat = Json.format[FilterOperator.Find]
 
-  private implicit val apiFilterOperatorFormat: Format[FilterOperator.Operator] = new Format[FilterOperator.Operator] {
+  implicit val apiFilterOperatorFormat: Format[FilterOperator.Operator] = new Format[FilterOperator.Operator] {
     def reads(json: JsValue): JsResult[FilterOperator.Operator] = (json \ "operator").as[String] match {
       case "contains"     => Json.fromJson[FilterOperator.Contains](json)(filterOperatorContainsFormat)
       case "in"           => Json.fromJson[FilterOperator.In](json)(filterOperatorInFormat)
@@ -75,7 +74,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   implicit val endpointQueryFilterFormat: Format[EndpointQueryFilter] = Json.format[EndpointQueryFilter]
 
   val endpointQueryRead: Reads[EndpointQuery] = (
-    (__ \ "endpoint").read[String].filter(ValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
+    (__ \ "endpoint").read[String].filter(JsonValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
     (__ \ "mapping").readNullable[JsValue] and
     (__ \ "filters").readNullable[Seq[EndpointQueryFilter]] and
     (__ \ "links").lazyReadNullable(implicitly[Format[Seq[EndpointQuery]]]))(EndpointQuery.apply _)
@@ -91,7 +90,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   implicit val propertyQueryFormat: Format[PropertyQuery] = Json.format[PropertyQuery]
 
   val endpointDatabundleRead: Reads[EndpointDataBundle] = (
-    (__ \ "name").read[String].filter(ValidationError("Bundle name invalid"))(_.matches("[0-9a-zA-Z-]+")) and
+    (__ \ "name").read[String].filter(JsonValidationError("Bundle name invalid"))(_.matches("[0-9a-zA-Z-]+")) and
     (__ \ "bundle").read[Map[String, PropertyQuery]])(EndpointDataBundle.apply _)
 
   val endpointDatabundleWrite: Writes[EndpointDataBundle] = Json.writes[EndpointDataBundle]
@@ -102,7 +101,7 @@ trait RichDataJsonFormats extends HatJsonFormats {
   implicit val dataDebitRequestFormat: Format[DataDebitRequest] = Json.format[DataDebitRequest]
 
   val dataDebitReads: Reads[RichDataDebit] = (
-    (__ \ "dataDebitKey").read[String].filter(ValidationError("Data Debit Key invalid"))(_.matches("[0-9a-zA-Z-]+")) and
+    (__ \ "dataDebitKey").read[String].filter(JsonValidationError("Data Debit Key invalid"))(_.matches("[0-9a-zA-Z-]+")) and
     (__ \ "dateCreated").read[LocalDateTime] and
     (__ \ "client").read[User] and
     (__ \ "bundles").read[Seq[DebitBundle]])(RichDataDebit.apply _)
@@ -115,10 +114,10 @@ trait RichDataJsonFormats extends HatJsonFormats {
 object RichDataJsonFormats extends RichDataJsonFormats
 
 case class EndpointData(
-  endpoint: String,
-  recordId: Option[UUID],
-  data: JsValue,
-  links: Option[Seq[EndpointData]])
+    endpoint: String,
+    recordId: Option[UUID],
+    data: JsValue,
+    links: Option[Seq[EndpointData]])
 
 object FilterOperator {
   trait Operator {
@@ -173,10 +172,10 @@ case class EndpointQuery(
 }
 
 case class PropertyQuery(
-  endpoints: List[EndpointQuery],
-  orderBy: Option[String],
-  ordering: Option[String],
-  limit: Option[Int])
+    endpoints: List[EndpointQuery],
+    orderBy: Option[String],
+    ordering: Option[String],
+    limit: Option[Int])
 
 case class EndpointDataBundle(
     name: String,
@@ -220,22 +219,22 @@ case class RichDataDebit(
 }
 
 case class RichDataDebitData(
-  conditions: Option[Map[String, Boolean]],
-  bundle: Map[String, Seq[EndpointData]])
+    conditions: Option[Map[String, Boolean]],
+    bundle: Map[String, Seq[EndpointData]])
 
 case class DebitBundle(
-  dateCreated: LocalDateTime,
-  startDate: LocalDateTime,
-  endDate: LocalDateTime,
-  rolling: Boolean,
-  enabled: Boolean,
-  conditions: Option[EndpointDataBundle],
-  bundle: EndpointDataBundle)
+    dateCreated: LocalDateTime,
+    startDate: LocalDateTime,
+    endDate: LocalDateTime,
+    rolling: Boolean,
+    enabled: Boolean,
+    conditions: Option[EndpointDataBundle],
+    bundle: EndpointDataBundle)
 
 case class DataDebitRequest(
-  bundle: EndpointDataBundle,
-  conditions: Option[EndpointDataBundle],
-  startDate: LocalDateTime,
-  endDate: LocalDateTime,
-  rolling: Boolean)
+    bundle: EndpointDataBundle,
+    conditions: Option[EndpointDataBundle],
+    startDate: LocalDateTime,
+    endDate: LocalDateTime,
+    rolling: Boolean)
 

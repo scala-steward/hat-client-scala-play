@@ -34,7 +34,7 @@ trait HatDataDebits {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/dataDebit/$dataDebitId/values")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
     futureResponse.flatMap { response =>
@@ -59,7 +59,7 @@ trait HatDataDebits {
     definitionStructure: List[ApiBundleDataSourceStructure])(implicit ec: ExecutionContext): Future[ApiDataDebit] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/dataDebit/propose")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val bundle = ApiBundleContextless(None, None, None, s"Bundle for Offer $title", Some(definitionStructure))
 

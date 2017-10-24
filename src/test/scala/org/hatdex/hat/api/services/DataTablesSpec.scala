@@ -22,7 +22,6 @@ import play.api.mvc.Results
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.io.Source._
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class DataTablesSpec(implicit ee: ExecutionEnv) extends Specification {
 

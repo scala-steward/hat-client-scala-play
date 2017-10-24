@@ -9,11 +9,7 @@
 
 package org.hatdex.hat.api.models
 
-import java.util.UUID
-
-import org.joda.time.LocalDateTime
 import scala.math.BigDecimal
-import scala.math.BigDecimal.RoundingMode
 
 object StatusKind {
   sealed trait Kind {

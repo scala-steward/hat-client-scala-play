@@ -30,7 +30,7 @@ trait HatAuthentication {
 
   def retrievePublicKey()(implicit ec: ExecutionContext): Future[String] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/publickey")
-      .withHeaders("Accept" -> "text/plain")
+      .withHttpHeaders("Accept" -> "text/plain")
       .withVirtualHost(hatAddress)
 
     request.get().map { response =>
@@ -45,9 +45,9 @@ trait HatAuthentication {
   def authenticateForToken(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/users/access_token")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json")
-      .withHeaders("username" -> username)
-      .withHeaders("password" -> password)
+      .withHttpHeaders("Accept" -> "application/json")
+      .withHttpHeaders("username" -> username)
+      .withHttpHeaders("password" -> password)
 
     logger.debug(s"Authenticate for token with HAT at ${request.url}")
 
@@ -76,7 +76,7 @@ trait HatAuthentication {
   def createAccount(access_token: String, hatUser: User)(implicit ec: ExecutionContext): Future[UUID] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/users/user")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     logger.debug(s"Create account request ${request.uri}")
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(hatUser))
@@ -95,7 +95,7 @@ trait HatAuthentication {
   def updateAccount(access_token: String, hatUser: User)(implicit ec: ExecutionContext): Future[UUID] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/users/user/${hatUser.userId}/update")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     logger.debug(s"Update account request ${request.uri}")
     val futureResponse: Future[WSResponse] = request.put(Json.toJson(hatUser))
@@ -114,7 +114,7 @@ trait HatAuthentication {
   def enableAccount(access_token: String, userId: UUID)(implicit ec: ExecutionContext): Future[Boolean] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/users/user/$userId/enable")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     logger.debug(s"Enable account $userId on $hatAddress")
     val futureResponse: Future[WSResponse] = request.put("")

@@ -12,7 +12,7 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val crossScala = Seq("2.11.8")
+    val crossScala = Seq("2.12.4", "2.11.8")
     val scalaVersion = crossScala.head
   }
 
@@ -24,13 +24,15 @@ object Dependencies {
   object Library {
     object Play {
       val version = play.core.PlayVersion.current
-      val ws = "com.typesafe.play" %% "play-ws" % version
+      val ws = "com.typesafe.play" %% "play-ahc-ws" % version
       val test = "com.typesafe.play" %% "play-test" % version
       val specs2 = "com.typesafe.play" %% "play-specs2" % version
+      val json = "com.typesafe.play" %% "play-json" % version
+      val jsonJoda = "com.typesafe.play" %% "play-json-joda" % version
     }
 
     object Specs2 {
-      private val version = "3.6.6"
+      private val version = "3.8.9"
       val core = "org.specs2" %% "specs2-core" % version
       val matcherExtra = "org.specs2" %% "specs2-matcher-extra" % version
       val mock = "org.specs2" %% "specs2-mock" % version

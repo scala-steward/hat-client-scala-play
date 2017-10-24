@@ -9,7 +9,6 @@
 
 package org.hatdex.hat.api.json
 
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 import scala.util.Try
@@ -21,9 +20,9 @@ trait UuidMarshalling {
     def reads(json: JsValue) = {
       json match {
         case JsString(s) =>
-          parseUUID(s).map(JsSuccess(_)).getOrElse(JsError(Seq(JsPath() -> Seq(ValidationError("Expected UUID string")))))
+          parseUUID(s).map(JsSuccess(_)).getOrElse(JsError(Seq(JsPath() -> Seq(JsonValidationError("Expected UUID string")))))
         case _ =>
-          JsError(Seq(JsPath() -> Seq(ValidationError("Expected UUID string"))))
+          JsError(Seq(JsPath() -> Seq(JsonValidationError("Expected UUID string"))))
       }
     }
   }

@@ -9,11 +9,10 @@
 
 package org.hatdex.hat.api.json
 
-import play.api.Logger
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 trait DateTimeMarshalling {
+
   implicit object DefaultJodaDateTimeWrites extends Writes[org.joda.time.DateTime] {
     def writes(d: org.joda.time.DateTime): JsValue = JsString(d.toString)
   }
@@ -29,7 +28,7 @@ trait DateTimeMarshalling {
         case Some(d) => JsSuccess(d)
         case None    => JsSuccess(new DateTime(0)) // JsError(Seq(JsPath() -> Seq(ValidationError("validate.error.expected.date.isoformat", "ISO8601"))))
       }
-      case _ => JsError(Seq(JsPath() -> Seq(ValidationError("validate.error.expected.date"))))
+      case _ => JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.date"))))
     }
 
     private def parseDateTime(input: String): Option[DateTime] = {

@@ -30,7 +30,7 @@ trait HatDataRecords {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/data/record/values")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(records))
 

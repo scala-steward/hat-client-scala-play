@@ -22,9 +22,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.io.Source._
 
-// Using global execution context in tests only
-import scala.concurrent.ExecutionContext.Implicits.global
-
 class DataDebitsSpec(implicit ee: ExecutionEnv) extends Specification {
 
   def awaiting[T]: Future[MatchResult[T]] => Result = { _.await }

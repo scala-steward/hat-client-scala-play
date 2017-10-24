@@ -14,17 +14,17 @@ import org.joda.time.LocalDateTime
 import scala.collection.immutable.HashMap
 
 case class DataFieldStats(
-  name: String,
-  tableName: String,
-  tableSource: String,
-  valueCount: Int)
+    name: String,
+    tableName: String,
+    tableSource: String,
+    valueCount: Int)
 
 case class DataTableStats(
-  name: String,
-  source: String,
-  fields: Seq[DataFieldStats],
-  subTables: Option[Seq[DataTableStats]],
-  valueCount: Int)
+    name: String,
+    source: String,
+    fields: Seq[DataFieldStats],
+    subTables: Option[Seq[DataTableStats]],
+    valueCount: Int)
 
 sealed trait DataStats {
   val statsType: String
@@ -70,8 +70,8 @@ sealed trait RichDataStats {
 }
 
 case class EndpointStats(
-  endpoint: String,
-  propertyStats: HashMap[String, Long])
+    endpoint: String,
+    propertyStats: HashMap[String, Long])
 
 case class InboundDataStats(
     time: LocalDateTime,

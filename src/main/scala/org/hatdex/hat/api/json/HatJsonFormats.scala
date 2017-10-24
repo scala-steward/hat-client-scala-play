@@ -18,6 +18,9 @@ import play.api.libs.json._
 import scala.util.{ Failure, Success, Try }
 
 trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDateTimeMarshalling {
+  import play.api.libs.json.JodaWrites._
+  import play.api.libs.json.JodaReads._
+
   implicit val userRoleFormat: Format[UserRole] = new Format[UserRole] {
     def reads(json: JsValue): JsResult[UserRole] = {
       val role = (json \ "role").as[String]

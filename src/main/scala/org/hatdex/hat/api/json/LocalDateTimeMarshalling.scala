@@ -9,10 +9,10 @@
 
 package org.hatdex.hat.api.json
 
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 trait LocalDateTimeMarshalling {
+
   implicit object DefaultJodaLocalDateTimeWrites extends Writes[org.joda.time.LocalDateTime] {
     def writes(d: org.joda.time.LocalDateTime): JsValue = JsString(d.toDateTime().toString("yyyy-MM-dd'T'HH:mm:ssZ"))
   }
@@ -26,9 +26,9 @@ trait LocalDateTimeMarshalling {
       case JsNumber(d) => JsSuccess(new LocalDateTime(d.toLong))
       case JsString(s) => parseDateTime(s) match {
         case Some(d) => JsSuccess(d)
-        case None    => JsError(Seq(JsPath() -> Seq(ValidationError("validate.error.expected.date.isoformat", "ISO8601"))))
+        case None    => JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.date.isoformat", "ISO8601"))))
       }
-      case _ => JsError(Seq(JsPath() -> Seq(ValidationError("validate.error.expected.date"))))
+      case _ => JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.date"))))
     }
 
     private def parseDateTime(input: String): Option[LocalDateTime] = {

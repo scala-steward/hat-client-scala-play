@@ -26,7 +26,7 @@ trait HatSystem {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/system/update")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
     futureResponse.flatMap { response =>

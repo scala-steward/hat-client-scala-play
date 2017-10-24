@@ -21,7 +21,7 @@ trait HatDataDebitsV2 {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
 
@@ -48,7 +48,7 @@ trait HatDataDebitsV2 {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
 
@@ -75,7 +75,7 @@ trait HatDataDebitsV2 {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId/values")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
 
@@ -101,7 +101,7 @@ trait HatDataDebitsV2 {
   def registerDataDebit(access_token: String, dataDebitId: String, dataDebit: DataDebitRequest)(implicit ec: ExecutionContext): Future[RichDataDebit] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(dataDebit))
 

@@ -31,8 +31,8 @@ trait HatDataTables {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/data/table")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
-      .withQueryString("name" -> name, "source" -> source)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withQueryStringParameters("name" -> name, "source" -> source)
 
     val futureResponse: Future[WSResponse] = request.get()
 
@@ -60,7 +60,7 @@ trait HatDataTables {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/data/table/$id")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
 
@@ -88,7 +88,7 @@ trait HatDataTables {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/data/table")
       .withVirtualHost(hatAddress)
-      .withHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(tableStructure))
 
