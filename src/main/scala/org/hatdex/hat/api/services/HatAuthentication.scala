@@ -45,11 +45,12 @@ trait HatAuthentication {
   def authenticateForToken(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/users/access_token")
       .withVirtualHost(hatAddress)
-      .withHttpHeaders("Accept" -> "application/json")
-      .withHttpHeaders("username" -> username)
-      .withHttpHeaders("password" -> password)
+      .withHttpHeaders(
+        "Accept" -> "application/json",
+        "username" -> username,
+        "password" -> password)
 
-    logger.debug(s"Authenticate for token with HAT at ${request.url}")
+    logger.debug(s"Authenticate for token with HAT at ${request.method} ${request.url} (headers: ${request.headers})")
 
     val futureResponse: Future[WSResponse] = request.get()
     futureResponse.map { response =>
