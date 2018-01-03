@@ -16,16 +16,17 @@ import play.api.libs.ws._
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait HatSystem {
-  val logger: Logger
-  val ws: WSClient
-  val schema: String
-  val hatAddress: String
+  protected val logger: Logger
+  protected val ws: WSClient
+  protected val schema: String
+  protected val hatAddress: String
+  protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   def update(access_token: String)(implicit ec: ExecutionContext): Future[Unit] = {
     logger.debug(s"Update HAT database")
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/system/update")
-      .withVirtualHost(hatAddress)
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()

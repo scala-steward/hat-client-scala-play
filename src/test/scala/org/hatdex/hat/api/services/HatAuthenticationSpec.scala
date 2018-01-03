@@ -39,7 +39,7 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
     "return access token on sucessful login" in {
       withHatClient { client =>
         client.authenticateForToken("user", "pa55") map { result =>
-          val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("validAccessToken")).mkString
+          val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
           result must beEqualTo(validAccessToken)
         } await (1, 10.seconds)
       }

@@ -1,90 +1,127 @@
-/*
- * Copyright (C) 2016 HAT Data Exchange Ltd - All Rights Reserved
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Written by Andrius Aucinas <andrius.aucinas@hatdex.org>, 2 / 2017
- *
- */
-
 package org.hatdex.hat.api.services
 
-import java.util.UUID
-
-import org.hatdex.hat.api.json.DataDebitFormats
-import org.hatdex.hat.api.models.{ ApiBundleContextless, ApiBundleDataSourceStructure, ApiDataDebit, ApiDataDebitOut }
-import org.joda.time.DateTime
+import org.hatdex.hat.api.models.{ DataDebitRequest, RichDataDebit, RichDataDebitData }
+import org.hatdex.hat.api.services.Errors.{ ApiException, UnauthorizedActionException }
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.{ JsError, JsSuccess, Json }
-import play.api.libs.ws._
+import play.api.libs.ws.{ WSClient, WSRequest, WSResponse }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait HatDataDebits {
-  val logger: Logger
-  val ws: WSClient
-  val schema: String
-  val hatAddress: String
+  protected val logger: Logger
+  protected val ws: WSClient
+  protected val schema: String
+  protected val hatAddress: String
+  protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
-  import DataDebitFormats._
+  import org.hatdex.hat.api.models.RichDataJsonFormats._
 
-  def dataDebitValues(access_token: String, dataDebitId: UUID)(implicit ec: ExecutionContext): Future[ApiDataDebitOut] = {
-    logger.debug(s"Get Data Debit $dataDebitId values from $hatAddress")
+  def getDataDebit(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[RichDataDebit] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/dataDebit/$dataDebitId/values")
-      .withVirtualHost(hatAddress)
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId")
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
+
     futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[ApiDataDebitOut] match {
-            case s: JsSuccess[ApiDataDebitOut] => Future.successful(s.get)
+          response.json.validate[RichDataDebit] match {
+            case s: JsSuccess[RichDataDebit] => Future.successful(s.get)
             case e: JsError =>
-              logger.error(s"Error parsing successful Data Debit value response: $e")
-              Future.failed(new RuntimeException(s"Error parsing successful Data Debit value response: $e"))
+              val message = s"Error parsing response from a successful data debit request: $e"
+              logger.error(message)
+              Future.failed(new ApiException(message))
           }
-        // Convert to ApiDataDebitOut - if validation has failed, it will have thrown an error already
+        case FORBIDDEN =>
+          Future.failed(UnauthorizedActionException(s"Retrieving data debit $dataDebitId from $hatAddress unauthorized"))
         case _ =>
-          logger.error(s"Fetching Data Debit $dataDebitId values from $hatAddress failed, $response, ${response.body}")
-          Future.failed(new RuntimeException(s"Fetching Data Debit $dataDebitId values from $hatAddress failed"))
+          logger.error(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}")
+          Future.failed(new ApiException(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}"))
       }
     }
   }
 
-  def proposeDataDebit(access_token: String, title: String,
-    starts: DateTime, expires: DateTime,
-    definitionStructure: List[ApiBundleDataSourceStructure])(implicit ec: ExecutionContext): Future[ApiDataDebit] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/dataDebit/propose")
-      .withVirtualHost(hatAddress)
+  def listDataDebits(access_token: String)(implicit ec: ExecutionContext): Future[Seq[RichDataDebit]] = {
+
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit")
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
-    val bundle = ApiBundleContextless(None, None, None, s"Bundle for Offer $title", Some(definitionStructure))
+    val futureResponse: Future[WSResponse] = request.get()
 
-    val dataDebit = ApiDataDebit(None, None, None,
-      title, starts.toLocalDateTime, expires.toLocalDateTime,
-      enabled = None, rolling = false, sell = true,
-      0, "contextless", Some(bundle), None)
+    futureResponse.flatMap { response =>
+      response.status match {
+        case OK =>
+          response.json.validate[Seq[RichDataDebit]] match {
+            case s: JsSuccess[Seq[RichDataDebit]] => Future.successful(s.get)
+            case e: JsError =>
+              val message = s"Error parsing response from a successful data debit request: $e"
+              logger.error(message)
+              Future.failed(new ApiException(message))
+          }
+        case FORBIDDEN =>
+          Future.failed(UnauthorizedActionException(s"Retrieving data debits from $hatAddress unauthorized"))
+        case _ =>
+          logger.error(s"Retrieving data debits from $hatAddress failed ${response.body}")
+          Future.failed(new ApiException(s"Retrieving data debits from $hatAddress failed ${response.body}"))
+      }
+    }
+  }
 
-    logger.debug(s"Submitting Data Debit request for $hatAddress: ${Json.toJson(dataDebit).toString()}")
+  def getDataDebitValues(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[RichDataDebitData] = {
+
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId/values")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+
+    val futureResponse: Future[WSResponse] = request.get()
+
+    futureResponse.flatMap { response =>
+      response.status match {
+        case OK =>
+          response.json.validate[RichDataDebitData] match {
+            case s: JsSuccess[RichDataDebitData] => Future.successful(s.get)
+            case e: JsError =>
+              val message = s"Error parsing response from a successful data debit values request: $e"
+              logger.error(message)
+              Future.failed(new ApiException(message))
+          }
+        case FORBIDDEN =>
+          Future.failed(UnauthorizedActionException(s"Retrieving data debit $dataDebitId values from $hatAddress unauthorized"))
+        case _ =>
+          logger.error(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}")
+          Future.failed(new ApiException(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}"))
+      }
+    }
+  }
+
+  def registerDataDebit(access_token: String, dataDebitId: String, dataDebit: DataDebitRequest)(implicit ec: ExecutionContext): Future[RichDataDebit] = {
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(dataDebit))
 
     futureResponse.flatMap { response =>
       response.status match {
         case CREATED =>
-          val dd = Json.parse(response.body).as[ApiDataDebit]
-          logger.info(s"Data debit created: $dd")
-          Future.successful(dd)
-        case BAD_REQUEST =>
-          logger.error(s"Bad request when creating data debit: ${response.body}")
-          Future.failed(new RuntimeException(s"Bad request when creating data debit: ${response.body}"))
+          response.json.validate[RichDataDebit] match {
+            case s: JsSuccess[RichDataDebit] => Future.successful(s.get)
+            case e: JsError =>
+              val message = s"Error parsing response from a successful data debit registration request: $e"
+              logger.error(message)
+              Future.failed(new ApiException(message))
+          }
+        case FORBIDDEN =>
+          Future.failed(UnauthorizedActionException(s"Registering data debit $dataDebitId with $hatAddress unauthorized"))
         case _ =>
-          logger.error(s"Unexpected error when creating data debit: ${response.body}")
-          Future.failed(new RuntimeException(s"Unexpected error when creating data debit: ${response.body}"))
+          logger.error(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}")
+          Future.failed(new ApiException(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}"))
       }
     }
   }
-
 }

@@ -19,17 +19,18 @@ import play.api.libs.ws._
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait HatApplications {
-  val logger: Logger
-  val ws: WSClient
-  val schema: String
-  val hatAddress: String
+  protected val logger: Logger
+  protected val ws: WSClient
+  protected val schema: String
+  protected val hatAddress: String
+  protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   import org.hatdex.hat.api.json.HatJsonFormats._
 
   def getApplications(access_token: String)(implicit ec: ExecutionContext): Future[Seq[HatService]] = {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/application")
-      .withVirtualHost(hatAddress)
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.get()
@@ -54,7 +55,7 @@ trait HatApplications {
 
   def saveApplication(access_token: String, application: HatService)(implicit ec: ExecutionContext): Future[HatService] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/application")
-      .withVirtualHost(hatAddress)
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(application))

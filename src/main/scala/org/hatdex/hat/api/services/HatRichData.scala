@@ -21,17 +21,18 @@ import play.api.libs.ws._
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait HatRichData {
-  val logger: Logger
-  val ws: WSClient
-  val schema: String
-  val hatAddress: String
+  protected val logger: Logger
+  protected val ws: WSClient
+  protected val schema: String
+  protected val hatAddress: String
+  protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   import org.hatdex.hat.api.models.RichDataJsonFormats._
 
   def saveData(access_token: String, namespace: String, endpoint: String, data: JsArray)(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data/$namespace/$endpoint")
-      .withVirtualHost(hatAddress)
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(data)
@@ -62,7 +63,7 @@ trait HatRichData {
 
   def saveData(access_token: String, data: Seq[EndpointData])(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-batch")
-      .withVirtualHost(hatAddress)
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
     val futureResponse: Future[WSResponse] = request.post(Json.toJson(data))
@@ -103,7 +104,7 @@ trait HatRichData {
       take.map(r => "take" -> r.toString)).flatten
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data/$namespace/$endpoint")
-      .withVirtualHost(hatAddress)
+      .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
       .withQueryStringParameters(queryParameter: _*)
 
