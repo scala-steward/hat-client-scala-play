@@ -39,7 +39,6 @@ trait DataStatsFormat extends DataDebitFormats {
 
   implicit val endpointStatsFormat: Format[EndpointStats] = Json.format[EndpointStats]
 
-  protected implicit val dataDebitStatsFormat: Format[DataDebitStats] = Json.format[DataDebitStats]
   protected implicit val dataCreditStatsFormat: Format[DataCreditStats] = Json.format[DataCreditStats]
   protected implicit val dataStorageStatsFormat: Format[DataStorageStats] = Json.format[DataStorageStats]
   protected implicit val inboundDataStatsFormat: Format[InboundDataStats] = Json.format[InboundDataStats]
@@ -49,7 +48,6 @@ trait DataStatsFormat extends DataDebitFormats {
 
   implicit val dataStatsFormat: Format[DataStats] = new Format[DataStats] {
     def reads(json: JsValue): JsResult[DataStats] = (json \ "statsType").as[String] match {
-      case "datadebit"      => Json.fromJson[DataDebitStats](json)(dataDebitStatsFormat)
       case "datacredit"     => Json.fromJson[DataCreditStats](json)(dataCreditStatsFormat)
       case "storage"        => Json.fromJson[DataStorageStats](json)(dataStorageStatsFormat)
       case "inbound"        => Json.fromJson[InboundDataStats](json)(inboundDataStatsFormat)
@@ -60,7 +58,6 @@ trait DataStatsFormat extends DataDebitFormats {
 
     def writes(stats: DataStats): JsValue = {
       val statsJson = stats match {
-        case ds: DataDebitStats    => Json.toJson(ds)(dataDebitStatsFormat)
         case ds: DataCreditStats   => Json.toJson(ds)(dataCreditStatsFormat)
         case ds: DataStorageStats  => Json.toJson(ds)(dataStorageStatsFormat)
         case ds: InboundDataStats  => Json.toJson(ds)(inboundDataStatsFormat)

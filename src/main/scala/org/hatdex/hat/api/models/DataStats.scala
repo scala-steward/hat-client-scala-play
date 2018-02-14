@@ -47,16 +47,6 @@ case class DataCreditStats(
   final val statsType: String = "datacredit"
 }
 
-case class DataDebitStats(
-    dataDebit: ApiDataDebit,
-    operation: String,
-    time: LocalDateTime,
-    user: User,
-    dataTableStats: Option[Seq[DataTableStats]],
-    logEntry: String) extends DataStats with StatsForTables {
-  final val statsType: String = "datadebit"
-}
-
 case class DataStorageStats(
     time: LocalDateTime,
     dataTableStats: Seq[DataTableStats],

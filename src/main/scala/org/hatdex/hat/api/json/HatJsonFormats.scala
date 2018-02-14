@@ -115,7 +115,6 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
   implicit val errorMessage: Format[ErrorMessage] = Json.format[ErrorMessage]
   implicit val successResponse: Format[SuccessResponse] = Json.format[SuccessResponse]
 
-  implicit val apiRelationshipFormat: Format[ApiRelationship] = Json.format[ApiRelationship]
   implicit val apiGenericIdFormat: Format[ApiGenericId] = Json.format[ApiGenericId]
 
   implicit val statusNewFormat: Format[HatFileStatus.New] = Json.format[HatFileStatus.New]
