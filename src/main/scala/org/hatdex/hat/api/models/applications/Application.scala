@@ -104,6 +104,7 @@ object ApplicationStatus {
   trait Status {
     val kind: String
     val compatibility: Version
+    val recentDataCheckEndpoint: Option[String]
   }
 
   case class Internal(
