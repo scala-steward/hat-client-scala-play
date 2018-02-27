@@ -6,6 +6,5 @@ case class HatApplication(
     application: Application,
     setup: Boolean,
     active: Boolean,
-    applicationToken: Option[String],
     needsUpdating: Option[Boolean],
     mostRecentData: Option[DateTime])
