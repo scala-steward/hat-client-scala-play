@@ -77,22 +77,38 @@ case class ApplicationPermissions(
 object ApplicationSetup {
   trait Setup {
     val kind: String
+    val onboarding: Option[Seq[OnboardingStep]]
+    val preferences: Option[ApplicationPreferences]
   }
 
-  case class External(url: Option[String], iosUrl: Option[String], androidUrl: Option[String]) extends Setup {
+  case class External(
+      url: Option[String],
+      iosUrl: Option[String],
+      androidUrl: Option[String],
+      onboarding: Option[Seq[OnboardingStep]],
+      preferences: Option[ApplicationPreferences]) extends Setup {
     final val kind: String = "External"
   }
 
   case class Internal(
-      settings: Seq[SetupSettings],
-      onboarding: Option[Seq[OnboardingStep]]) extends Setup {
+      onboarding: Option[Seq[OnboardingStep]],
+      preferences: Option[ApplicationPreferences]) extends Setup {
     final val kind: String = "Internal"
   }
 
-  case class SetupSettings(
+  // Preferences are stored at a specific endpoint to make them accessible as data
+  // They are stored as a Map (a JSON object) with values of each preference stored in the HAT,
+  // but the rest coming from DEX
+  case class ApplicationPreferences(
+      endpoint: String,
+      preferences: Map[String, Preference])
+
+  case class Preference(
       setting: String,
+      description: String,
       kind: String,
-      defaultValue: Option[JsValue])
+      defaultValue: Option[JsValue],
+      value: Option[JsValue])
 
   case class OnboardingStep(
       title: String,

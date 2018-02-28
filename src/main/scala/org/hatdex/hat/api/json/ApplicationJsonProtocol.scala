@@ -52,7 +52,8 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
 
   // Application Settings JSON formats
 
-  protected implicit val applicationSetupSettingsFormat: Format[ApplicationSetup.SetupSettings] = Json.format[ApplicationSetup.SetupSettings]
+  protected implicit val applicationPreferenceFormat: Format[ApplicationSetup.Preference] = Json.format[ApplicationSetup.Preference]
+  protected implicit val applicationPreferencesFormat: Format[ApplicationSetup.ApplicationPreferences] = Json.format[ApplicationSetup.ApplicationPreferences]
   protected implicit val applicationSetupOnboardingStepFormat: Format[ApplicationSetup.OnboardingStep] = Json.format[ApplicationSetup.OnboardingStep]
   protected implicit val applicationSetupInternalFormat: Format[ApplicationSetup.Internal] = Json.format[ApplicationSetup.Internal]
   protected implicit val applicationSetupExternalFormat: Format[ApplicationSetup.External] = Json.format[ApplicationSetup.External]
