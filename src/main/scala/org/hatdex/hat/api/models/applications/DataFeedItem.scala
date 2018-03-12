@@ -33,8 +33,8 @@ case class LocationGeo(
     latitude: Double)
 
 case class LocationAddress(
-    country: String,
-    city: String,
+    country: Option[String],
+    city: Option[String],
     name: Option[String],
     street: Option[String],
     zip: Option[String])
