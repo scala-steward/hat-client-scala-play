@@ -20,6 +20,5 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.11")
 
 // S3 based SBT resolver
-resolvers += "Era7 maven releases" at "https://s3-eu-west-1.amazonaws.com/releases.era7.com"
-
+resolvers += Resolver.jcenterRepo
 addSbtPlugin("ohnosequences" % "sbt-s3-resolver" % "0.19.0")
