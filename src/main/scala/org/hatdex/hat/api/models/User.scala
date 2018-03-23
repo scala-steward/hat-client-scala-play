@@ -24,7 +24,7 @@ case class User(
   lazy val clean: User = this.copy(pass = Option.empty[String])
 }
 
-sealed abstract class UserRole(roleTitle: String) {
+sealed abstract class UserRole(roleTitle: String) extends Serializable {
   def title: String = roleTitle.toLowerCase
 
   def name: String = this.toString.replaceAll("\\(.*\\)", "")
