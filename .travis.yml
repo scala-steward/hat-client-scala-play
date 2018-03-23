@@ -1,0 +1,41 @@
+language: scala
+dist: trusty
+sudo: false
+scala:
+- 2.12.4
+jdk:
+- openjdk8
+cache:
+  directories:
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.sbt/boot/scala-$TRAVIS_SCALA_VERSION"
+branches:
+  only:
+  - master
+  - dev
+env:
+  global:
+  - AWS_DEFAULT_REGION=eu-west-1
+  - AWS_REGION=eu-west-1
+  - secure: OBllnsjaeqknSk1dAc9mUv9cHqhOexhwPDbsyvTT46HF6uNRkYEbr5bqhOsuDR9K7/0f5ozQcoYHJPdrFFQ1/A7QOy8NYwx2u45qUw7nlghF0Vw0CrWZqDiWr5qOHmNhSpPkb6tyLlj44ygskCHIi7VeUCyrzzWzl0GJa+FosGrnvsBW8ShI+U8krlZlZUnxGU1/guWYlLUu5PUDjohdpIh2E69bhuIEqyfwlI0M6n1z49/r3DynwTQsDIUfbgBTiQ3peBrw51h+ckkCtia8ynyKvatmqfJxM29E2hz4KM/URKQMDOXpl+KaX/FImtfgyRpZAc2d4yzaaD585hRXJ0GdVwWwUwBk7ycX4Nhux6P5I6OxpHg9EhQcimkiqzGEjaV0RzApn5cjn+pH52UUJahZiQfP6dnya40p8EQOdamCAmoRqR/uV6Pj9LJf/+I5jbBpPYzrYLxQTE1CHNt1GRWELQAzLpLSjbzCLWybouNP4f4atOQd5NMo/bguC4V90nK1Ck8w7NH6/ssDTBig+JO//eRf9UfcJ6hpo/2rI9NrksjZoYRMwPyT2TRDMQgQ6JWoxGuD3u5TYQ/ZT6ml04Ud3MelgWIEgepm//dA//CLxHBuefLvHUmyg/8hymsVESuwvohLjPbrQ+0NhS/YOScCBwUTerpMUNBy5TisMMo=
+  - secure: A1RpSK9nQYBI/mkGVmVmcjzKGXmmlxNUNxZmhpUz1NwRVU3IP6Wb1dD/uFEgtSbQvM8KLkosKEvL/mXv+Jzpc3OStdX4/LK5gfcIX7o9bsS03wvBLJ2LuF+DbsvKOBXyjCyMkzIvXHh+DsU5sv2h+iPGAw4imOEDFo1KtAk5myeyeMtdw7SKm6HZO8W2WREqE0nhT1pQl88uU9zbzDQk8TT3J9CvBd0uzoY/v1/3OXbVd2oz6g52UfPNeu2Q26A9WrTaV8rQz9/pQtlt0EVyMQ0WuUljYjsb4iUvGAxjniI4Hn6lLKeENB03wINHJpGnmmlh9yoxrAMVI8f/cv1V4xiE9+42fgTARwd2aSiBzhcT3rok573Xc3EXCAzqZa+GbUP3kEIJ+mfMxWw9pyLDBFA15Lnbo0c0824b2bl3N8SmN3o5Op9ssv57Oyt5VC8CDSuW/HjEPLRObUWi0fz4gzrWnA3+wGU/hl0dk5OpMLYOzubTbcJv895B3XZABb8plh+5xuQq/4iypIqb9FlWxl1cBD0k+lP79nHK22EjPTuhcW5j76rxy4GFrTfYbZoYGrZhbRVAGNKBrgpPTVM7ixi7FAs8ESaCi9GOWxuGDDJvNWi4j72VDZBMDcDkoKwTPPVzOhq7t9MUuxaHoBzmEFE1ZK01oLap+tPyTvivmKY=
+install:
+- pip install --user awscli
+- export PATH=$PATH:$HOME/.local/bin
+script:
+- sbt clean
+- sbt ++$TRAVIS_SCALA_VERSION compile
+- sbt ++$TRAVIS_SCALA_VERSION test:compile
+- sbt ++$TRAVIS_SCALA_VERSION coverage test
+after_success:
+- find $HOME/.sbt -name "*.lock" | xargs rm
+- find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
+- |
+  if [[ "$TRAVIS_PULL_REQUEST" = "false" || -z "$RUMPEL" ]]; then
+    sbt coverageReport
+  fi
+deploy:
+- provider: script
+  script:
+  - sbt publish
+  skip_cleanup: true
