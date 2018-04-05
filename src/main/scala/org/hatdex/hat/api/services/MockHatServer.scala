@@ -25,7 +25,7 @@ import scala.io.Source._
 
 object MockHatServer {
 
-  import org.hatdex.hat.api.models.RichDataJsonFormats._
+  import org.hatdex.hat.api.json.RichDataJsonFormats._
 
   private val logger = Logger(this.getClass)
 

@@ -80,6 +80,7 @@ case class OutboundDataStats(
   final val statsType: String = "outbound"
 }
 
+@Deprecated
 case class DataDebitEvent(
     dataDebit: RichDataDebit,
     operation: String,
@@ -87,4 +88,13 @@ case class DataDebitEvent(
     user: User,
     logEntry: String) extends DataStats {
   final val statsType: String = "datadebitEvent"
+}
+
+case class DataDebitOperation(
+    dataDebit: DataDebit,
+    operation: String,
+    time: LocalDateTime,
+    user: User,
+    logEntry: String) extends DataStats {
+  final val statsType: String = "datadebit"
 }

@@ -27,7 +27,7 @@ trait HatRichData {
   protected val hatAddress: String
   protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
-  import org.hatdex.hat.api.models.RichDataJsonFormats._
+  import org.hatdex.hat.api.json.RichDataJsonFormats._
 
   def saveData(access_token: String, namespace: String, endpoint: String, data: JsArray)(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
 

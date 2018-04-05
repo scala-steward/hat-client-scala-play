@@ -59,7 +59,7 @@ class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDat
 }
 
 trait RichDataSpecContext extends Scope {
-  import org.hatdex.hat.api.models.RichDataJsonFormats._
+  import org.hatdex.hat.api.json.RichDataJsonFormats._
   val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
   val dataRecords = Json.parse(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/flexiRecordsSaved.json"))
 

@@ -2,116 +2,8 @@ package org.hatdex.hat.api.models
 
 import java.util.UUID
 
-import org.hatdex.hat.api.json.HatJsonFormats
-import org.joda.time.LocalDateTime
-import play.api.libs.functional.syntax._
+import org.joda.time.{DateTime, Duration, LocalDateTime}
 import play.api.libs.json._
-
-trait RichDataJsonFormats extends HatJsonFormats {
-
-  val endpointDataWrites: Writes[EndpointData] = (
-    (__ \ "endpoint").write[String] and
-    (__ \ "recordId").writeNullable[UUID] and
-    (__ \ "data").write[JsValue] and
-    (__ \ "links").lazyWriteNullable(implicitly[Format[Seq[EndpointData]]]))(unlift(EndpointData.unapply))
-
-  val endpointDataReads: Reads[EndpointData] = (
-    (__ \ "endpoint").read[String].filter(JsonValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
-    (__ \ "recordId").readNullable[UUID] and
-    (__ \ "data").read[JsValue] and
-    (__ \ "links").lazyReadNullable(implicitly[Reads[Seq[EndpointData]]]))(EndpointData.apply _)
-
-  implicit val endpointDataFormat: Format[EndpointData] = Format(endpointDataReads, endpointDataWrites)
-
-  private val fieldTransDateTimeExtractFormat = Json.format[FieldTransformation.DateTimeExtract]
-  private val fieldTransTimestampExtractFormat = Json.format[FieldTransformation.TimestampExtract]
-
-  implicit val apiFieldTransformationFormat: Format[FieldTransformation.Transformation] = new Format[FieldTransformation.Transformation] {
-    def reads(json: JsValue): JsResult[FieldTransformation.Transformation] = (json \ "transformation").as[String] match {
-      case "identity"         => JsSuccess(FieldTransformation.Identity())
-      case "datetimeExtract"  => Json.fromJson[FieldTransformation.DateTimeExtract](json)(fieldTransDateTimeExtractFormat)
-      case "timestampExtract" => Json.fromJson[FieldTransformation.TimestampExtract](json)(fieldTransTimestampExtractFormat)
-      case "searchable"       => JsSuccess(FieldTransformation.Searchable())
-      case transformation     => JsError(s"Unexpected JSON value $transformation in $json")
-    }
-
-    def writes(transformation: FieldTransformation.Transformation): JsValue = {
-      val (transformed, tType) = transformation match {
-        case _: FieldTransformation.Identity          => (Json.obj(), JsString("identity"))
-        case ds: FieldTransformation.DateTimeExtract  => (Json.toJson(ds)(fieldTransDateTimeExtractFormat), JsString("datetimeExtract"))
-        case ds: FieldTransformation.TimestampExtract => (Json.toJson(ds)(fieldTransTimestampExtractFormat), JsString("timestampExtract"))
-        case _: FieldTransformation.Searchable        => (Json.obj(), JsString("searchable"))
-      }
-      transformed.as[JsObject] + (("transformation", tType))
-    }
-  }
-
-  private val filterOperatorContainsFormat = Json.format[FilterOperator.Contains]
-  private val filterOperatorInFormat = Json.format[FilterOperator.In]
-  private val filterOperatorBetweenFormat = Json.format[FilterOperator.Between]
-  private val filterOperatorFindFormat = Json.format[FilterOperator.Find]
-
-  implicit val apiFilterOperatorFormat: Format[FilterOperator.Operator] = new Format[FilterOperator.Operator] {
-    def reads(json: JsValue): JsResult[FilterOperator.Operator] = (json \ "operator").as[String] match {
-      case "contains"     => Json.fromJson[FilterOperator.Contains](json)(filterOperatorContainsFormat)
-      case "in"           => Json.fromJson[FilterOperator.In](json)(filterOperatorInFormat)
-      case "between"      => Json.fromJson[FilterOperator.Between](json)(filterOperatorBetweenFormat)
-      case "find"         => Json.fromJson[FilterOperator.Find](json)(filterOperatorFindFormat)
-      case transformation => JsError(s"Unexpected JSON value $transformation in $json")
-    }
-
-    def writes(transformation: FilterOperator.Operator): JsValue = {
-      val (transformed, tType) = transformation match {
-        case ds: FilterOperator.Contains => (Json.toJson(ds)(filterOperatorContainsFormat), JsString("contains"))
-        case ds: FilterOperator.In       => (Json.toJson(ds)(filterOperatorInFormat), JsString("in"))
-        case ds: FilterOperator.Between  => (Json.toJson(ds)(filterOperatorBetweenFormat), JsString("between"))
-        case ds: FilterOperator.Find     => (Json.toJson(ds)(filterOperatorFindFormat), JsString("find"))
-      }
-      transformed.as[JsObject] + (("operator", tType))
-    }
-  }
-
-  implicit val endpointQueryFilterFormat: Format[EndpointQueryFilter] = Json.format[EndpointQueryFilter]
-
-  val endpointQueryRead: Reads[EndpointQuery] = (
-    (__ \ "endpoint").read[String].filter(JsonValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
-    (__ \ "mapping").readNullable[JsValue] and
-    (__ \ "filters").readNullable[Seq[EndpointQueryFilter]] and
-    (__ \ "links").lazyReadNullable(implicitly[Format[Seq[EndpointQuery]]]))(EndpointQuery.apply _)
-
-  val endpointQueryWrites: Writes[EndpointQuery] = (
-    (__ \ "endpoint").write[String] and
-    (__ \ "mapping").writeNullable[JsValue] and
-    (__ \ "filters").writeNullable[Seq[EndpointQueryFilter]] and
-    (__ \ "links").lazyWriteNullable(implicitly[Format[Seq[EndpointQuery]]]))(unlift(EndpointQuery.unapply))
-
-  implicit val endpointQueryFormat: Format[EndpointQuery] = Format(endpointQueryRead, endpointQueryWrites)
-
-  implicit val propertyQueryFormat: Format[PropertyQuery] = Json.format[PropertyQuery]
-
-  val endpointDatabundleRead: Reads[EndpointDataBundle] = (
-    (__ \ "name").read[String].filter(JsonValidationError("Bundle name invalid"))(_.matches("[0-9a-zA-Z-]+")) and
-    (__ \ "bundle").read[Map[String, PropertyQuery]])(EndpointDataBundle.apply _)
-
-  val endpointDatabundleWrite: Writes[EndpointDataBundle] = Json.writes[EndpointDataBundle]
-
-  implicit val endpointDatabundleFormat: Format[EndpointDataBundle] = Format(endpointDatabundleRead, endpointDatabundleWrite)
-
-  implicit val debitBundleFormat: Format[DebitBundle] = Json.format[DebitBundle]
-  implicit val dataDebitRequestFormat: Format[DataDebitRequest] = Json.format[DataDebitRequest]
-
-  val dataDebitReads: Reads[RichDataDebit] = (
-    (__ \ "dataDebitKey").read[String].filter(JsonValidationError("Data Debit Key invalid"))(_.matches("[0-9a-zA-Z-]+")) and
-    (__ \ "dateCreated").read[LocalDateTime] and
-    (__ \ "client").read[User] and
-    (__ \ "bundles").read[Seq[DebitBundle]])(RichDataDebit.apply _)
-  val dataDebitWrites: Writes[RichDataDebit] = Json.writes[RichDataDebit]
-
-  implicit val dataDebitFormat: Format[RichDataDebit] = Format(dataDebitReads, dataDebitWrites)
-  implicit val dataDebitValuesFormat: Format[RichDataDebitData] = Json.format[RichDataDebitData]
-}
-
-object RichDataJsonFormats extends RichDataJsonFormats
 
 case class EndpointData(
     endpoint: String,
@@ -193,6 +85,7 @@ case class EndpointDataBundle(
   }
 }
 
+@Deprecated
 case class RichDataDebit(
     dataDebitKey: String,
     dateCreated: LocalDateTime,
@@ -218,10 +111,12 @@ case class RichDataDebit(
 
 }
 
+@Deprecated
 case class RichDataDebitData(
     conditions: Option[Map[String, Boolean]],
     bundle: Map[String, Seq[EndpointData]])
 
+@Deprecated
 case class DebitBundle(
     dateCreated: LocalDateTime,
     startDate: LocalDateTime,
@@ -231,6 +126,7 @@ case class DebitBundle(
     conditions: Option[EndpointDataBundle],
     bundle: EndpointDataBundle)
 
+@Deprecated
 case class DataDebitRequest(
     bundle: EndpointDataBundle,
     conditions: Option[EndpointDataBundle],
@@ -238,3 +134,83 @@ case class DataDebitRequest(
     endDate: LocalDateTime,
     rolling: Boolean)
 
+// Structure replacing RichDataDebit to contain more info
+
+case class DataDebitPermissions(
+    dateCreated: LocalDateTime,
+    purpose: String, // The purpose of processing data for regulatory compliance
+    start: DateTime, // Start of the data debit
+    period: Duration, // How long does it run for - a day/week/month/etc?
+    cancelAtPeriodEnd: Boolean, // should it be cancelled at the end of the current period?
+    canceledAt: Option[DateTime], // when was it cancelled - set at the time of cancellation, if set and cancelAtPeriodEnd=false, cancel immediately
+    termsUrl: String, // URL linking to terms and conditions of this data debit
+    conditions: Option[EndpointDataBundle],
+    bundle: EndpointDataBundle
+) {
+  lazy val active: Boolean = {
+    val now = DateTime.now()
+    if (start.isAfter(now)) {
+      false
+    } else {
+      end.forall(_.isAfter(now)) // if end date is set, only active if it is after now; no end date - active
+    }
+  }
+
+  lazy val end: Option[DateTime] = {
+    (canceledAt, cancelAtPeriodEnd) match {
+      case (Some(canceled), false) ⇒ Some(canceled) // has been cancelled with immediate effect
+      case (Some(canceled), true) ⇒ Some(start.plus( math.ceil((canceled.getMillis - start.getMillis).toDouble / period.getMillis.toDouble).toLong * period.getMillis) ) // finish at the end of period
+      case (None, false) ⇒ None // rolling indefinitely
+      case (None, true) ⇒ Some(start.plus(period)) // the validity period finished
+    }
+  }
+}
+
+case class DataDebit(
+    dataDebitKey: String,
+    permissions: Seq[DataDebitPermissions],
+    requestClientName: String,
+    requestClientUrl: String,
+    requestClientLogoUrl: String,
+    requestApplicationId: Option[String],
+    requestDescription: Option[String], // High level description (may be empty) of what the Data Debit is about
+) {
+
+  lazy val currentPermissions: Option[DataDebitPermissions] = permissions.sortBy(_.dateCreated).headOption
+
+  private implicit def dateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isAfter _)
+
+  lazy val activePermissions: Option[DataDebitPermissions] =
+    permissions.filter(_.active)
+      .sortBy(_.dateCreated)
+      .headOption
+
+  lazy val lastUpdated: LocalDateTime =
+    permissions.sortBy(_.dateCreated)
+      .headOption
+      .map(_.dateCreated)
+      .getOrElse(LocalDateTime.now())
+
+  lazy val active: Boolean = activePermissions.exists(_ ⇒ true)
+  lazy val start: Option[DateTime] = activePermissions.map(p ⇒ p.start)
+  lazy val end: Option[DateTime] = activePermissions.flatMap(p ⇒ p.end)
+}
+
+case class DataDebitSetupRequest(
+    dataDebitKey: String, // final
+    purpose: String, // The purpose of processing data for regulatory compliance
+    start: DateTime, // Start of the data debit
+    period: Duration, // How long does it run for - a day/week/month/etc?
+    cancelAtPeriodEnd: Boolean, // should it be cancelled at the end of the current period?
+    requestClientName: String, // Final
+    requestClientUrl: String, // Final
+    requestClientLogoUrl: String, // Final
+    requestApplicationId: Option[String], // Final
+    requestDescription: Option[String], // Final
+    termsUrl: String, // URL linking to terms and conditions of this data debit
+    conditions: Option[EndpointDataBundle],
+    bundle: EndpointDataBundle)
+
+case class DataDebitData(
+    conditions: Option[Map[String, Boolean]],
+    bundle: Map[String, Seq[EndpointData]])

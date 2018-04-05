@@ -16,7 +16,7 @@ trait HatDataDebits {
   protected val hatAddress: String
   protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
-  import org.hatdex.hat.api.models.RichDataJsonFormats._
+  import org.hatdex.hat.api.json.RichDataJsonFormats._
 
   def getDataDebit(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[RichDataDebit] = {
 
