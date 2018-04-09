@@ -32,7 +32,7 @@ object Dependencies {
     }
 
     object Specs2 {
-      private val version = "3.8.9"
+      private val version = "3.9.5"
       val core = "org.specs2" %% "specs2-core" % version
       val matcherExtra = "org.specs2" %% "specs2-matcher-extra" % version
       val mock = "org.specs2" %% "specs2-mock" % version

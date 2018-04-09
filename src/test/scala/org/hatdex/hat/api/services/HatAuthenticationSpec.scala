@@ -32,7 +32,7 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
       withHatClient { client =>
         client.retrievePublicKey() map { result =>
           result must startWith("-----BEGIN PUBLIC KEY-----")
-        } await (1, 10.seconds)
+        } await (1, 20.seconds)
       }
     }
 
@@ -41,7 +41,7 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
         client.authenticateForToken("user", "pa55") map { result =>
           val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
           result must beEqualTo(validAccessToken)
-        } await (1, 10.seconds)
+        } await (1, 20.seconds)
       }
     }
 
@@ -52,7 +52,7 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
         } recover {
           case e =>
             e.getMessage must beEqualTo("Unauthorized")
-        } await (1, 10.seconds)
+        } await (1, 20.seconds)
       }
     }
   }

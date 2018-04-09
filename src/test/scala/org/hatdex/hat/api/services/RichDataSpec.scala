@@ -19,6 +19,7 @@ import play.api.Logger
 import play.api.libs.json.{ JsArray, Json }
 import play.api.mvc.Results
 
+import scala.concurrent.duration._
 import scala.io.Source._
 
 class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDataSpecContext {
@@ -33,7 +34,7 @@ class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDat
         client.saveData(validAccessToken, "rumpel", "locations", jsonData) map { record =>
           logger.debug(s"Received records: ${record}")
           record.length must beEqualTo(data.length)
-        } await
+        } await (1, 20.seconds)
       }
     }
 
@@ -41,7 +42,7 @@ class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDat
       withHatClient { client =>
         client.getData(validAccessToken, "rumpel", "locations") map { record =>
           record.length must beEqualTo(data.length)
-        } await
+        } await (1, 20.seconds)
       }
     }
 
@@ -51,7 +52,7 @@ class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDat
           res must beEqualTo("")
         } recover {
           case e => e must beAnInstanceOf[UnauthorizedActionException]
-        } await
+        } await (1, 20.seconds)
       }
     }
   }
