@@ -168,6 +168,7 @@ case class DataDebitPermissions(
 
 case class DataDebit(
     dataDebitKey: String,
+    dateCreated: LocalDateTime,
     permissions: Seq[DataDebitPermissions],
     requestClientName: String,
     requestClientUrl: String,
