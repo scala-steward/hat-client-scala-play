@@ -145,7 +145,8 @@ case class DataDebitPermissions(
     canceledAt: Option[DateTime], // when was it cancelled - set at the time of cancellation, if set and cancelAtPeriodEnd=false, cancel immediately
     termsUrl: String, // URL linking to terms and conditions of this data debit
     conditions: Option[EndpointDataBundle],
-    bundle: EndpointDataBundle
+    bundle: EndpointDataBundle,
+    accepted: Boolean
 ) {
   lazy val active: Boolean = {
     val now = DateTime.now()
