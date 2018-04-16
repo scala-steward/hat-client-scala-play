@@ -2,7 +2,7 @@ package org.hatdex.hat.api.models
 
 import java.util.UUID
 
-import org.joda.time.{DateTime, Duration, LocalDateTime}
+import org.joda.time.{ DateTime, Duration, LocalDateTime }
 import play.api.libs.json._
 
 case class EndpointData(
@@ -146,13 +146,13 @@ case class DataDebitPermissions(
     termsUrl: String, // URL linking to terms and conditions of this data debit
     conditions: Option[EndpointDataBundle],
     bundle: EndpointDataBundle,
-    accepted: Boolean
-) {
+    accepted: Boolean) {
   lazy val active: Boolean = {
     val now = DateTime.now()
     if (start.isAfter(now)) {
       false
-    } else {
+    }
+    else {
       end.forall(_.isAfter(now)) // if end date is set, only active if it is after now; no end date - active
     }
   }
@@ -160,9 +160,9 @@ case class DataDebitPermissions(
   lazy val end: Option[DateTime] = {
     (canceledAt, cancelAtPeriodEnd) match {
       case (Some(canceled), false) ⇒ Some(canceled) // has been cancelled with immediate effect
-      case (Some(canceled), true) ⇒ Some(start.plus( math.ceil((canceled.getMillis - start.getMillis).toDouble / period.getMillis.toDouble).toLong * period.getMillis) ) // finish at the end of period
-      case (None, false) ⇒ None // rolling indefinitely
-      case (None, true) ⇒ Some(start.plus(period)) // the validity period finished
+      case (Some(canceled), true)  ⇒ Some(start.plus(math.ceil((canceled.getMillis - start.getMillis).toDouble / period.getMillis.toDouble).toLong * period.getMillis)) // finish at the end of period
+      case (None, false)           ⇒ None // rolling indefinitely
+      case (None, true)            ⇒ Some(start.plus(period)) // the validity period finished
     }
   }
 }
@@ -175,7 +175,7 @@ case class DataDebit(
     requestClientUrl: String,
     requestClientLogoUrl: String,
     requestApplicationId: Option[String],
-    requestDescription: Option[String], // High level description (may be empty) of what the Data Debit is about
+    requestDescription: Option[String] // High level description (may be empty) of what the Data Debit is about
 ) {
 
   lazy val currentPermissions: Option[DataDebitPermissions] = permissions.sortBy(_.dateCreated).headOption
