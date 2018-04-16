@@ -153,7 +153,7 @@ case class DataDebitPermissions(
       false
     }
     else {
-      end.forall(_.isAfter(now)) // if end date is set, only active if it is after now; no end date - active
+      accepted && end.forall(_.isAfter(now)) // if end date is set, only active if it is after now; no end date - active
     }
   }
 
