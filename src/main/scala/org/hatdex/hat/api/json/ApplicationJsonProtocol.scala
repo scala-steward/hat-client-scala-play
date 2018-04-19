@@ -1,7 +1,7 @@
 package org.hatdex.hat.api.json
 
 import org.hatdex.hat.api.models.applications._
-import org.hatdex.hat.api.models.{ DataDebitRequest, UserRole }
+import org.hatdex.hat.api.models.{ DataDebitRequest, EndpointDataBundle, UserRole }
 import play.api.libs.json._
 
 import scala.util.Try
@@ -27,6 +27,8 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
 
   protected implicit val userRoleFormat: Format[UserRole] = HatJsonFormats.userRoleFormat
   protected implicit val dataDebitRequestFormat: Format[DataDebitRequest] = RichDataJsonFormats.dataDebitRequestFormat
+  protected implicit val dataBundleFormat: Format[EndpointDataBundle] = RichDataJsonFormats.endpointDatabundleFormat
+  protected implicit val applicationRatingFormat: Format[ApplicationRating] = Json.format[ApplicationRating]
   protected implicit val applicationPermissionsFormat: Format[ApplicationPermissions] = Json.format[ApplicationPermissions]
 
   // Application Status JSON formats

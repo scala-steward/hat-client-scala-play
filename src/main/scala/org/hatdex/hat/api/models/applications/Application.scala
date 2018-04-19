@@ -1,6 +1,7 @@
 package org.hatdex.hat.api.models.applications
 
 import org.hatdex.hat.api.models._
+import org.joda.time.{ DateTime, Duration }
 import play.api.libs.json.JsValue
 
 case class Drawable(
@@ -44,12 +45,18 @@ object Version {
     }
 }
 
+case class ApplicationRating(
+    score: String)
+
 case class ApplicationInfo(
     version: Version,
     published: Boolean,
     name: String,
     headline: String,
     description: FormattedText,
+    termsUrl: String,
+    dataUsePurpose: String,
+    rating: Option[ApplicationRating],
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics)
 
@@ -72,6 +79,7 @@ object ApplicationKind {
 
 case class ApplicationPermissions(
     rolesGranted: Seq[UserRole],
+    dataRetrieved: Option[EndpointDataBundle],
     dataRequired: Option[DataDebitRequest])
 
 object ApplicationSetup {
@@ -152,6 +160,14 @@ case class Application(
   }
 
   lazy val dataDebitId: Option[String] = permissions.dataRequired.map(_ => s"app-$id")
+  lazy val dataDebitSetupRequest: Option[DataDebitSetupRequest] = {
+    for {
+      dataDebitKey ← dataDebitId
+      bundle ← permissions.dataRetrieved
+    } yield DataDebitSetupRequest(dataDebitKey, info.dataUsePurpose, DateTime.now(), Duration.standardDays(30), cancelAtPeriodEnd = false,
+      info.name, null, info.graphics.logo.normal, Some(id), Some(info.description.text), info.termsUrl, None, bundle)
+  }
+
 }
 
 case class ApplicationHistory(
