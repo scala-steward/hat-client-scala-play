@@ -25,13 +25,14 @@ trait HatRichData {
   protected val ws: WSClient
   protected val schema: String
   protected val hatAddress: String
+  protected val apiVersion: String
   protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   import org.hatdex.hat.api.json.RichDataJsonFormats._
 
   def saveData(access_token: String, namespace: String, endpoint: String, data: JsArray)(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data/$namespace/$endpoint")
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data/$namespace/$endpoint")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -62,7 +63,7 @@ trait HatRichData {
   }
 
   def saveData(access_token: String, data: Seq[EndpointData])(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-batch")
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-batch")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -103,7 +104,7 @@ trait HatRichData {
       skip.map(r => "skip" -> r.toString),
       take.map(r => "take" -> r.toString)).flatten
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data/$namespace/$endpoint")
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data/$namespace/$endpoint")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
       .withQueryStringParameters(queryParameter: _*)

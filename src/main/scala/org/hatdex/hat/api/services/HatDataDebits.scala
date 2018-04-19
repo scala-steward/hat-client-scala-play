@@ -1,6 +1,6 @@
 package org.hatdex.hat.api.services
 
-import org.hatdex.hat.api.models.{ DataDebitRequest, RichDataDebit, RichDataDebitData }
+import org.hatdex.hat.api.models._
 import org.hatdex.hat.api.services.Errors.{ ApiException, UnauthorizedActionException }
 import play.api.Logger
 import play.api.http.Status._
@@ -14,13 +14,14 @@ trait HatDataDebits {
   protected val ws: WSClient
   protected val schema: String
   protected val hatAddress: String
+  protected val apiVersion: String
   protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   import org.hatdex.hat.api.json.RichDataJsonFormats._
 
-  def getDataDebit(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[RichDataDebit] = {
+  def getDataDebit(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[DataDebit] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId")
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -29,8 +30,8 @@ trait HatDataDebits {
     futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[RichDataDebit] match {
-            case s: JsSuccess[RichDataDebit] => Future.successful(s.get)
+          response.json.validate[DataDebit] match {
+            case s: JsSuccess[DataDebit] => Future.successful(s.get)
             case e: JsError =>
               val message = s"Error parsing response from a successful data debit request: $e"
               logger.error(message)
@@ -45,9 +46,9 @@ trait HatDataDebits {
     }
   }
 
-  def listDataDebits(access_token: String)(implicit ec: ExecutionContext): Future[Seq[RichDataDebit]] = {
+  def listDataDebits(access_token: String)(implicit ec: ExecutionContext): Future[Seq[DataDebit]] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit")
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -56,8 +57,8 @@ trait HatDataDebits {
     futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[Seq[RichDataDebit]] match {
-            case s: JsSuccess[Seq[RichDataDebit]] => Future.successful(s.get)
+          response.json.validate[Seq[DataDebit]] match {
+            case s: JsSuccess[Seq[DataDebit]] => Future.successful(s.get)
             case e: JsError =>
               val message = s"Error parsing response from a successful data debit request: $e"
               logger.error(message)
@@ -72,9 +73,9 @@ trait HatDataDebits {
     }
   }
 
-  def getDataDebitValues(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[RichDataDebitData] = {
+  def getDataDebitValues(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[DataDebitData] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId/values")
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId/values")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -83,8 +84,8 @@ trait HatDataDebits {
     futureResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[RichDataDebitData] match {
-            case s: JsSuccess[RichDataDebitData] => Future.successful(s.get)
+          response.json.validate[DataDebitData] match {
+            case s: JsSuccess[DataDebitData] => Future.successful(s.get)
             case e: JsError =>
               val message = s"Error parsing response from a successful data debit values request: $e"
               logger.error(message)
@@ -99,8 +100,8 @@ trait HatDataDebits {
     }
   }
 
-  def registerDataDebit(access_token: String, dataDebitId: String, dataDebit: DataDebitRequest)(implicit ec: ExecutionContext): Future[RichDataDebit] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/data-debit/$dataDebitId")
+  def registerDataDebit(access_token: String, dataDebitId: String, dataDebit: DataDebitSetupRequest)(implicit ec: ExecutionContext): Future[DataDebit] = {
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -109,8 +110,8 @@ trait HatDataDebits {
     futureResponse.flatMap { response =>
       response.status match {
         case CREATED =>
-          response.json.validate[RichDataDebit] match {
-            case s: JsSuccess[RichDataDebit] => Future.successful(s.get)
+          response.json.validate[DataDebit] match {
+            case s: JsSuccess[DataDebit] => Future.successful(s.get)
             case e: JsError =>
               val message = s"Error parsing response from a successful data debit registration request: $e"
               logger.error(message)

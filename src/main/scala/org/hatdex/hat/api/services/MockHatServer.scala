@@ -12,7 +12,7 @@ package org.hatdex.hat.api.services
 import java.util.UUID
 
 import akka.util.ByteString
-import org.hatdex.hat.api.models.{ ApiDataTable, ApiRecordValues, EndpointData, ErrorMessage }
+import org.hatdex.hat.api.models.{ EndpointData, ErrorMessage }
 import play.api.Logger
 import play.api.http.{ DefaultFileMimeTypesProvider, FileMimeTypesConfiguration, HttpEntity }
 import play.api.libs.json._
@@ -29,13 +29,15 @@ object MockHatServer {
 
   private val logger = Logger(this.getClass)
 
+  protected val apiVersion: String = "v2.6"
+
   implicit val fileMimeTypes = new DefaultFileMimeTypesProvider(FileMimeTypesConfiguration(Map(
     "json" -> "application/json",
     "pem" -> "text/plain"))).get
 
   def withMockHatServerClient[T](block: WSClient => T): T = {
     Server.withRouterFromComponents() { components =>
-      import components.{ defaultActionBuilder => Action }
+      import components.{ defaultActionBuilder ⇒ Action }
       {
         case GET(p"/publickey") => Action {
           Results.Ok.sendResource("hat-test-messages/testPublicKey.pem")
@@ -51,106 +53,8 @@ object MockHatServer {
             case _                            => Results.Unauthorized.sendResource("hat-test-messages/authInvalid.json")
           }
         }
-        case GET(p"/dataDebit/cedaaf28-3ae8-4676-aae7-100a1fb5079f/values") => Action { request =>
-          val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
-          val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
-
-          maybeAccessToken match {
-            case Some(token) if token == validAccessToken => Results.Ok.sendResource("hat-test-messages/dataDebitOut.json")
-            case _                                        => Results.Unauthorized.sendResource("hat-test-messages/authInvalid.json")
-          }
-        }
-        case GET(p"/dataDebit/cedaaf28-3ae8-4676-aae7-100a1fb5079a/values") => Action { request =>
-          val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
-          val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
-
-          val ddUnauthorizedMessage =
-            """
-            |{
-            |    "message": "Forbidden",
-            |    "cause": "You do not have rights to access values for this data debit"
-            |}
-          """.stripMargin
-
-          maybeAccessToken match {
-            case Some(token) if token == validAccessToken => Results.Forbidden.sendEntity(HttpEntity.Strict(ByteString(ddUnauthorizedMessage), Some("application/json")))
-            case _                                        => Results.Unauthorized.sendResource("hat-test-messages/authInvalid.json")
-          }
-        }
-        case GET(p"/data/table") => Action { request =>
-          val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
-          val maybeTableName = request.getQueryString("name")
-          val maybeTableSource = request.getQueryString("source")
-
-          val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
-
-          (maybeTableName, maybeTableSource, maybeAccessToken) match {
-            case (Some("events"), Some("calendar"), Some(token)) if token == validAccessToken => Results.Ok.sendResource("hat-test-messages/tableFound.json")
-            case (Some(_), Some(_), Some(token)) if token == validAccessToken => Results.NotFound.sendResource("hat-test-messages/tableNotFound.json")
-            case _ => Results.Unauthorized.sendResource("hat-test-messages/authInvalid.json")
-          }
-        }
-        case GET(p"/data/table/${ int(id) }") => Action { request =>
-          val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
-
-          val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
-
-          (id, maybeAccessToken) match {
-            case (58, Some(token)) if token == validAccessToken => Results.Ok.sendResource("hat-test-messages/tableFound.json")
-            case (_, Some(token)) if token == validAccessToken => Results.NotFound.sendResource("hat-test-messages/tableIdNotFound.json")
-            case _ => Results.Unauthorized.sendResource("hat-test-messages/authInvalid.json")
-          }
-        }
-        case POST(p"/data/table") => Action { request =>
-          val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
-          request.body.asJson.map { bodyJson =>
-            bodyJson.validate[ApiDataTable] match {
-              case s: JsSuccess[ApiDataTable] =>
-                val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
-                val expectedTable = Json.parse(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/expectedTableValue.json")).as[ApiDataTable]
-
-                val response = (s.get, maybeAccessToken) match {
-                  case (body, Some(token)) if token == validAccessToken && body == expectedTable =>
-                    Results.Created.sendResource("hat-test-messages/tableFound.json")
-                  case (body, Some(token)) if token == validAccessToken =>
-                    Results.Ok.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("").toString()), Some("application/json")))
-                  case _ =>
-                    Results.Unauthorized.sendResource("authInvalid.json")
-                }
-                response
-              case e: JsError => Results.Ok.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("").toString()), Some("application/json")))
-              case _          => Results.Ok.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("").toString()), Some("application/json")))
-            }
-          } getOrElse {
-            Results.BadRequest.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("Not JSON!").toString()), Some("application/json")))
-          }
-        }
-        case POST(p"/data/record/values") => Action { request =>
-          val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
-          request.body.asJson.map { bodyJson =>
-            bodyJson.validate[Seq[ApiRecordValues]] match {
-              case s: JsSuccess[Seq[ApiRecordValues]] =>
-                val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
-                val expectedRecord = Json.parse(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/recordsSubmission.json")).as[Seq[ApiRecordValues]]
-
-                val response = (s.get, maybeAccessToken) match {
-                  case (body, Some(token)) if token == validAccessToken && body == expectedRecord =>
-                    Results.Created.sendResource("hat-test-messages/recordsPosted.json")
-                  case (body, Some(token)) if token == validAccessToken =>
-                    Results.BadRequest.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("").toString()), Some("application/json")))
-                  case _ =>
-                    Results.Unauthorized.sendResource("hat-test-messages/authInvalid.json")
-                }
-                response
-              case e: JsError => Results.Ok.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("").toString()), Some("application/json")))
-              case _          => Results.Ok.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("").toString()), Some("application/json")))
-            }
-          } getOrElse {
-            Results.BadRequest.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("Not JSON!").toString()), Some("application/json")))
-          }
-        }
-        case POST(p"/api/v2/data/$namespace/$endpoint") => Action { request =>
-          logger.info(s"POST /api/v2/data/$namespace/$endpoint")
+        case POST(p"/api/$apiVersion/data/$namespace/$endpoint") => Action { request =>
+          logger.info(s"POST /api/$apiVersion/data/$namespace/$endpoint")
           request.body.asJson.map {
             case array: JsArray =>
               val result = array.value.map(EndpointData(s"$namespace/$endpoint", Some(UUID.randomUUID), _, None))
@@ -162,8 +66,8 @@ object MockHatServer {
             Results.BadRequest.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("Not JSON!").toString()), Some("application/json")))
           }
         }
-        case GET(p"/api/v2/data/$namespace/$endpoint") => Action { request =>
-          logger.info(s"GET /api/v2/data/$namespace/$endpoint")
+        case GET(p"/api/$apiVersion/data/$namespace/$endpoint") => Action { request =>
+          logger.info(s"GET /api/$apiVersion/data/$namespace/$endpoint")
           val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
 
           val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
@@ -180,8 +84,8 @@ object MockHatServer {
           }
         }
 
-        case GET(p"/api/v2/data-debit/$dataDebitId/values") => Action { request =>
-          logger.info(s"GET /api/v2/data-debit/$dataDebitId/values")
+        case GET(p"/api/$apiVersion/data-debit/$dataDebitId/values") => Action { request =>
+          logger.info(s"GET /api/$apiVersion/data-debit/$dataDebitId/values")
           val maybeAccessToken = request.headers.toSimpleMap.get("X-Auth-Token")
 
           val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
@@ -207,7 +111,7 @@ object MockHatServer {
 
   def withHatClient[T](block: HatClient => T): T = {
     withMockHatServerClient { client =>
-      block(new HatClient(client, "", ""))
+      block(new HatClient(client, "", "", "v2.6"))
     }
   }
 }

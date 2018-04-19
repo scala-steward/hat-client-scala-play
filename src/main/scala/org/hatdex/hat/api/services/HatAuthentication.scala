@@ -25,6 +25,7 @@ trait HatAuthentication {
   protected val ws: WSClient
   protected val schema: String
   protected val hatAddress: String
+  protected val apiVersion: String
   protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   import HatJsonFormats._
