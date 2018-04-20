@@ -23,12 +23,13 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
     def writes(version: Version): JsValue = JsString(version.toString)
   }
 
+  protected implicit val applicationRatingFormat: Format[ApplicationRating] = Json.format[ApplicationRating]
+
   protected implicit val applicationInfoFormat: Format[ApplicationInfo] = Json.format[ApplicationInfo]
 
   protected implicit val userRoleFormat: Format[UserRole] = HatJsonFormats.userRoleFormat
   protected implicit val dataDebitRequestFormat: Format[DataDebitRequest] = RichDataJsonFormats.dataDebitRequestFormat
   protected implicit val dataBundleFormat: Format[EndpointDataBundle] = RichDataJsonFormats.endpointDatabundleFormat
-  protected implicit val applicationRatingFormat: Format[ApplicationRating] = Json.format[ApplicationRating]
   protected implicit val applicationPermissionsFormat: Format[ApplicationPermissions] = Json.format[ApplicationPermissions]
 
   // Application Status JSON formats

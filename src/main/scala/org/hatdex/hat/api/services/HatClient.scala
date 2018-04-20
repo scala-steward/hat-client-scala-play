@@ -15,6 +15,7 @@ import play.api.libs.ws.WSClient
 
 class HatClient(val ws: WSClient, val hatAddress: String, override val schema: String, override val apiVersion: String) extends HatAuthentication
   with HatDataDebits
+  with HatApplications
   with HatRichData
   with HatSystem {
   @Inject def this(ws: WSClient, hatAddress: String) = this(ws, hatAddress, "https://", "v2.6")
