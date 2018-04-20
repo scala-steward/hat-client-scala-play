@@ -14,13 +14,16 @@ case class DataFeedItem(
 
 case class DataFeedItemTitle(
     text: String,
+    subtitle: Option[String],
     action: Option[String])
 
 case class DataFeedItemContent(
     text: Option[String],
+    html: Option[String],
     media: Option[Seq[DataFeedItemMedia]])
 
 case class DataFeedItemMedia(
+    thumbnail: Option[String],
     url: Option[String])
 
 case class DataFeedItemLocation(

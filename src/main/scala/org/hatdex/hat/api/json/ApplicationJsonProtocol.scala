@@ -1,7 +1,7 @@
 package org.hatdex.hat.api.json
 
 import org.hatdex.hat.api.models.applications._
-import org.hatdex.hat.api.models.{ DataDebitRequest, EndpointDataBundle, UserRole }
+import org.hatdex.hat.api.models._
 import play.api.libs.json._
 
 import scala.util.Try

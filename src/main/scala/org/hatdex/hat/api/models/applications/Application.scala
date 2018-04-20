@@ -4,17 +4,6 @@ import org.hatdex.hat.api.models._
 import org.joda.time.{ DateTime, Duration }
 import play.api.libs.json.JsValue
 
-case class Drawable(
-    small: Option[String],
-    normal: String,
-    large: Option[String],
-    xlarge: Option[String])
-
-case class FormattedText(
-    text: String,
-    markdown: Option[String],
-    html: Option[String])
-
 case class ApplicationGraphics(
     banner: Drawable,
     logo: Drawable,
