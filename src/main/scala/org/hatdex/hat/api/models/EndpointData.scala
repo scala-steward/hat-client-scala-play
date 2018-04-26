@@ -178,9 +178,9 @@ case class DataDebit(
     requestDescription: Option[String] // High level description (may be empty) of what the Data Debit is about
 ) {
 
-  lazy val currentPermissions: Option[DataDebitPermissions] = permissions.sortBy(_.dateCreated).headOption
-
   private implicit def dateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isAfter _)
+
+  lazy val currentPermissions: Option[DataDebitPermissions] = permissions.sortBy(_.dateCreated).headOption
 
   lazy val activePermissions: Option[DataDebitPermissions] =
     permissions.filter(_.active)
@@ -188,14 +188,17 @@ case class DataDebit(
       .headOption
 
   lazy val lastUpdated: LocalDateTime =
-    permissions.sortBy(_.dateCreated)
-      .headOption
-      .map(_.dateCreated)
-      .getOrElse(LocalDateTime.now())
+    if (permissions.nonEmpty) {
+      permissions.map(_.dateCreated).max
+    }
+    else {
+      LocalDateTime.now()
+    }
 
-  lazy val active: Boolean = activePermissions.exists(_ ⇒ true)
-  lazy val start: Option[DateTime] = activePermissions.map(p ⇒ p.start)
-  lazy val end: Option[DateTime] = activePermissions.flatMap(p ⇒ p.end)
+  lazy val accepted: Boolean = permissions.exists(_.accepted)
+  lazy val active: Boolean = activePermissions.exists(_.active)
+  lazy val start: Option[DateTime] = activePermissions.orElse(currentPermissions).map(p ⇒ p.start)
+  lazy val end: Option[DateTime] = activePermissions.orElse(currentPermissions).flatMap(p ⇒ p.end)
 }
 
 case class DataDebitSetupRequest(

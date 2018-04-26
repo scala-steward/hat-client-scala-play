@@ -145,6 +145,7 @@ trait RichDataJsonFormats extends HatJsonFormats with JodaWrites with JodaReads 
 
   private val ddWrites: Writes[DataDebit] = Json.writes[DataDebit]
     .addField("active", _.active)
+    .addField("accepted", _.accepted)
     .addField("start", _.start)
     .addField("end", _.end)
     .addField("permissionsActive", _.activePermissions)
