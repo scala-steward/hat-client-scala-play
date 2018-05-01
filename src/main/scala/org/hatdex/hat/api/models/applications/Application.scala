@@ -53,6 +53,7 @@ object ApplicationKind {
 
   trait Kind {
     val kind: String
+    val url: String
   }
 
   case class DataPlug(url: String) extends Kind {
@@ -148,13 +149,13 @@ case class Application(
     status.compatibility.greaterThan(fromApplication.info.version)
   }
 
-  lazy val dataDebitId: Option[String] = permissions.dataRequired.map(_ => s"app-$id")
+  lazy val dataDebitId: Option[String] = permissions.dataRetrieved.map(_ => s"app-$id")
   lazy val dataDebitSetupRequest: Option[DataDebitSetupRequest] = {
     for {
       dataDebitKey ← dataDebitId
       bundle ← permissions.dataRetrieved
     } yield DataDebitSetupRequest(dataDebitKey, info.dataUsePurpose, DateTime.now(), Duration.standardDays(30), cancelAtPeriodEnd = false,
-      info.name, null, info.graphics.logo.normal, Some(id), Some(info.description.text), info.termsUrl, None, bundle)
+      info.name, kind.url, info.graphics.logo.normal, Some(id), Some(info.description.text), info.termsUrl, None, bundle)
   }
 
 }
