@@ -131,6 +131,7 @@ object ApplicationStatus {
       compatibility: Version,
       statusUrl: String,
       expectedStatus: Int, // TODO: a more detailed status mapping to include a message from reported status
+      dataPreviewEndpoint: Option[String],
       recentDataCheckEndpoint: Option[String]) extends Status {
     final val kind: String = "External"
   }
