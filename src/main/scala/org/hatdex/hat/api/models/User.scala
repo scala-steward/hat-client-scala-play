@@ -38,12 +38,13 @@ object UserRole {
     (userRole, roleExtra) match {
       case (role, None) ⇒
         role match {
-          case "owner"      ⇒ Owner()
-          case "platform"   ⇒ Platform()
-          case "validate"   ⇒ Validate()
-          case "datadebit"  ⇒ DataDebitOwner("")
-          case "datacredit" ⇒ DataCredit("")
-          case _            ⇒ UnknownRole()
+          case "owner"           ⇒ Owner()
+          case "platform"        ⇒ Platform()
+          case "validate"        ⇒ Validate()
+          case "datadebit"       ⇒ DataDebitOwner("")
+          case "datacredit"      ⇒ DataCredit("")
+          case "applicationlist" ⇒ ApplicationList()
+          case _                 ⇒ UnknownRole()
         }
       case (role, Some(extra)) ⇒
         role match {
@@ -52,6 +53,7 @@ object UserRole {
           case "namespacewrite"           ⇒ NamespaceWrite(extra)
           case "namespaceread"            ⇒ NamespaceRead(extra)
           case "retrieveapplicationtoken" ⇒ RetrieveApplicationToken(extra)
+          case "applicationmanage"        ⇒ ApplicationManage(extra)
           case _                          ⇒ UnknownRole()
         }
     }
@@ -68,6 +70,13 @@ case class UnknownRole() extends UserRole("unknown")
 case class RetrieveApplicationToken(applicationId: String) extends UserRole("retrieveapplicationtoken") {
   override def extra: Option[String] = Some(applicationId)
 }
+
+case class ApplicationManage(applicationId: String) extends UserRole("applicationmanage") {
+  override def extra: Option[String] = Some(applicationId)
+}
+
+// List applications on the HAT - only effective in conjunction with one or more of `ApplicationManage`
+case class ApplicationList() extends UserRole("applicationlist")
 
 // Clients
 case class DataDebitOwner(dataDebitId: String) extends UserRole("datadebit") {
