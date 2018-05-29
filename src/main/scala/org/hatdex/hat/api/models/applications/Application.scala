@@ -123,6 +123,7 @@ object ApplicationStatus {
 
   case class Internal(
       compatibility: Version,
+      dataPreviewEndpoint: Option[String],
       recentDataCheckEndpoint: Option[String]) extends Status {
     final val kind: String = "Internal"
   }
