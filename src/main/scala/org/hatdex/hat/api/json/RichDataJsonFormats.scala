@@ -3,7 +3,7 @@ package org.hatdex.hat.api.json
 import java.util.UUID
 
 import org.hatdex.hat.api.models._
-import org.joda.time.{ Duration, LocalDateTime }
+import org.joda.time.{ Duration, LocalDateTime, Period }
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -126,6 +126,22 @@ trait RichDataJsonFormats extends HatJsonFormats with JodaWrites with JodaReads 
     def reads(json: JsValue): JsResult[Duration] = json match {
       case JsNumber(value) ⇒ JsSuccess(new Duration(value.toLong))
       case JsString(value) ⇒ Try(Duration.parse(value)).map(p ⇒ JsSuccess(p))
+        .recover({ case e ⇒ JsError(Seq(JsPath() -> Seq(JsonValidationError(s"Could not parse period: ${e.getMessage}")))) })
+        .get
+      case _ ⇒ JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.period"))))
+    }
+  }
+
+  /*
+  * Period Json formats
+   */
+  implicit val periodWrites: Writes[Period] = new Writes[Period] {
+    def writes(o: Period): JsValue = JsNumber(o.getMillis)
+  }
+  implicit val periodReads: Reads[Period] = new Reads[Period] {
+    def reads(json: JsValue): JsResult[Period] = json match {
+      case JsNumber(value) ⇒ JsSuccess(new Period(value.toLong))
+      case JsString(value) ⇒ Try(Period.parse(value)).map(p ⇒ JsSuccess(p))
         .recover({ case e ⇒ JsError(Seq(JsPath() -> Seq(JsonValidationError(s"Could not parse period: ${e.getMessage}")))) })
         .get
       case _ ⇒ JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.period"))))
