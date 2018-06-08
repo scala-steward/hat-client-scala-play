@@ -10,6 +10,7 @@ trait DataFeedItemJsonProtocol extends JodaWrites with JodaReads {
   protected implicit val locationAddressFormat: Format[LocationAddress] = Json.format[LocationAddress]
   protected implicit val locationFormat: Format[DataFeedItemLocation] = Json.format[DataFeedItemLocation]
   protected implicit val mediaFormat: Format[DataFeedItemMedia] = Json.format[DataFeedItemMedia]
+  protected implicit val dataFeedNestedStructureItemFormat: Format[DataFeedNestedStructureItem] = Json.format[DataFeedNestedStructureItem]
   protected implicit val contentFormat: Format[DataFeedItemContent] = Json.format[DataFeedItemContent]
   protected implicit val titleFormat: Format[DataFeedItemTitle] = Json.format[DataFeedItemTitle]
 

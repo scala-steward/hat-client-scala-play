@@ -17,10 +17,16 @@ case class DataFeedItemTitle(
     subtitle: Option[String],
     action: Option[String])
 
+case class DataFeedNestedStructureItem(
+    content: String,
+    badge: Option[String],
+    types: Option[Seq[String]])
+
 case class DataFeedItemContent(
     text: Option[String],
     html: Option[String],
-    media: Option[Seq[DataFeedItemMedia]])
+    media: Option[Seq[DataFeedItemMedia]],
+    nestedStructure: Option[Map[String, Seq[DataFeedNestedStructureItem]]])
 
 case class DataFeedItemMedia(
     thumbnail: Option[String],
