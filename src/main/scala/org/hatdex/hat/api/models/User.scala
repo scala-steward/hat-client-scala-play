@@ -54,6 +54,7 @@ object UserRole {
           case "namespaceread"            ⇒ NamespaceRead(extra)
           case "retrieveapplicationtoken" ⇒ RetrieveApplicationToken(extra)
           case "applicationmanage"        ⇒ ApplicationManage(extra)
+          case "managefiles"              ⇒ ManageFiles(extra)
           case _                          ⇒ UnknownRole()
         }
     }
