@@ -97,3 +97,7 @@ case class NamespaceRead(namespace: String) extends UserRole("namespaceread") {
   override def extra: Option[String] = Some(namespace)
 }
 
+case class ManageFiles(source: String) extends UserRole("managefiles") {
+  override def extra: Option[String] = Some(source)
+}
+
