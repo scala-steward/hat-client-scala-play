@@ -30,11 +30,12 @@ trait HatRichData {
 
   import org.hatdex.hat.api.json.RichDataJsonFormats._
 
-  def saveData(access_token: String, namespace: String, endpoint: String, data: JsArray)(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
+  def saveData(access_token: String, namespace: String, endpoint: String, data: JsArray, skipErrors: Boolean = false)(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data/$namespace/$endpoint")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+      .withQueryStringParameters("skipErrors" -> skipErrors.toString)
 
     val futureResponse: Future[WSResponse] = request.post(data)
 
