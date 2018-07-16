@@ -39,6 +39,7 @@ case class ApplicationRating(
 
 case class ApplicationInfo(
     version: Version,
+    updateNotes: Option[ApplicationUpdateNotes],
     published: Boolean,
     name: String,
     headline: String,
@@ -48,6 +49,10 @@ case class ApplicationInfo(
     rating: Option[ApplicationRating],
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics)
+
+case class ApplicationUpdateNotes(
+    header: String,
+    notes: Option[Seq[String]])
 
 object ApplicationKind {
 
