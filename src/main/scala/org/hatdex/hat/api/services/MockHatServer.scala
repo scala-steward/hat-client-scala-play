@@ -57,10 +57,10 @@ object MockHatServer {
           logger.info(s"POST /api/$apiVersion/data/$namespace/$endpoint")
           request.body.asJson.map {
             case array: JsArray =>
-              val result = array.value.map(EndpointData(s"$namespace/$endpoint", Some(UUID.randomUUID), _, None))
+              val result = array.value.map(EndpointData(s"$namespace/$endpoint", Some(UUID.randomUUID), None, None, _, None))
               Results.Created.sendEntity(HttpEntity.Strict(ByteString(Json.toJson(result).toString()), Some("application/json")))
             case value: JsValue =>
-              val result = EndpointData(s"$namespace/$endpoint", Some(UUID.randomUUID), value, None)
+              val result = EndpointData(s"$namespace/$endpoint", Some(UUID.randomUUID), None, None, value, None)
               Results.Created.sendEntity(HttpEntity.Strict(ByteString(Json.toJson(result).toString()), Some("application/json")))
           } getOrElse {
             Results.BadRequest.sendEntity(HttpEntity.Strict(ByteString(Json.toJson("Not JSON!").toString()), Some("application/json")))

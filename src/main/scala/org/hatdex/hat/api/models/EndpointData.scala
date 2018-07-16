@@ -8,6 +8,8 @@ import play.api.libs.json._
 case class EndpointData(
     endpoint: String,
     recordId: Option[UUID],
+    sourceTimestamp: Option[DateTime],
+    sourceUniqueId: Option[String],
     data: JsValue,
     links: Option[Seq[EndpointData]])
 

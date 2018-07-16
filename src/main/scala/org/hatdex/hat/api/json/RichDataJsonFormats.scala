@@ -3,7 +3,7 @@ package org.hatdex.hat.api.json
 import java.util.UUID
 
 import org.hatdex.hat.api.models._
-import org.joda.time.{ Duration, LocalDateTime, Period }
+import org.joda.time.{ DateTime, Duration, LocalDateTime, Period }
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -14,12 +14,16 @@ trait RichDataJsonFormats extends HatJsonFormats with JodaWrites with JodaReads 
   val endpointDataWrites: Writes[EndpointData] = (
     (__ \ "endpoint").write[String] and
     (__ \ "recordId").writeNullable[UUID] and
+    (__ \ "sourceTimestamp").writeNullable[DateTime] and
+    (__ \ "sourceUniqueId").writeNullable[String] and
     (__ \ "data").write[JsValue] and
     (__ \ "links").lazyWriteNullable(implicitly[Format[Seq[EndpointData]]]))(unlift(EndpointData.unapply))
 
   val endpointDataReads: Reads[EndpointData] = (
     (__ \ "endpoint").read[String].filter(JsonValidationError("Endpoint invalid"))(_.matches("[0-9a-z-/]+")) and
     (__ \ "recordId").readNullable[UUID] and
+    (__ \ "sourceTimestamp").readNullable[DateTime] and
+    (__ \ "sourceUniqueId").readNullable[String] and
     (__ \ "data").read[JsValue] and
     (__ \ "links").lazyReadNullable(implicitly[Reads[Seq[EndpointData]]]))(EndpointData.apply _)
 
