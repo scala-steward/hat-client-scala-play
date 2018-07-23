@@ -132,12 +132,14 @@ object ApplicationStatus {
     val kind: String
     val compatibility: Version
     val recentDataCheckEndpoint: Option[String]
+    val versionReleaseDate: DateTime
   }
 
   case class Internal(
       compatibility: Version,
       dataPreviewEndpoint: Option[String],
-      recentDataCheckEndpoint: Option[String]) extends Status {
+      recentDataCheckEndpoint: Option[String],
+      versionReleaseDate: DateTime) extends Status {
     final val kind: String = "Internal"
   }
 
@@ -146,7 +148,8 @@ object ApplicationStatus {
       statusUrl: String,
       expectedStatus: Int, // TODO: a more detailed status mapping to include a message from reported status
       dataPreviewEndpoint: Option[String],
-      recentDataCheckEndpoint: Option[String]) extends Status {
+      recentDataCheckEndpoint: Option[String],
+      versionReleaseDate: DateTime) extends Status {
     final val kind: String = "External"
   }
 }
