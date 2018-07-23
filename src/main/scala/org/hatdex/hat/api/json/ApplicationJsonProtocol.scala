@@ -26,6 +26,7 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
   protected implicit val applicationRatingFormat: Format[ApplicationRating] = Json.format[ApplicationRating]
 
   protected implicit val applicationUpdateNotesFormat: Format[ApplicationUpdateNotes] = Json.format[ApplicationUpdateNotes]
+  protected implicit val applicationDeveloperFormat: Format[ApplicationDeveloper] = Json.format[ApplicationDeveloper]
   protected implicit val applicationInfoFormat: Format[ApplicationInfo] = Json.format[ApplicationInfo]
 
   protected implicit val userRoleFormat: Format[UserRole] = HatJsonFormats.userRoleFormat

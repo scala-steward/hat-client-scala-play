@@ -37,6 +37,13 @@ object Version {
 case class ApplicationRating(
     score: String)
 
+case class ApplicationDeveloper(
+    id: String,
+    name: String,
+    url: String,
+    country: Option[String],
+    logo: Option[Drawable])
+
 case class ApplicationInfo(
     version: Version,
     updateNotes: Option[ApplicationUpdateNotes],
@@ -46,6 +53,7 @@ case class ApplicationInfo(
     description: FormattedText,
     termsUrl: String,
     dataUsePurpose: String,
+    supportContact: String,
     rating: Option[ApplicationRating],
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics)
@@ -147,6 +155,7 @@ case class Application(
     id: String,
     kind: ApplicationKind.Kind,
     info: ApplicationInfo,
+    developer: ApplicationDeveloper,
     permissions: ApplicationPermissions,
     setup: ApplicationSetup.Setup,
     status: ApplicationStatus.Status) {
