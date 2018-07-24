@@ -7,11 +7,11 @@ import play.api.libs.json._
 import scala.util.Try
 
 trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
-  protected implicit val drawableFormat: Format[Drawable] = Json.format[Drawable]
-  protected implicit val applicationGraphicsFormat: Format[ApplicationGraphics] = Json.format[ApplicationGraphics]
-  protected implicit val formattedTextFormat: Format[FormattedText] = Json.format[FormattedText]
+  implicit val drawableFormat: Format[Drawable] = Json.format[Drawable]
+  implicit val applicationGraphicsFormat: Format[ApplicationGraphics] = Json.format[ApplicationGraphics]
+  implicit val formattedTextFormat: Format[FormattedText] = Json.format[FormattedText]
 
-  protected implicit val versionFormat: Format[Version] = new Format[Version] {
+  implicit val versionFormat: Format[Version] = new Format[Version] {
     def reads(json: JsValue): JsResult[Version] =
       Try(Version(json.as[String]))
         .map(v => JsSuccess(v))
@@ -23,11 +23,11 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
     def writes(version: Version): JsValue = JsString(version.toString)
   }
 
-  protected implicit val applicationRatingFormat: Format[ApplicationRating] = Json.format[ApplicationRating]
+  implicit val applicationRatingFormat: Format[ApplicationRating] = Json.format[ApplicationRating]
 
-  protected implicit val applicationUpdateNotesFormat: Format[ApplicationUpdateNotes] = Json.format[ApplicationUpdateNotes]
-  protected implicit val applicationDeveloperFormat: Format[ApplicationDeveloper] = Json.format[ApplicationDeveloper]
-  protected implicit val applicationInfoFormat: Format[ApplicationInfo] = Json.format[ApplicationInfo]
+  implicit val applicationUpdateNotesFormat: Format[ApplicationUpdateNotes] = Json.format[ApplicationUpdateNotes]
+  implicit val applicationDeveloperFormat: Format[ApplicationDeveloper] = Json.format[ApplicationDeveloper]
+  implicit val applicationInfoFormat: Format[ApplicationInfo] = Json.format[ApplicationInfo]
 
   protected implicit val userRoleFormat: Format[UserRole] = HatJsonFormats.userRoleFormat
   protected implicit val dataDebitRequestFormat: Format[DataDebitRequest] = RichDataJsonFormats.dataDebitRequestFormat
