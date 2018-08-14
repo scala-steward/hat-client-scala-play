@@ -11,6 +11,7 @@ package org.hatdex.hat.api.models
 
 import org.joda.time.LocalDateTime
 
+@Deprecated
 case class ApiBundleContextEntitySelection(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -20,6 +21,7 @@ case class ApiBundleContextEntitySelection(
     entityKind: Option[String],
     properties: Option[Seq[ApiBundleContextPropertySelection]])
 
+@Deprecated
 case class ApiBundleContextPropertySelection(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -30,6 +32,7 @@ case class ApiBundleContextPropertySelection(
     propertyType: Option[String],
     propertyUnitofmeasurement: Option[String])
 
+@Deprecated
 case class ApiBundleContext(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],

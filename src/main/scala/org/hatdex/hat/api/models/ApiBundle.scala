@@ -13,7 +13,9 @@ import org.joda.time.LocalDateTime
 
 import scala.collection.immutable.Map
 
+@Deprecated
 object ComparisonOperators {
+  @Deprecated
   sealed trait ComparisonOperator
   case object equal extends ComparisonOperator
   case object notEqual extends ComparisonOperator
@@ -41,6 +43,7 @@ object ComparisonOperators {
 
 import org.hatdex.hat.api.models.ComparisonOperators.ComparisonOperator
 
+@Deprecated
 case class ApiBundleTableCondition(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -49,6 +52,7 @@ case class ApiBundleTableCondition(
     value: String,
     operator: ComparisonOperator)
 
+@Deprecated
 case class ApiBundleTableSlice(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -56,6 +60,7 @@ case class ApiBundleTableSlice(
     table: ApiDataTable,
     conditions: Seq[ApiBundleTableCondition])
 
+@Deprecated
 case class ApiBundleTable(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -63,10 +68,9 @@ case class ApiBundleTable(
     name: String,
     table: ApiDataTable, // Used to tag which table is bundled
     slices: Option[Seq[ApiBundleTableSlice]],
-    data: Option[Seq[ApiDataRecord]])
+    data: Option[Seq[ApiDataRecord]]) // Data is optional, only used on the outbound
 
-// Data is optional, only used on the outbound
-
+@Deprecated
 case class ApiBundleCombination(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -77,10 +81,14 @@ case class ApiBundleCombination(
     bundleTableField: Option[ApiDataField],
     operator: Option[ComparisonOperator])
 
+@Deprecated
 case class ApiBundleDataSourceField(name: String, description: String, fields: Option[List[ApiBundleDataSourceField]])
+@Deprecated
 case class ApiBundleDataSourceDataset(name: String, description: String, fields: List[ApiBundleDataSourceField])
+@Deprecated
 case class ApiBundleDataSourceStructure(source: String, datasets: List[ApiBundleDataSourceDataset])
 
+@Deprecated
 case class ApiBundleContextless(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -88,13 +96,13 @@ case class ApiBundleContextless(
     name: String,
     sources: Option[Seq[ApiBundleDataSourceStructure]])
 
+@Deprecated
 case class ApiBundleContextlessDatasetData(
     name: String,
     table: ApiDataTable, // Used to tag which table is bundled
-    data: Option[Seq[ApiDataRecord]])
+    data: Option[Seq[ApiDataRecord]]) // Data is optional, only used on the outbound
 
-// Data is optional, only used on the outbound
-
+@Deprecated
 case class ApiBundleContextlessData(
     id: Int,
     name: String,

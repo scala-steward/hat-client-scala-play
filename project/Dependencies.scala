@@ -25,16 +25,16 @@ object Dependencies {
     object Play {
       val version = "2.6.17"
       val ws = "com.typesafe.play" %% "play-ahc-ws" % version
-      val test = "com.typesafe.play" %% "play-test" % version // Used by the MockHatServer
+      val test = "com.typesafe.play" %% "play-test" % version % "compile" // Used by the MockHatServer
       val json = "com.typesafe.play" %% "play-json" % "2.6.9"
       val jsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.6.9"
     }
 
     object Specs2 {
       private val version = "4.3.3"
-      val core = "org.specs2" %% "specs2-core" % version
-      val matcherExtra = "org.specs2" %% "specs2-matcher-extra" % version
-      val mock = "org.specs2" %% "specs2-mock" % version
+      val core = "org.specs2" %% "specs2-core" % version % "test"
+      val matcherExtra = "org.specs2" %% "specs2-matcher-extra" % version % "test"
+      val mock = "org.specs2" %% "specs2-mock" % version % "test"
     }
 
     object Utils {

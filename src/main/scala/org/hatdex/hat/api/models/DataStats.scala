@@ -13,12 +13,14 @@ import org.joda.time.LocalDateTime
 
 import scala.collection.immutable.HashMap
 
+@Deprecated
 case class DataFieldStats(
     name: String,
     tableName: String,
     tableSource: String,
     valueCount: Int)
 
+@Deprecated
 case class DataTableStats(
     name: String,
     source: String,
@@ -32,12 +34,14 @@ sealed trait DataStats {
   val logEntry: String
 }
 
+@Deprecated
 trait StatsForTables {
   val time: LocalDateTime
   val user: User
   val dataTableStats: Option[Seq[DataTableStats]]
 }
 
+@Deprecated
 case class DataCreditStats(
     operation: String,
     time: LocalDateTime,
@@ -47,6 +51,7 @@ case class DataCreditStats(
   final val statsType: String = "datacredit"
 }
 
+@Deprecated
 case class DataStorageStats(
     time: LocalDateTime,
     dataTableStats: Seq[DataTableStats],

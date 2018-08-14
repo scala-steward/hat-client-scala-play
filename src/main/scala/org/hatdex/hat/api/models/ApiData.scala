@@ -11,6 +11,7 @@ package org.hatdex.hat.api.models
 
 import org.joda.time.LocalDateTime
 
+@Deprecated
 case class ApiDataField(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -19,6 +20,7 @@ case class ApiDataField(
     name: String,
     values: Option[Seq[ApiDataValue]])
 
+@Deprecated
 case class ApiDataRecord(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -26,6 +28,7 @@ case class ApiDataRecord(
     name: String,
     tables: Option[Seq[ApiDataTable]])
 
+@Deprecated
 object ApiDataRecord {
   def flattenRecordValues(record: ApiDataRecord): Map[String, Any] = {
     Map(record.tables.getOrElse(Seq()).map { table =>
@@ -34,6 +37,7 @@ object ApiDataRecord {
   }
 }
 
+@Deprecated
 case class ApiDataTable(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -43,6 +47,7 @@ case class ApiDataTable(
     fields: Option[Seq[ApiDataField]],
     subTables: Option[Seq[ApiDataTable]])
 
+@Deprecated
 object ApiDataTable {
   /*
    * Reformats API Data table with values to a format where field/subtable name is an object key and values or subtables are the values
@@ -85,6 +90,7 @@ object ApiDataTable {
   }
 }
 
+@Deprecated
 case class ApiDataValue(
     id: Option[Int],
     dateCreated: Option[LocalDateTime],
@@ -93,6 +99,7 @@ case class ApiDataValue(
     field: Option[ApiDataField],
     record: Option[ApiDataRecord])
 
+@Deprecated
 case class ApiRecordValues(
     record: ApiDataRecord,
     values: Seq[ApiDataValue])
