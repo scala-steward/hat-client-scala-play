@@ -12,7 +12,7 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val crossScala = Seq("2.12.4", "2.11.8")
+    val crossScala = Seq("2.12.6", "2.11.8")
     val scalaVersion = crossScala.head
   }
 
@@ -23,23 +23,22 @@ object Dependencies {
 
   object Library {
     object Play {
-      val version = play.core.PlayVersion.current
+      val version = "2.6.17"
       val ws = "com.typesafe.play" %% "play-ahc-ws" % version
-      val test = "com.typesafe.play" %% "play-test" % version
-      val specs2 = "com.typesafe.play" %% "play-specs2" % version
+      val test = "com.typesafe.play" %% "play-test" % version // Used by the MockHatServer
       val json = "com.typesafe.play" %% "play-json" % "2.6.9"
       val jsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.6.9"
     }
 
     object Specs2 {
-      private val version = "3.9.5"
+      private val version = "4.3.3"
       val core = "org.specs2" %% "specs2-core" % version
       val matcherExtra = "org.specs2" %% "specs2-matcher-extra" % version
       val mock = "org.specs2" %% "specs2-mock" % version
     }
 
     object Utils {
-      val jodaTime = "joda-time" % "joda-time" % "2.9.9"
+      val jodaTime = "joda-time" % "joda-time" % "2.10"
     }
   }
 }

@@ -3,7 +3,6 @@ import Dependencies._
 libraryDependencies ++= Seq(
   Library.Play.ws,
   Library.Play.test,
-  Library.Play.specs2,
   Library.Play.json,
   Library.Play.jsonJoda,
   Library.Specs2.matcherExtra,

@@ -140,15 +140,15 @@ trait RichDataJsonFormats extends HatJsonFormats with JodaWrites with JodaReads 
   * Period Json formats
    */
   implicit val periodWrites: Writes[Period] = new Writes[Period] {
-    def writes(o: Period): JsValue = JsNumber(o.getMillis)
+    def writes(o: Period): JsValue = JsString(o.toString)
   }
   implicit val periodReads: Reads[Period] = new Reads[Period] {
     def reads(json: JsValue): JsResult[Period] = json match {
       case JsNumber(value) ⇒ JsSuccess(new Period(value.toLong))
       case JsString(value) ⇒ Try(Period.parse(value)).map(p ⇒ JsSuccess(p))
-        .recover({ case e ⇒ JsError(Seq(JsPath() -> Seq(JsonValidationError(s"Could not parse period: ${e.getMessage}")))) })
+        .recover({ case e ⇒ JsError(Seq(JsPath() → Seq(JsonValidationError(s"Could not parse period: ${e.getMessage}")))) })
         .get
-      case _ ⇒ JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.period"))))
+      case _ ⇒ JsError(Seq(JsPath() → Seq(JsonValidationError("validate.error.expected.period"))))
     }
   }
 
