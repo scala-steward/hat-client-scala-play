@@ -212,7 +212,6 @@ case class DataDebitSetupRequest(
     requestClientName: String, // Final
     requestClientUrl: String, // Final
     requestClientLogoUrl: String, // Final
-    requestClientCallbackUrl: Option[String], // the url to notify when data is received on the defined endpoints
     requestApplicationId: Option[String], // Final
     requestDescription: Option[String], // Final
     termsUrl: String, // URL linking to terms and conditions of this data debit
