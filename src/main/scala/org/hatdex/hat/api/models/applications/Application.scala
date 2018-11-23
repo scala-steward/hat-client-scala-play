@@ -56,7 +56,8 @@ case class ApplicationInfo(
     supportContact: String,
     rating: Option[ApplicationRating],
     dataPreview: Seq[DataFeedItem],
-    graphics: ApplicationGraphics)
+    graphics: ApplicationGraphics,
+    callbackUrl: Option[String])
 
 case class ApplicationUpdateNotes(
     header: String,
@@ -174,7 +175,7 @@ case class Application(
       dataDebitKey ← dataDebitId
       bundle ← permissions.dataRetrieved
     } yield DataDebitSetupRequest(dataDebitKey, info.dataUsePurpose, DateTime.now(), Duration.standardDays(30), cancelAtPeriodEnd = false,
-      info.name, kind.url, info.graphics.logo.normal, Some(id), Some(info.description.text), info.termsUrl, None, bundle)
+      info.name, kind.url, info.graphics.logo.normal, info.callbackUrl, Some(id), Some(info.description.text), info.termsUrl, None, bundle)
   }
 
 }
