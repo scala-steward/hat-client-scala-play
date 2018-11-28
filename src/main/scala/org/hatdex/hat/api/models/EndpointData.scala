@@ -176,6 +176,7 @@ case class DataDebit(
     requestClientName: String,
     requestClientUrl: String,
     requestClientLogoUrl: String,
+    requestClientCallbackUrl: Option[String],
     requestApplicationId: Option[String],
     requestDescription: Option[String] // High level description (may be empty) of what the Data Debit is about
 ) {
