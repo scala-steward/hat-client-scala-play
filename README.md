@@ -1,6 +1,6 @@
 # Scala API wrappers for the HAT
 
-Current Version: 2.6.2-SNAPSHOT
+Current Version: 2.6.5-SNAPSHOT
 
 This repository provides convenience wrappers around HAT HTTP APIs and contains 
 the most up-to-date set of typesafe HAT Data Models and Play-JSON based
@@ -15,7 +15,7 @@ The library artifacts are hosted on AWS S3:
     resolvers += "HAT Library Artifacts Releases" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-releases.hubofallthings.com"
     // Or for SNAPSHOTS:
     // "HAT Library Artifacts Snapshots" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-snapshots.hubofallthings.com"
-    libraryDependencies ++= "org.hatdex" %% "hat-client-scala-play" % 2.6.2
+    libraryDependencies ++= "org.hatdex" %% "hat-client-scala-play" % 2.6.5
 
 To use the client, it is sufficient to create a new one with minimal configuration:
 
