@@ -35,7 +35,31 @@ trait HatSystem {
         case OK => Future.successful(())
         case _ =>
           logger.error(s"Updating $hatAddress failed, $response, ${response.body}")
-          Future.failed(new RuntimeException(s"Updating $hatAddress faile"))
+          Future.failed(new RuntimeException(s"Updating $hatAddress failed"))
+      }
+    }
+  }
+
+  /**
+    *
+    * @param access_token - Expect Milliner Shared Secret
+    * @param ec
+    * @return
+    */
+  def destroyCache(access_token: String)(implicit ec: ExecutionContext): Future[Unit] = {
+    logger.debug(s"Destroying HAT Cache")
+
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2.6/destroy-cache")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
+
+    val futureResponse: Future[WSResponse] = request.delete()
+    futureResponse.flatMap { response =>
+      response.status match {
+        case OK => Future.successful(())
+        case _ =>
+          logger.error(s"Destroying $hatAddress cache failed, $response, ${response.body}")
+          Future.failed(new RuntimeException(s"Destroying $hatAddress cache failed"))
       }
     }
   }

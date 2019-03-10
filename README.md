@@ -1,6 +1,6 @@
 # Scala API wrappers for the HAT
 
-Current Version: 2.6.5-SNAPSHOT
+Current Version: 2.6.6-SNAPSHOT
 
 This repository provides convenience wrappers around HAT HTTP APIs and contains 
 the most up-to-date set of typesafe HAT Data Models and Play-JSON based
