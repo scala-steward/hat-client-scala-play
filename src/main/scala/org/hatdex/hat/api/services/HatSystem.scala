@@ -49,7 +49,7 @@ trait HatSystem {
   def destroyCache(access_token: String)(implicit ec: ExecutionContext): Future[Unit] = {
     logger.debug(s"Destroying HAT Cache")
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2.6/destroy-cache")
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2.6/system/destroy-cache")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
