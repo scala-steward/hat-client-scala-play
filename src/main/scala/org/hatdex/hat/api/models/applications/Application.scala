@@ -57,7 +57,8 @@ case class ApplicationInfo(
     rating: Option[ApplicationRating],
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics,
-    callbackUrl: Option[String])
+    callbackUrl: Option[String],
+    callbackUrls: Seq[String])
 
 case class ApplicationUpdateNotes(
     header: String,
@@ -91,6 +92,7 @@ object ApplicationSetup {
     val kind: String
     val onboarding: Option[Seq[OnboardingStep]]
     val preferences: Option[ApplicationPreferences]
+    val dependencies: Option[Seq[String]]  // List of application IDs that need to be setup for correct operation of this app
   }
 
   case class External(
@@ -98,13 +100,15 @@ object ApplicationSetup {
       iosUrl: Option[String],
       androidUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
-      preferences: Option[ApplicationPreferences]) extends Setup {
+      preferences: Option[ApplicationPreferences],
+      dependencies: Option[Seq[String]]) extends Setup {
     final val kind: String = "External"
   }
 
   case class Internal(
       onboarding: Option[Seq[OnboardingStep]],
-      preferences: Option[ApplicationPreferences]) extends Setup {
+      preferences: Option[ApplicationPreferences],
+      dependencies: Option[Seq[String]]) extends Setup {
     final val kind: String = "Internal"
   }
 
