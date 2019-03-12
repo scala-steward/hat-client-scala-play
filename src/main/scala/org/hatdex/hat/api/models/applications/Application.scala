@@ -57,8 +57,7 @@ case class ApplicationInfo(
     rating: Option[ApplicationRating],
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics,
-    callbackUrl: Option[String],
-    callbackUrls: Seq[String])
+    callbackUrl: Option[String])
 
 case class ApplicationUpdateNotes(
     header: String,
@@ -99,6 +98,7 @@ object ApplicationSetup {
       url: Option[String],
       iosUrl: Option[String],
       androidUrl: Option[String],
+      testingUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
       dependencies: Option[Seq[String]]) extends Setup {
