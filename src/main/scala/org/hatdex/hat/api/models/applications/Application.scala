@@ -91,20 +91,24 @@ object ApplicationSetup {
     val kind: String
     val onboarding: Option[Seq[OnboardingStep]]
     val preferences: Option[ApplicationPreferences]
+    val dependencies: Option[Seq[String]]  // List of application IDs that need to be setup for correct operation of this app
   }
 
   case class External(
       url: Option[String],
       iosUrl: Option[String],
       androidUrl: Option[String],
+      testingUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
-      preferences: Option[ApplicationPreferences]) extends Setup {
+      preferences: Option[ApplicationPreferences],
+      dependencies: Option[Seq[String]]) extends Setup {
     final val kind: String = "External"
   }
 
   case class Internal(
       onboarding: Option[Seq[OnboardingStep]],
-      preferences: Option[ApplicationPreferences]) extends Setup {
+      preferences: Option[ApplicationPreferences],
+      dependencies: Option[Seq[String]]) extends Setup {
     final val kind: String = "Internal"
   }
 

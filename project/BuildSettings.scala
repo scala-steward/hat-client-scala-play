@@ -14,9 +14,9 @@ import sbt._
 //// Basic settings
 ////*******************************
 object BuildSettings extends AutoPlugin {
-  override def trigger = allRequirements
+  override def trigger: PluginTrigger = allRequirements
 
-  override def projectSettings = Seq(
+  override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := "org.hatdex",
     version := "2.6.6-SNAPSHOT",
     resolvers ++= Dependencies.resolvers,
