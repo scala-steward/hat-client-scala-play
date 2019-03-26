@@ -59,7 +59,7 @@ trait HatSystem {
         case OK => Future.successful(())
         case NOT_FOUND =>
           logger.error(s"Destroying $hatAddress cache failed - HAT NOT FOUND, $response, ${response.body}")
-          Future.failed(new RuntimeException(s"Destroying $hatAddress cache failed - HAT NOT FOUnD"))
+          Future.failed(new RuntimeException(s"Destroying $hatAddress cache failed - HAT NOT FOUND"))
         case _ =>
           logger.error(s"Destroying $hatAddress cache failed, $response, ${response.body}")
           Future.failed(new RuntimeException(s"Destroying $hatAddress cache failed"))
