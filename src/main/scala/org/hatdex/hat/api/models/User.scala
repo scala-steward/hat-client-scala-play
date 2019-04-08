@@ -54,6 +54,7 @@ object UserRole {
           case "namespaceread"            ⇒ NamespaceRead(extra)
           case "retrieveapplicationtoken" ⇒ RetrieveApplicationToken(extra)
           case "applicationmanage"        ⇒ ApplicationManage(extra)
+          case "applicationstatusread"    ⇒ ApplicationStatusRead(extra)
           case "managefiles"              ⇒ ManageFiles(extra)
           case _                          ⇒ UnknownRole()
         }
@@ -73,6 +74,10 @@ case class RetrieveApplicationToken(applicationId: String) extends UserRole("ret
 }
 
 case class ApplicationManage(applicationId: String) extends UserRole("applicationmanage") {
+  override def extra: Option[String] = Some(applicationId)
+}
+
+case class ApplicationStatusRead(applicationId: String) extends UserRole("applicationstatusread") {
   override def extra: Option[String] = Some(applicationId)
 }
 
