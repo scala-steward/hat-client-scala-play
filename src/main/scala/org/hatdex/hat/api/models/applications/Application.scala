@@ -35,7 +35,8 @@ object Version {
 }
 
 case class ApplicationRating(
-    score: String)
+    score: String,
+    points: Int)
 
 case class ApplicationDeveloper(
     id: String,
@@ -57,8 +58,8 @@ case class ApplicationInfo(
     rating: Option[ApplicationRating],
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics,
-    callbackUrl: Option[String],
-    callbackUrls: Seq[String])
+    primaryColor: Option[String],
+    callbackUrl: Option[String])
 
 case class ApplicationUpdateNotes(
     header: String,
@@ -99,6 +100,7 @@ object ApplicationSetup {
       url: Option[String],
       iosUrl: Option[String],
       androidUrl: Option[String],
+      testingUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
       dependencies: Option[Seq[String]]) extends Setup {
@@ -143,6 +145,7 @@ object ApplicationStatus {
   case class Internal(
       compatibility: Version,
       dataPreviewEndpoint: Option[String],
+      staticDataPreviewEndpoint: Option[String],
       recentDataCheckEndpoint: Option[String],
       versionReleaseDate: DateTime) extends Status {
     final val kind: String = "Internal"
@@ -153,6 +156,7 @@ object ApplicationStatus {
       statusUrl: String,
       expectedStatus: Int, // TODO: a more detailed status mapping to include a message from reported status
       dataPreviewEndpoint: Option[String],
+      staticDataPreviewEndpoint: Option[String],
       recentDataCheckEndpoint: Option[String],
       versionReleaseDate: DateTime) extends Status {
     final val kind: String = "External"
