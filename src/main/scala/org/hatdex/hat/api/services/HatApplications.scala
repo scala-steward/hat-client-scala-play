@@ -10,6 +10,7 @@
 package org.hatdex.hat.api.services
 
 import org.hatdex.hat.api.models.HatService
+import org.hatdex.hat.api.models.applications.Application
 import org.hatdex.hat.api.services.Errors.{ ApiException, UnauthorizedActionException }
 import play.api.Logger
 import play.api.http.Status._
@@ -23,10 +24,13 @@ trait HatApplications {
   protected val ws: WSClient
   protected val schema: String
   protected val hatAddress: String
+  protected val apiVersion: String
   protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   import org.hatdex.hat.api.json.HatJsonFormats._
+  import org.hatdex.hat.api.json.ApplicationJsonProtocol._
 
+  @Deprecated
   def getApplications(access_token: String)(implicit ec: ExecutionContext): Future[Seq[HatService]] = {
 
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/application")
@@ -53,6 +57,7 @@ trait HatApplications {
     }
   }
 
+  @Deprecated
   def saveApplication(access_token: String, application: HatService)(implicit ec: ExecutionContext): Future[HatService] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2/application")
       .withVirtualHost(host)
@@ -74,6 +79,96 @@ trait HatApplications {
         case _ =>
           logger.error(s"Saving application for $hatAddress failed, $response, ${response.body}")
           Future.failed(new ApiException(s"Saving application for $hatAddress failed unexpectedly"))
+      }
+    }
+  }
+
+  def getAllApplications(accessToken: String)(implicit ec: ExecutionContext): Future[Seq[Application]] = {
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/applications")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> accessToken)
+
+    val eventualResponse: Future[WSResponse] = request.get()
+
+    eventualResponse.flatMap { response =>
+      response.status match {
+        case OK =>
+          response.json.validate[Seq[Application]] match {
+            case s: JsSuccess[Seq[Application]] => Future.successful(s.get)
+            case e: JsError =>
+              logger.error(s"Error parsing Application listing response: $e")
+              Future.failed(new ApiException(s"Error parsing Application listing response: $e"))
+          }
+        case FORBIDDEN =>
+          Future.failed(UnauthorizedActionException(s"Getting applications for hat $hatAddress forbidden"))
+        case _ =>
+          logger.error(s"Listing applications for $hatAddress failed, $response, ${response.body}")
+          Future.failed(new ApiException(s"Listing applications for $hatAddress failed unexpectedly"))
+      }
+    }
+  }
+
+  def enableApplication(accessToken: String, applicationId: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+    implicit val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/applications/$applicationId/setup")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> accessToken)
+
+    transitionApplication
+  }
+
+  def disableApplication(accessToken: String, applicationId: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+    implicit val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/applications/$applicationId/disable")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> accessToken)
+
+    transitionApplication
+  }
+
+  def getApplicationToken(accessToken: String, applicationId: String)(implicit ec: ExecutionContext): Future[String] = {
+    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/applications/$applicationId/access-token")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> accessToken)
+
+    val eventualResponse: Future[WSResponse] = request.get()
+
+    eventualResponse.flatMap { response =>
+      response.status match {
+        case OK =>
+          (response.json \ "accessToken").asOpt[String] match {
+            case Some(token) => Future.successful(token)
+            case None =>
+              Future.failed(new ApiException("Unable to parse application token"))
+          }
+        case FORBIDDEN =>
+          Future.failed(UnauthorizedActionException(s"Getting applications for hat $hatAddress forbidden"))
+        case _ =>
+          logger.error(s"Listing applications for $hatAddress failed, $response, ${response.body}")
+          Future.failed(new ApiException(s"Listing applications for $hatAddress failed unexpectedly"))
+      }
+    }
+  }
+
+  private def transitionApplication(implicit ec: ExecutionContext, request: WSRequest): Future[Boolean] = {
+    val eventualResponse: Future[WSResponse] = request.get()
+
+    eventualResponse.flatMap { response =>
+      response.status match {
+        case OK =>
+          response.json.validate[Application] match {
+            case _: JsSuccess[Application] => Future.successful(true)
+            case e: JsError =>
+              logger.error(s"Error parsing Application enable response: $e")
+              Future.failed(new ApiException(s"Error parsing Application listing response: $e"))
+          }
+        case BAD_REQUEST =>
+          Future.failed(new ApiException("Invalid application ID"))
+        case UNAUTHORIZED =>
+          Future.failed(new ApiException(s"Invalid authentication token"))
+        case FORBIDDEN =>
+          Future.failed(UnauthorizedActionException(s"Getting applications for hat $hatAddress forbidden"))
+        case _ =>
+          logger.error(s"Listing applications for $hatAddress failed, $response, ${response.body}")
+          Future.failed(new ApiException(s"Listing applications for $hatAddress failed unexpectedly"))
       }
     }
   }

@@ -13,6 +13,7 @@ import java.util.UUID
 
 import org.hatdex.hat.api.json.HatJsonFormats
 import org.hatdex.hat.api.models.User
+import org.hatdex.hat.api.services.Errors.ApiException
 import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json._
@@ -129,6 +130,29 @@ trait HatAuthentication {
         case _ =>
           logger.error(s"Account enabling for $userId on HAT $hatAddress failed, $response, ${response.body}")
           throw new RuntimeException(s"Account enabling for $userId failed")
+      }
+    }
+  }
+
+  def triggerHatClaim(email: String, applicationId: String)(implicit ec: ExecutionContext): Future[String] = {
+    val request: WSRequest = ws.url(s"$schema$hatAddress/control/v2/auth/claim")
+      .withVirtualHost(host)
+      .withHttpHeaders("Accept" -> "application/json")
+
+    logger.debug(s"Trigger HAT claim process on $hatAddress")
+    val eventualResponse = request.post(Json.obj("email" -> email, "applicationId" -> applicationId))
+
+    eventualResponse.flatMap { response =>
+      response.status match {
+        case OK =>
+          logger.debug(s"Claim trigger on $hatAddress")
+          val message = (response.json \ "message").validate[String].getOrElse("")
+
+          Future.successful(message)
+
+        case _ =>
+          logger.error(s"Failed to trigger claim on $hatAddress. HAT response: ${response.body}")
+          Future.failed(new ApiException(s"Failed to trigger claim on $hatAddress."))
       }
     }
   }

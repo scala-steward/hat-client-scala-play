@@ -93,7 +93,7 @@ object ApplicationSetup {
     val kind: String
     val onboarding: Option[Seq[OnboardingStep]]
     val preferences: Option[ApplicationPreferences]
-    val dependencies: Option[Seq[String]]  // List of application IDs that need to be setup for correct operation of this app
+    val dependencies: Option[Seq[String]] // List of application IDs that need to be setup for correct operation of this app
   }
 
   case class External(
