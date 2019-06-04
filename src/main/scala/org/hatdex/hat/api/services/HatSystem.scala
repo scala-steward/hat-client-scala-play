@@ -41,11 +41,11 @@ trait HatSystem {
   }
 
   /**
-    *
-    * @param access_token - Expect Milliner Shared Secret
-    * @param ec
-    * @return
-    */
+   *
+   * @param access_token - Expect Milliner Shared Secret
+   * @param ec
+   * @return
+   */
   def destroyCache(access_token: String)(implicit ec: ExecutionContext): Future[Unit] = {
     logger.debug(s"Destroying HAT Cache")
 
