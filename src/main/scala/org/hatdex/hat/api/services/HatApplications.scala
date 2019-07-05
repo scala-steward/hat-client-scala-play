@@ -10,7 +10,7 @@
 package org.hatdex.hat.api.services
 
 import org.hatdex.hat.api.models.HatService
-import org.hatdex.hat.api.models.applications.Application
+import org.hatdex.hat.api.models.applications.HatApplication
 import org.hatdex.hat.api.services.Errors.{ ApiException, UnauthorizedActionException }
 import play.api.Logger
 import play.api.http.Status._
@@ -83,7 +83,7 @@ trait HatApplications {
     }
   }
 
-  def getAllApplications(accessToken: String)(implicit ec: ExecutionContext): Future[Seq[Application]] = {
+  def getAllApplications(accessToken: String)(implicit ec: ExecutionContext): Future[Seq[HatApplication]] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/applications")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> accessToken)
@@ -93,8 +93,8 @@ trait HatApplications {
     eventualResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[Seq[Application]] match {
-            case s: JsSuccess[Seq[Application]] => Future.successful(s.get)
+          response.json.validate[Seq[HatApplication]] match {
+            case s: JsSuccess[Seq[HatApplication]] => Future.successful(s.get)
             case e: JsError =>
               logger.error(s"Error parsing Application listing response: $e")
               Future.failed(new ApiException(s"Error parsing Application listing response: $e"))
@@ -154,8 +154,8 @@ trait HatApplications {
     eventualResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[Application] match {
-            case _: JsSuccess[Application] => Future.successful(true)
+          response.json.validate[HatApplication] match {
+            case _: JsSuccess[HatApplication] => Future.successful(true)
             case e: JsError =>
               logger.error(s"Error parsing Application enable response: $e")
               Future.failed(new ApiException(s"Error parsing Application listing response: $e"))
