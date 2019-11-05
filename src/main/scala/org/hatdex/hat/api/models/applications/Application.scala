@@ -52,7 +52,9 @@ case class ApplicationInfo(
     name: String,
     headline: String,
     description: FormattedText,
+    hmiDescription: Option[String],
     termsUrl: String,
+    privacyPolicyUrl: Option[String],
     dataUsePurpose: String,
     supportContact: String,
     rating: Option[ApplicationRating],
@@ -91,9 +93,10 @@ case class ApplicationPermissions(
 object ApplicationSetup {
   trait Setup {
     val kind: String
+    val provisioningService: String
     val onboarding: Option[Seq[OnboardingStep]]
     val preferences: Option[ApplicationPreferences]
-    val dependencies: Option[Seq[String]] // List of application IDs that need to be setup for correct operation of this app
+    val dependencies: Option[Seq[String]] // List of application IDs that need to be setup for correct operation of the app
   }
 
   case class External(
@@ -101,6 +104,9 @@ object ApplicationSetup {
       iosUrl: Option[String],
       androidUrl: Option[String],
       testingUrl: Option[String],
+      validRedirectUris: Seq[String],
+      provisioningService: String = "daas",
+      deauthorizeCallbackUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
       dependencies: Option[Seq[String]]) extends Setup {
@@ -108,6 +114,7 @@ object ApplicationSetup {
   }
 
   case class Internal(
+      provisioningService: String = "baas",
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
       dependencies: Option[Seq[String]]) extends Setup {

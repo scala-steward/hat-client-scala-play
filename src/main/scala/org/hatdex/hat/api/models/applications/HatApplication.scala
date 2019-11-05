@@ -8,4 +8,5 @@ case class HatApplication(
     enabled: Boolean,
     active: Boolean,
     needsUpdating: Option[Boolean],
+    dependenciesEnabled: Option[Boolean],
     mostRecentData: Option[DateTime])
