@@ -80,7 +80,7 @@ object ApplicationKind {
   case class Tool(url: String) extends Kind {
     val kind: String = "Tool"
   }
-  case class App(url: String, iosUrl: Option[String], androidUrl: Option[String]) extends Kind {
+  case class App(url: String, iosUrl: Option[String], androidUrl: Option[String], provisioningService: String) extends Kind {
     val kind: String = "App"
   }
 }
@@ -93,7 +93,6 @@ case class ApplicationPermissions(
 object ApplicationSetup {
   trait Setup {
     val kind: String
-    val provisioningService: String
     val onboarding: Option[Seq[OnboardingStep]]
     val preferences: Option[ApplicationPreferences]
     val dependencies: Option[Seq[String]] // List of application IDs that need to be setup for correct operation of the app
@@ -105,7 +104,6 @@ object ApplicationSetup {
       androidUrl: Option[String],
       testingUrl: Option[String],
       validRedirectUris: Seq[String],
-      provisioningService: String = "daas",
       deauthorizeCallbackUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
@@ -114,7 +112,6 @@ object ApplicationSetup {
   }
 
   case class Internal(
-      provisioningService: String = "baas",
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
       dependencies: Option[Seq[String]]) extends Setup {
