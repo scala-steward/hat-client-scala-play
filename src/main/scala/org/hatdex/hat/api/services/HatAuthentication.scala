@@ -134,9 +134,10 @@ trait HatAuthentication {
     }
   }
 
-  def triggerHatClaim(email: String, applicationId: String)(implicit ec: ExecutionContext): Future[String] = {
+  def triggerHatClaim(email: String, applicationId: String, lang: String = "en")(implicit ec: ExecutionContext): Future[String] = {
     val request: WSRequest = ws.url(s"$schema$hatAddress/control/v2/auth/claim")
       .withVirtualHost(host)
+      .withQueryStringParameters("lang" -> lang)
       .withHttpHeaders("Accept" -> "application/json")
 
     logger.debug(s"Trigger HAT claim process on $hatAddress")
