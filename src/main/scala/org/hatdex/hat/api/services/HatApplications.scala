@@ -154,12 +154,13 @@ trait HatApplications {
     eventualResponse.flatMap { response =>
       response.status match {
         case OK =>
-          response.json.validate[HatApplication] match {
-            case _: JsSuccess[HatApplication] => Future.successful(true)
-            case e: JsError =>
-              logger.error(s"Error parsing Application enable response: $e")
-              Future.failed(new ApiException(s"Error parsing Application listing response: $e"))
-          }
+          Future.successful(true)
+        //          response.json.validate[HatApplication] match {
+        //            case _: JsSuccess[HatApplication] => Future.successful(true)
+        //            case e: JsError =>
+        //              logger.error(s"Error parsing Application enable response: $e")
+        //              Future.failed(new ApiException(s"Error parsing Application listing response: $e"))
+        //          }
         case BAD_REQUEST =>
           Future.failed(new ApiException("Invalid application ID"))
         case UNAUTHORIZED =>

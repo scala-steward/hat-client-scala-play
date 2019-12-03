@@ -80,7 +80,7 @@ object ApplicationKind {
   case class Tool(url: String) extends Kind {
     val kind: String = "Tool"
   }
-  case class App(url: String, iosUrl: Option[String], androidUrl: Option[String], provisioningService: String) extends Kind {
+  case class App(url: String, iosUrl: Option[String], androidUrl: Option[String], provisioningService: String = "daas") extends Kind {
     val kind: String = "App"
   }
 }
@@ -103,7 +103,7 @@ object ApplicationSetup {
       iosUrl: Option[String],
       androidUrl: Option[String],
       testingUrl: Option[String],
-      validRedirectUris: Seq[String],
+      validRedirectUris: Seq[String] = Seq(),
       deauthorizeCallbackUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
