@@ -1,25 +1,25 @@
 name: Deploy HAT Scala Client
 
 on:
-  push:
+  release:
+    types: [published]
     branches:
-      - github-actions
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Setup NodeJs environment
-        uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
       - name: Sbt clean, compile and test
         run: |
           export PATH=$PATH:$HOME/.local/bin
           sbt clean
           sbt compile
-          # sbt test:compile
-          # sbt coverage test
+          sbt test:compile
+          sbt coverage test
+          sbt publish
         env:
           AWS_DEFAULT_REGION: eu-west-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_SANDBOX }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_SANDBOX }}
