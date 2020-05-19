@@ -61,7 +61,8 @@ case class ApplicationInfo(
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics,
     primaryColor: Option[String],
-    callbackUrl: Option[String])
+    callbackUrl: Option[String],
+    email: Option[String] = None)
 
 case class ApplicationUpdateNotes(
     header: String,
