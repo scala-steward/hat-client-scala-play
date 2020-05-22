@@ -62,7 +62,7 @@ case class ApplicationInfo(
     graphics: ApplicationGraphics,
     primaryColor: Option[String],
     callbackUrl: Option[String],
-    email: Option[String] = None)
+    url: Option[String] = None)
 
 case class ApplicationUpdateNotes(
     header: String,
