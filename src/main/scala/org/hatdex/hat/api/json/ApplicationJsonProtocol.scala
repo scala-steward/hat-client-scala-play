@@ -41,30 +41,24 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
     RichDataJsonFormats.dataDebitRequestFormat
   protected implicit val dataBundleFormat: Format[EndpointDataBundle] =
     RichDataJsonFormats.endpointDatabundleFormat
-  protected implicit val applicationPermissionsFormat
-    : Format[ApplicationPermissions] = Json.format[ApplicationPermissions]
+  protected implicit val applicationPermissionsFormat: Format[ApplicationPermissions] = Json.format[ApplicationPermissions]
 
   // Application Status JSON formats
 
-  protected implicit val applicationStatusInternalFormat
-    : Format[ApplicationStatus.Internal] =
+  protected implicit val applicationStatusInternalFormat: Format[ApplicationStatus.Internal] =
     Json.format[ApplicationStatus.Internal]
-  protected implicit val applicationStatusExternalFormat
-    : Format[ApplicationStatus.External] =
+  protected implicit val applicationStatusExternalFormat: Format[ApplicationStatus.External] =
     Json.format[ApplicationStatus.External]
 
-  protected implicit val applicationStatusformat
-    : Format[ApplicationStatus.Status] = new Format[ApplicationStatus.Status] {
+  protected implicit val applicationStatusformat: Format[ApplicationStatus.Status] = new Format[ApplicationStatus.Status] {
     def reads(json: JsValue): JsResult[ApplicationStatus.Status] =
       (json \ "kind").as[String] match {
         case "Internal" =>
           Json.fromJson[ApplicationStatus.Internal](json)(
-            applicationStatusInternalFormat
-          )
+            applicationStatusInternalFormat)
         case "External" =>
           Json.fromJson[ApplicationStatus.External](json)(
-            applicationStatusExternalFormat
-          )
+            applicationStatusExternalFormat)
         case kind => JsError(s"Unexpected JSON value $kind in $json")
       }
 
@@ -73,13 +67,11 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
         case s: ApplicationStatus.Internal =>
           (
             Json.toJson(s)(applicationStatusInternalFormat),
-            JsString("Internal")
-          )
+            JsString("Internal"))
         case s: ApplicationStatus.External =>
           (
             Json.toJson(s)(applicationStatusExternalFormat),
-            JsString("External")
-          )
+            JsString("External"))
       }
       statusJson.as[JsObject] + (("kind", statusKind))
     }
@@ -87,32 +79,24 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
 
   // Application Settings JSON formats
 
-  protected implicit val applicationPreferenceFormat
-    : Format[ApplicationSetup.Preference] =
+  protected implicit val applicationPreferenceFormat: Format[ApplicationSetup.Preference] =
     Json.format[ApplicationSetup.Preference]
-  protected implicit val applicationPreferencesFormat
-    : Format[ApplicationSetup.ApplicationPreferences] =
+  protected implicit val applicationPreferencesFormat: Format[ApplicationSetup.ApplicationPreferences] =
     Json.format[ApplicationSetup.ApplicationPreferences]
-  protected implicit val applicationSetupOnboardingStepFormat
-    : Format[ApplicationSetup.OnboardingStep] =
+  protected implicit val applicationSetupOnboardingStepFormat: Format[ApplicationSetup.OnboardingStep] =
     Json.format[ApplicationSetup.OnboardingStep]
-  protected implicit val applicationSetupInternalFormat
-    : Format[ApplicationSetup.Internal] = Json.format[ApplicationSetup.Internal]
-  protected implicit val applicationSetupExternalFormat
-    : Format[ApplicationSetup.External] = Json.format[ApplicationSetup.External]
+  protected implicit val applicationSetupInternalFormat: Format[ApplicationSetup.Internal] = Json.format[ApplicationSetup.Internal]
+  protected implicit val applicationSetupExternalFormat: Format[ApplicationSetup.External] = Json.format[ApplicationSetup.External]
 
-  protected implicit val applicationSetupFormat
-    : Format[ApplicationSetup.Setup] = new Format[ApplicationSetup.Setup] {
+  protected implicit val applicationSetupFormat: Format[ApplicationSetup.Setup] = new Format[ApplicationSetup.Setup] {
     def reads(json: JsValue): JsResult[ApplicationSetup.Setup] =
       (json \ "kind").as[String] match {
         case "External" =>
           Json.fromJson[ApplicationSetup.External](json)(
-            applicationSetupExternalFormat
-          )
+            applicationSetupExternalFormat)
         case "Internal" =>
           Json.fromJson[ApplicationSetup.Internal](json)(
-            applicationSetupInternalFormat
-          )
+            applicationSetupInternalFormat)
         case kind => JsError(s"Unexpected JSON value $kind in $json")
       }
 
@@ -129,14 +113,11 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
 
   // Application Kind JSON formats
 
-  protected implicit val applicationKindDataPlugFormat
-    : Format[ApplicationKind.DataPlug] = Json.format[ApplicationKind.DataPlug]
-  protected implicit val applicationKindToolFormat
-    : Format[ApplicationKind.Tool] = Json.format[ApplicationKind.Tool]
+  protected implicit val applicationKindDataPlugFormat: Format[ApplicationKind.DataPlug] = Json.format[ApplicationKind.DataPlug]
+  protected implicit val applicationKindToolFormat: Format[ApplicationKind.Tool] = Json.format[ApplicationKind.Tool]
   protected implicit val applicationKindAppFormat: Format[ApplicationKind.App] =
     Json.format[ApplicationKind.App]
-  protected implicit val applicationKindContractFormat
-    : Format[ApplicationKind.Contract] = Json.format[ApplicationKind.Contract]
+  protected implicit val applicationKindContractFormat: Format[ApplicationKind.Contract] = Json.format[ApplicationKind.Contract]
 
   protected implicit val applicationKindFormat: Format[ApplicationKind.Kind] =
     new Format[ApplicationKind.Kind] {
@@ -144,16 +125,14 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
         (json \ "kind").as[String] match {
           case "DataPlug" =>
             Json.fromJson[ApplicationKind.DataPlug](json)(
-              applicationKindDataPlugFormat
-            )
+              applicationKindDataPlugFormat)
           case "Tool" =>
             Json.fromJson[ApplicationKind.Tool](json)(applicationKindToolFormat)
           case "App" =>
             Json.fromJson[ApplicationKind.App](json)(applicationKindAppFormat)
           case "Contract" =>
             Json.fromJson[ApplicationKind.Contract](json)(
-              applicationKindContractFormat
-            )
+              applicationKindContractFormat)
           case kind => JsError(s"Unexpected JSON value $kind in $json")
         }
 
@@ -162,8 +141,7 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
           case k: ApplicationKind.DataPlug =>
             (
               Json.toJson(k)(applicationKindDataPlugFormat),
-              JsString("DataPlug")
-            )
+              JsString("DataPlug"))
           case k: ApplicationKind.Tool =>
             (Json.toJson(k)(applicationKindToolFormat), JsString("Tool"))
           case k: ApplicationKind.App =>
@@ -171,8 +149,7 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
           case k: ApplicationKind.Contract =>
             (
               Json.toJson(k)(applicationKindContractFormat),
-              JsString("Contract")
-            )
+              JsString("Contract"))
 
         }
         kindJson.as[JsObject] + (("kind", kind))
