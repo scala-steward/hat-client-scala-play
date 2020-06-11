@@ -12,7 +12,8 @@ case class ApplicationGraphics(
 /*
  * Application version should follow Semantic Versioning
  */
-case class Version(major: Int, minor: Int, patch: Int) extends Ordered[Version] {
+case class Version(major: Int, minor: Int, patch: Int)
+  extends Ordered[Version] {
   override def toString: String = s"$major.$minor.$patch"
 
   def greaterThan(other: Version): Boolean =
@@ -22,21 +23,27 @@ case class Version(major: Int, minor: Int, patch: Int) extends Ordered[Version] 
 
   import scala.math.Ordered.orderingToOrdered
 
-  def compare(that: Version): Int = ((this.major, this.minor, this.patch)) compare ((that.major, that.minor, that.patch))
+  def compare(that: Version): Int =
+    ((this.major, this.minor, this.patch)) compare (
+      (
+        that.major,
+        that.minor,
+        that.patch))
 }
 
 object Version {
   private val version = "(\\d+).(\\d+).(\\d+)".r
   def apply(v: String): Version =
     v match {
-      case version(major, minor, patch) => Version(major.toInt, minor.toInt, patch.toInt)
-      case _                            => throw new RuntimeException(s"value $v for version number does not match expected format")
+      case version(major, minor, patch) =>
+        Version(major.toInt, minor.toInt, patch.toInt)
+      case _ =>
+        throw new RuntimeException(
+          s"value $v for version number does not match expected format")
     }
 }
 
-case class ApplicationRating(
-    score: String,
-    points: Int)
+case class ApplicationRating(score: String, points: Int)
 
 case class ApplicationDeveloper(
     id: String,
@@ -61,11 +68,10 @@ case class ApplicationInfo(
     dataPreview: Seq[DataFeedItem],
     graphics: ApplicationGraphics,
     primaryColor: Option[String],
-    callbackUrl: Option[String])
+    callbackUrl: Option[String],
+    url: Option[String] = None)
 
-case class ApplicationUpdateNotes(
-    header: String,
-    notes: Option[Seq[String]])
+case class ApplicationUpdateNotes(header: String, notes: Option[Seq[String]])
 
 object ApplicationKind {
 
@@ -80,8 +86,16 @@ object ApplicationKind {
   case class Tool(url: String) extends Kind {
     val kind: String = "Tool"
   }
-  case class App(url: String, iosUrl: Option[String], androidUrl: Option[String], provisioningService: String = "daas") extends Kind {
+  case class App(
+      url: String,
+      iosUrl: Option[String],
+      androidUrl: Option[String],
+      provisioningService: String = "daas")
+    extends Kind {
     val kind: String = "App"
+  }
+  case class Contract(url: String) extends Kind {
+    val kind: String = "Contract"
   }
 }
 
@@ -107,14 +121,16 @@ object ApplicationSetup {
       deauthorizeCallbackUrl: Option[String],
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
-      dependencies: Option[Seq[String]]) extends Setup {
+      dependencies: Option[Seq[String]])
+    extends Setup {
     final val kind: String = "External"
   }
 
   case class Internal(
       onboarding: Option[Seq[OnboardingStep]],
       preferences: Option[ApplicationPreferences],
-      dependencies: Option[Seq[String]]) extends Setup {
+      dependencies: Option[Seq[String]])
+    extends Setup {
     final val kind: String = "Internal"
   }
 
@@ -151,7 +167,8 @@ object ApplicationStatus {
       dataPreviewEndpoint: Option[String],
       staticDataPreviewEndpoint: Option[String],
       recentDataCheckEndpoint: Option[String],
-      versionReleaseDate: DateTime) extends Status {
+      versionReleaseDate: DateTime)
+    extends Status {
     final val kind: String = "Internal"
   }
 
@@ -181,13 +198,27 @@ case class Application(
     status.compatibility.greaterThan(fromApplication.info.version)
   }
 
-  lazy val dataDebitId: Option[String] = permissions.dataRetrieved.map(_ => s"app-$id")
+  lazy val dataDebitId: Option[String] =
+    permissions.dataRetrieved.map(_ => s"app-$id")
   lazy val dataDebitSetupRequest: Option[DataDebitSetupRequest] = {
     for {
-      dataDebitKey ← dataDebitId
-      bundle ← permissions.dataRetrieved
-    } yield DataDebitSetupRequest(dataDebitKey, info.dataUsePurpose, DateTime.now(), Duration.standardDays(30), cancelAtPeriodEnd = false,
-      info.name, kind.url, info.graphics.logo.normal, info.callbackUrl, Some(id), Some(info.description.text), info.termsUrl, None, bundle)
+      dataDebitKey <- dataDebitId
+      bundle <- permissions.dataRetrieved
+    } yield DataDebitSetupRequest(
+      dataDebitKey,
+      info.dataUsePurpose,
+      DateTime.now(),
+      Duration.standardDays(30),
+      cancelAtPeriodEnd = false,
+      info.name,
+      kind.url,
+      info.graphics.logo.normal,
+      info.callbackUrl,
+      Some(id),
+      Some(info.description.text),
+      info.termsUrl,
+      None,
+      bundle)
   }
 
 }
@@ -195,4 +226,3 @@ case class Application(
 case class ApplicationHistory(
     current: Application,
     history: Option[Seq[Application]])
-
