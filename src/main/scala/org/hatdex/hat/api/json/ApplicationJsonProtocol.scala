@@ -42,6 +42,7 @@ trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
   protected implicit val dataBundleFormat: Format[EndpointDataBundle] =
     RichDataJsonFormats.endpointDatabundleFormat
   protected implicit val applicationPermissionsFormat: Format[ApplicationPermissions] = Json.format[ApplicationPermissions]
+  protected implicit val applicationDependenciesFormat: Format[ApplicationDependencies] = Json.format[ApplicationDependencies]
 
   // Application Status JSON formats
 

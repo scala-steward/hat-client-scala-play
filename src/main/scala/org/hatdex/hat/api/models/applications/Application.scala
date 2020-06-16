@@ -89,8 +89,7 @@ object ApplicationKind {
   case class App(
       url: String,
       iosUrl: Option[String],
-      androidUrl: Option[String],
-      provisioningService: String = "daas")
+      androidUrl: Option[String])
     extends Kind {
     val kind: String = "App"
   }
@@ -103,6 +102,11 @@ case class ApplicationPermissions(
     rolesGranted: Seq[UserRole],
     dataRetrieved: Option[EndpointDataBundle],
     dataRequired: Option[DataDebitRequest])
+
+case class ApplicationDependencies(
+    plugs: Array[String],
+    tools: Array[String],
+    contracts: Array[String])
 
 object ApplicationSetup {
   trait Setup {
@@ -190,6 +194,7 @@ case class Application(
     info: ApplicationInfo,
     developer: ApplicationDeveloper,
     permissions: ApplicationPermissions,
+    dependencies: Option[ApplicationDependencies],
     setup: ApplicationSetup.Setup,
     status: ApplicationStatus.Status) {
 
