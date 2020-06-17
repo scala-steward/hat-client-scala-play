@@ -89,7 +89,8 @@ object ApplicationKind {
   case class App(
       url: String,
       iosUrl: Option[String],
-      androidUrl: Option[String])
+      androidUrl: Option[String],
+      provisioningService: Option[String] = Some("daas"))
     extends Kind {
     val kind: String = "App"
   }
