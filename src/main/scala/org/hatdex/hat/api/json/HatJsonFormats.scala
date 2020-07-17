@@ -36,7 +36,6 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     }
   }
 
-  implicit val payloadWrapperFormat = Json.format[PayloadWrapper]
   implicit val userReads = Json.format[User]
   implicit val accessTokenFormat = Json.format[AccessToken]
 
