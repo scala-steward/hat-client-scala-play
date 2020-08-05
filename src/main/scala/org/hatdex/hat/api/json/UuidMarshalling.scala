@@ -17,14 +17,15 @@ trait UuidMarshalling {
   object UUIDReads extends Reads[java.util.UUID] {
     def parseUUID(s: String): Option[java.util.UUID] = Try(java.util.UUID.fromString(s)).toOption
 
-    def reads(json: JsValue) = {
+    def reads(json: JsValue) =
       json match {
         case JsString(s) =>
-          parseUUID(s).map(JsSuccess(_)).getOrElse(JsError(Seq(JsPath() -> Seq(JsonValidationError("Expected UUID string")))))
+          parseUUID(s)
+            .map(JsSuccess(_))
+            .getOrElse(JsError(Seq(JsPath() -> Seq(JsonValidationError("Expected UUID string")))))
         case _ =>
           JsError(Seq(JsPath() -> Seq(JsonValidationError("Expected UUID string"))))
       }
-    }
   }
 
   object UUIDWrites extends Writes[java.util.UUID] {

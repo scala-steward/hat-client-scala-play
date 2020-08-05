@@ -30,9 +30,16 @@ trait HatRichData {
 
   import org.hatdex.hat.api.json.RichDataJsonFormats._
 
-  def saveData(access_token: String, namespace: String, endpoint: String, data: JsArray, skipErrors: Boolean = false)(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
+  def saveData(
+      access_token: String,
+      namespace: String,
+      endpoint: String,
+      data: JsArray,
+      skipErrors: Boolean = false
+    )(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data/$namespace/$endpoint")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/$apiVersion/data/$namespace/$endpoint")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
       .withQueryStringParameters("skipErrors" -> skipErrors.toString)
@@ -49,12 +56,17 @@ trait HatRichData {
               Future.failed(new ApiException(s"Error parsing response from a successful data records post: $e"))
           }
         case FORBIDDEN =>
-          Future.failed(UnauthorizedActionException(s"Saving data for hat $hatAddress, namespsace $namespace, endpoint $endpoint forbidden"))
+          Future.failed(
+            UnauthorizedActionException(
+              s"Saving data for hat $hatAddress, namespsace $namespace, endpoint $endpoint forbidden"
+            )
+          )
         case BAD_REQUEST =>
           response.json.validate[ErrorMessage] match {
-            case s: JsSuccess[ErrorMessage] if s.get.cause.startsWith("Duplicate data") => Future.failed(DuplicateDataException("Duplicate data"))
+            case s: JsSuccess[ErrorMessage] if s.get.cause.startsWith("Duplicate data") =>
+              Future.failed(DuplicateDataException("Duplicate data"))
             case s: JsSuccess[ErrorMessage] => Future.failed(new ApiException(s.get.message))
-            case e: JsError => Future.failed(new ApiException(s"Error deserializing Error Response: ${e.errors}"))
+            case e: JsError                 => Future.failed(new ApiException(s"Error deserializing Error Response: ${e.errors}"))
           }
         case _ =>
           logger.error(s"Creating new records for $hatAddress failed, $response, ${response.body}")
@@ -63,8 +75,12 @@ trait HatRichData {
     }
   }
 
-  def saveData(access_token: String, data: Seq[EndpointData])(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-batch")
+  def saveData(
+      access_token: String,
+      data: Seq[EndpointData]
+    )(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/$apiVersion/data-batch")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -83,9 +99,10 @@ trait HatRichData {
           Future.failed(UnauthorizedActionException(s"Saving data for hat $hatAddress forbidden"))
         case BAD_REQUEST =>
           response.json.validate[ErrorMessage] match {
-            case s: JsSuccess[ErrorMessage] if s.get.cause.startsWith("Duplicate data") => Future.failed(DuplicateDataException("Duplicate data"))
+            case s: JsSuccess[ErrorMessage] if s.get.cause.startsWith("Duplicate data") =>
+              Future.failed(DuplicateDataException("Duplicate data"))
             case s: JsSuccess[ErrorMessage] => Future.failed(new ApiException(s.get.message))
-            case e: JsError => Future.failed(new ApiException(s"Error deserializing Error Response: ${e.errors}"))
+            case e: JsError                 => Future.failed(new ApiException(s"Error deserializing Error Response: ${e.errors}"))
           }
         case _ =>
           logger.error(s"Creating new records for $hatAddress failed, $response, ${response.body}")
@@ -94,18 +111,27 @@ trait HatRichData {
     }
   }
 
-  def getData(access_token: String, namespace: String, endpoint: String, recordId: Option[UUID] = None,
-    orderBy: Option[String] = None, orderingDescending: Boolean = false,
-    skip: Option[Int] = None, take: Option[Int] = None)(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
+  def getData(
+      access_token: String,
+      namespace: String,
+      endpoint: String,
+      recordId: Option[UUID] = None,
+      orderBy: Option[String] = None,
+      orderingDescending: Boolean = false,
+      skip: Option[Int] = None,
+      take: Option[Int] = None
+    )(implicit ec: ExecutionContext): Future[Seq[EndpointData]] = {
 
     val queryParameter = Seq(
       recordId.map(r => "recordId" -> r.toString),
       orderBy.map(r => "orderBy" -> r),
-      if (orderingDescending) { Some("ordering" -> "descending") } else { None },
+      if (orderingDescending) Some("ordering" -> "descending") else None,
       skip.map(r => "skip" -> r.toString),
-      take.map(r => "take" -> r.toString)).flatten
+      take.map(r => "take" -> r.toString)
+    ).flatten
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data/$namespace/$endpoint")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/$apiVersion/data/$namespace/$endpoint")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
       .withQueryStringParameters(queryParameter: _*)
@@ -123,7 +149,11 @@ trait HatRichData {
               Future.failed(new ApiException(message))
           }
         case FORBIDDEN =>
-          Future.failed(UnauthorizedActionException(s"Retrieving data from $hatAddress, namespsace $namespace, endpoint $endpoint unauthorized"))
+          Future.failed(
+            UnauthorizedActionException(
+              s"Retrieving data from $hatAddress, namespsace $namespace, endpoint $endpoint unauthorized"
+            )
+          )
         case _ =>
           logger.error(s"Retrieving records for $hatAddress failed, $response, ${response.body}")
           Future.failed(new ApiException(s"Retrieving records for $hatAddress failed unexpectedly"))
@@ -132,4 +162,3 @@ trait HatRichData {
   }
 
 }
-

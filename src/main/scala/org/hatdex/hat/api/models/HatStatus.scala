@@ -15,7 +15,17 @@ object StatusKind {
   sealed trait Kind {
     val kind: String
   }
-  case class Numeric(metric: BigDecimal, units: Option[String], kind: String = "Numeric") extends Kind
-  case class Text(metric: String, units: Option[String], kind: String = "Text") extends Kind
+  case class Numeric(
+      metric: BigDecimal,
+      units: Option[String],
+      kind: String = "Numeric")
+      extends Kind
+  case class Text(
+      metric: String,
+      units: Option[String],
+      kind: String = "Text")
+      extends Kind
 }
-case class HatStatus(title: String, kind: StatusKind.Kind)
+case class HatStatus(
+    title: String,
+    kind: StatusKind.Kind)

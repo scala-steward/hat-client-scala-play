@@ -19,14 +19,13 @@ trait HatJsonUtilities {
    */
   def flattenTableValues(dataTable: ApiDataTable): JsValue = {
     val fieldObjects = dataTable.fields.map { fields =>
-      Map[String, JsValue](
-        fields flatMap { field =>
-          val maybeValues = field.values collect {
-            case values if values.length == 1 => Json.toJson(values.head.value)
-            case values if values.nonEmpty    => Json.toJson(values.map(_.value))
-          }
-          maybeValues.map(values => field.name -> values)
-        }: _*)
+      Map[String, JsValue](fields flatMap { field =>
+        val maybeValues = field.values collect {
+              case values if values.length == 1 => Json.toJson(values.head.value)
+              case values if values.nonEmpty    => Json.toJson(values.map(_.value))
+            }
+        maybeValues.map(values => field.name -> values)
+      }: _*)
     }
 
     val subtableObjects = dataTable.subTables.map { subtables =>
@@ -42,11 +41,13 @@ trait HatJsonUtilities {
     val recordDataTables = Map(record.tables.getOrElse(Seq()).map { table =>
       table.name -> flattenTableValues(table)
     }: _*)
-    JsObject(Map(
-      "id" -> Json.toJson(record.id.get),
-      "name" -> Json.toJson(record.name),
-      "lastUpdated" -> Json.toJson(record.lastUpdated.getOrElse(LocalDateTime.now()).toDateTime.toString()),
-      "data" -> JsObject(recordDataTables)))
+    JsObject(
+      Map(
+        "id" -> Json.toJson(record.id.get),
+        "name" -> Json.toJson(record.name),
+        "lastUpdated" -> Json.toJson(record.lastUpdated.getOrElse(LocalDateTime.now()).toDateTime.toString()),
+        "data" -> JsObject(recordDataTables)
+      )
+    )
   }
 }
-

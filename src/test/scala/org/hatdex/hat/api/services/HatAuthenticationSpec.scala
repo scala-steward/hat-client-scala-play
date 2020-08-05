@@ -23,7 +23,7 @@ import scala.io.Source._
 class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
 
   //  def awaiting[T]: Future[MatchResult[T]] => Result = { _.await }
-  def awaiting[T]: Future[MatchResult[T]] => Result = { _.await }
+  def awaiting[T]: Future[MatchResult[T]] => Result = _.await
 
   sequential
 
@@ -39,7 +39,9 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
     "return access token on sucessful login" in {
       withHatClient { client =>
         client.authenticateForToken("user", "pa55") map { result =>
-          val validAccessToken = fromInputStream(Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")).mkString
+          val validAccessToken = fromInputStream(
+            Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")
+          ).mkString
           result must beEqualTo(validAccessToken)
         } await (1, 20.seconds)
       }
