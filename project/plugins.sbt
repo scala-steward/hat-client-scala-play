@@ -16,3 +16,8 @@ addSbtPlugin("ohnosequences" % "sbt-s3-resolver" % "0.19.0")
 
 // run "sbt dependencyUpdates" to check maven for updates or "sbt ";dependencyUpdates; reload plugins; dependencyUpdates" for sbt plugins
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")
+
+resolvers += "HAT Library Artifacts Snapshots" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-snapshots.hubofallthings.com"
+resolvers += "HAT Library Artifacts Releases" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-releases.hubofallthings.com"
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.3.4")
+addSbtPlugin("io.dataswift" % "sbt-scalafmt-common" % "0.1.1")
