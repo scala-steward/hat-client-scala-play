@@ -19,9 +19,13 @@ trait HatDataDebits {
 
   import org.hatdex.hat.api.json.RichDataJsonFormats._
 
-  def getDataDebit(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[DataDebit] = {
+  def getDataDebit(
+      access_token: String,
+      dataDebitId: String
+    )(implicit ec: ExecutionContext): Future[DataDebit] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -38,17 +42,22 @@ trait HatDataDebits {
               Future.failed(new ApiException(message))
           }
         case FORBIDDEN =>
-          Future.failed(UnauthorizedActionException(s"Retrieving data debit $dataDebitId from $hatAddress unauthorized"))
+          Future.failed(
+            UnauthorizedActionException(s"Retrieving data debit $dataDebitId from $hatAddress unauthorized")
+          )
         case _ =>
           logger.error(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}")
-          Future.failed(new ApiException(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}"))
+          Future.failed(
+            new ApiException(s"Retrieving data debit $dataDebitId from $hatAddress failed ${response.body}")
+          )
       }
     }
   }
 
   def listDataDebits(access_token: String)(implicit ec: ExecutionContext): Future[Seq[DataDebit]] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/$apiVersion/data-debit")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -73,9 +82,13 @@ trait HatDataDebits {
     }
   }
 
-  def getDataDebitValues(access_token: String, dataDebitId: String)(implicit ec: ExecutionContext): Future[DataDebitData] = {
+  def getDataDebitValues(
+      access_token: String,
+      dataDebitId: String
+    )(implicit ec: ExecutionContext): Future[DataDebitData] = {
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId/values")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId/values")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -92,16 +105,25 @@ trait HatDataDebits {
               Future.failed(new ApiException(message))
           }
         case FORBIDDEN =>
-          Future.failed(UnauthorizedActionException(s"Retrieving data debit $dataDebitId values from $hatAddress unauthorized"))
+          Future.failed(
+            UnauthorizedActionException(s"Retrieving data debit $dataDebitId values from $hatAddress unauthorized")
+          )
         case _ =>
           logger.error(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}")
-          Future.failed(new ApiException(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}"))
+          Future.failed(
+            new ApiException(s"Retrieving data debit $dataDebitId values from $hatAddress failed ${response.body}")
+          )
       }
     }
   }
 
-  def registerDataDebit(access_token: String, dataDebitId: String, dataDebit: DataDebitSetupRequest)(implicit ec: ExecutionContext): Future[DataDebit] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId")
+  def registerDataDebit(
+      access_token: String,
+      dataDebitId: String,
+      dataDebit: DataDebitSetupRequest
+    )(implicit ec: ExecutionContext): Future[DataDebit] = {
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/$apiVersion/data-debit/$dataDebitId")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -118,10 +140,14 @@ trait HatDataDebits {
               Future.failed(new ApiException(message))
           }
         case FORBIDDEN =>
-          Future.failed(UnauthorizedActionException(s"Registering data debit $dataDebitId with $hatAddress unauthorized"))
+          Future.failed(
+            UnauthorizedActionException(s"Registering data debit $dataDebitId with $hatAddress unauthorized")
+          )
         case _ =>
           logger.error(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}")
-          Future.failed(new ApiException(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}"))
+          Future.failed(
+            new ApiException(s"Registering data debit $dataDebitId with $hatAddress failed ${response.body}")
+          )
       }
     }
   }

@@ -18,16 +18,15 @@ trait DataRecordUtils {
    */
   def flattenTableValues(dataTable: ApiDataTable): Map[String, Any] = {
     val fieldObjects = dataTable.fields.map { fields =>
-      Map[String, Any](
-        fields flatMap { field =>
-          val maybeValues = field.values match {
-            case Some(values) if values.isEmpty     => None
-            case Some(values) if values.length == 1 => Some(values.head.value)
-            case Some(values)                       => Some(values.map(_.value))
-            case None                               => None
-          }
-          maybeValues.map { values => field.name -> values }
-        }: _*)
+      Map[String, Any](fields flatMap { field =>
+        val maybeValues = field.values match {
+          case Some(values) if values.isEmpty     => None
+          case Some(values) if values.length == 1 => Some(values.head.value)
+          case Some(values)                       => Some(values.map(_.value))
+          case None                               => None
+        }
+        maybeValues.map(values => field.name -> values)
+      }: _*)
     }
 
     val subtableObjects = dataTable.subTables.map { subtables =>
@@ -47,6 +46,7 @@ trait DataRecordUtils {
       "id" -> record.id.get,
       "name" -> record.name,
       "lastUpdated" -> record.lastUpdated.getOrElse(LocalDateTime.now()).toDateTime.toString(),
-      "data" -> recordDataTables)
+      "data" -> recordDataTables
+    )
   }
 }

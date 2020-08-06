@@ -14,7 +14,8 @@ import play.api.libs.json.{ Format, Json }
 
 trait DataDebitFormats extends HatJsonFormats with LocalDateTimeMarshalling {
   // Contextless bundle formats
-  implicit val apiBundleContextlessDatasetDataFormat: Format[ApiBundleContextlessDatasetData] = Json.format[ApiBundleContextlessDatasetData]
+  implicit val apiBundleContextlessDatasetDataFormat: Format[ApiBundleContextlessDatasetData] =
+    Json.format[ApiBundleContextlessDatasetData]
   implicit val apiBundleContextlessDataFormat: Format[ApiBundleContextlessData] = Json.format[ApiBundleContextlessData]
 }
 

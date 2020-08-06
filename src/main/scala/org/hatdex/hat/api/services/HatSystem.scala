@@ -25,7 +25,8 @@ trait HatSystem {
   def update(access_token: String)(implicit ec: ExecutionContext): Future[Unit] = {
     logger.debug(s"Update HAT database")
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/system/update")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/system/update")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -41,15 +42,15 @@ trait HatSystem {
   }
 
   /**
-   *
-   * @param access_token - Expect Milliner Shared Secret
-   * @param ec
-   * @return
-   */
+    * @param access_token - Expect Milliner Shared Secret
+    * @param ec
+    * @return
+    */
   def destroyCache(access_token: String)(implicit ec: ExecutionContext): Future[Unit] = {
     logger.debug(s"Destroying HAT Cache")
 
-    val request: WSRequest = ws.url(s"$schema$hatAddress/api/v2.6/system/destroy-cache")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/api/v2.6/system/destroy-cache")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 

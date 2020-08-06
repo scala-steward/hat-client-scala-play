@@ -22,18 +22,22 @@ trait DateTimeMarshalling {
 
     val df = org.joda.time.format.ISODateTimeFormat.dateTimeParser()
 
-    def reads(json: JsValue): JsResult[DateTime] = json match {
-      case JsNumber(d) => JsSuccess(new DateTime(d.toLong))
-      case JsString(s) => parseDateTime(s) match {
-        case Some(d) => JsSuccess(d)
-        case None    => JsSuccess(new DateTime(0)) // JsError(Seq(JsPath() -> Seq(ValidationError("validate.error.expected.date.isoformat", "ISO8601"))))
+    def reads(json: JsValue): JsResult[DateTime] =
+      json match {
+        case JsNumber(d) => JsSuccess(new DateTime(d.toLong))
+        case JsString(s) =>
+          parseDateTime(s) match {
+            case Some(d) => JsSuccess(d)
+            case None =>
+              JsSuccess(
+                new DateTime(0)
+              ) // JsError(Seq(JsPath() -> Seq(ValidationError("validate.error.expected.date.isoformat", "ISO8601"))))
+          }
+        case _ => JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.date"))))
       }
-      case _ => JsError(Seq(JsPath() -> Seq(JsonValidationError("validate.error.expected.date"))))
-    }
 
-    private def parseDateTime(input: String): Option[DateTime] = {
+    private def parseDateTime(input: String): Option[DateTime] =
       scala.util.control.Exception.allCatch[DateTime] opt DateTime.parse(input, df)
-    }
 
   }
 }

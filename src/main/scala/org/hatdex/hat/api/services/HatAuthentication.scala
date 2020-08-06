@@ -32,7 +32,8 @@ trait HatAuthentication {
   import HatJsonFormats._
 
   def retrievePublicKey()(implicit ec: ExecutionContext): Future[String] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/publickey")
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/publickey")
       .withHttpHeaders("Accept" -> "text/plain")
       .withVirtualHost(host)
 
@@ -45,13 +46,14 @@ trait HatAuthentication {
     }
   }
 
-  def authenticateForToken(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/users/access_token")
+  def authenticateForToken(
+      username: String,
+      password: String
+    )(implicit ec: ExecutionContext): Future[String] = {
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/users/access_token")
       .withVirtualHost(host)
-      .withHttpHeaders(
-        "Accept" -> "application/json",
-        "username" -> username,
-        "password" -> password)
+      .withHttpHeaders("Accept" -> "application/json", "username" -> username, "password" -> password)
 
     logger.debug(s"Authenticate for token with HAT at ${request.method} ${request.url} (headers: ${request.headers})")
 
@@ -77,8 +79,12 @@ trait HatAuthentication {
     }
   }
 
-  def createAccount(access_token: String, hatUser: User)(implicit ec: ExecutionContext): Future[UUID] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/users/user")
+  def createAccount(
+      access_token: String,
+      hatUser: User
+    )(implicit ec: ExecutionContext): Future[UUID] = {
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/users/user")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -96,8 +102,12 @@ trait HatAuthentication {
     }
   }
 
-  def updateAccount(access_token: String, hatUser: User)(implicit ec: ExecutionContext): Future[UUID] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/users/user/${hatUser.userId}/update")
+  def updateAccount(
+      access_token: String,
+      hatUser: User
+    )(implicit ec: ExecutionContext): Future[UUID] = {
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/users/user/${hatUser.userId}/update")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -115,8 +125,12 @@ trait HatAuthentication {
     }
   }
 
-  def enableAccount(access_token: String, userId: UUID)(implicit ec: ExecutionContext): Future[Boolean] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/users/user/$userId/enable")
+  def enableAccount(
+      access_token: String,
+      userId: UUID
+    )(implicit ec: ExecutionContext): Future[Boolean] = {
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/users/user/$userId/enable")
       .withVirtualHost(host)
       .withHttpHeaders("Accept" -> "application/json", "X-Auth-Token" -> access_token)
 
@@ -134,8 +148,13 @@ trait HatAuthentication {
     }
   }
 
-  def triggerHatClaim(email: String, applicationId: String, lang: String = "en")(implicit ec: ExecutionContext): Future[String] = {
-    val request: WSRequest = ws.url(s"$schema$hatAddress/control/v2/auth/claim")
+  def triggerHatClaim(
+      email: String,
+      applicationId: String,
+      lang: String = "en"
+    )(implicit ec: ExecutionContext): Future[String] = {
+    val request: WSRequest = ws
+      .url(s"$schema$hatAddress/control/v2/auth/claim")
       .withVirtualHost(host)
       .withQueryStringParameters("lang" -> lang)
       .withHttpHeaders("Accept" -> "application/json")

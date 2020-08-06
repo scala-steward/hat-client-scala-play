@@ -33,11 +33,16 @@ object HatFileStatus {
   }
   case class New(status: String = "New") extends Status
   case class Initialized(status: String = "Initialized") extends Status
-  case class Completed(size: Long, status: String = "Completed") extends Status
+  case class Completed(
+      size: Long,
+      status: String = "Completed")
+      extends Status
   case class Deleted(status: String = "Deleted") extends Status
 }
 
-case class ApiHatFilePermissions(userId: UUID, contentReadable: Boolean)
+case class ApiHatFilePermissions(
+    userId: UUID,
+    contentReadable: Boolean)
 
 case class ApiHatFile(
     fileId: Option[String],

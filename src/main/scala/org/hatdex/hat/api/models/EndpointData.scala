@@ -24,7 +24,10 @@ object FilterOperator {
   case class Contains(value: JsValue) extends Operator {
     val operator = "contains"
   }
-  case class Between(lower: JsValue, upper: JsValue) extends Operator {
+  case class Between(
+      lower: JsValue,
+      upper: JsValue)
+      extends Operator {
     val operator = "between"
   }
   case class Find(search: JsValue) extends Operator {
@@ -44,9 +47,8 @@ case class EndpointQueryFilter(
     field: String,
     transformation: Option[FieldTransformation.Transformation],
     operator: FilterOperator.Operator) {
-  def originalField: List[String] = {
+  def originalField: List[String] =
     field.split('.').toList
-  }
 }
 
 case class EndpointQuery(
@@ -54,15 +56,13 @@ case class EndpointQuery(
     mapping: Option[JsValue],
     filters: Option[Seq[EndpointQueryFilter]],
     links: Option[Seq[EndpointQuery]]) {
-  def originalField(field: String): Option[List[String]] = {
+  def originalField(field: String): Option[List[String]] =
     mapping.flatMap { m =>
-      (m \ field)
-        .toOption
+      (m \ field).toOption
         .map(_.as[String].split('.').toList)
     } orElse {
       Some(field.split('.').toList)
     }
-  }
 }
 
 case class PropertyQuery(
@@ -80,11 +80,10 @@ case class EndpointDataBundle(
     .flatMap(_.endpoints.flatMap(endpointQueries))
     .toSeq
 
-  private def endpointQueries(endpointQuery: EndpointQuery): Seq[EndpointQuery] = {
+  private def endpointQueries(endpointQuery: EndpointQuery): Seq[EndpointQuery] =
     endpointQuery.links
       .map(_.flatMap(endpointQueries))
       .getOrElse(Seq()) :+ endpointQuery
-  }
 }
 
 @Deprecated
@@ -96,17 +95,19 @@ case class RichDataDebit(
 
   lazy val currentBundle: Option[DebitBundle] = bundles.sortBy(_.dateCreated).headOption
 
-  private implicit def dateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isAfter _)
+  implicit private def dateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isAfter _)
   lazy val activeBundle: Option[DebitBundle] =
-    bundles.filter { b =>
-      b.enabled && b.startDate.isBefore(LocalDateTime.now()) &&
+    bundles
+      .filter { b =>
+        b.enabled && b.startDate.isBefore(LocalDateTime.now()) &&
         (b.endDate.isAfter(LocalDateTime.now()) || b.rolling)
-    }
+      }
       .sortBy(_.dateCreated)
       .headOption
 
   lazy val lastUpdated: LocalDateTime =
-    bundles.sortBy(_.dateCreated)
+    bundles
+      .sortBy(_.dateCreated)
       .headOption
       .map(_.dateCreated)
       .getOrElse(LocalDateTime.now())
@@ -144,27 +145,34 @@ case class DataDebitPermissions(
     start: DateTime, // Start of the data debit
     period: Duration, // How long does it run for - a day/week/month/etc?
     cancelAtPeriodEnd: Boolean, // should it be cancelled at the end of the current period?
-    canceledAt: Option[DateTime], // when was it cancelled - set at the time of cancellation, if set and cancelAtPeriodEnd=false, cancel immediately
+    canceledAt: Option[
+      DateTime
+    ], // when was it cancelled - set at the time of cancellation, if set and cancelAtPeriodEnd=false, cancel immediately
     termsUrl: String, // URL linking to terms and conditions of this data debit
     conditions: Option[EndpointDataBundle],
     bundle: EndpointDataBundle,
     accepted: Boolean) {
   lazy val active: Boolean = {
     val now = DateTime.now()
-    if (start.isAfter(now)) {
+    if (start.isAfter(now))
       false
-    }
-    else {
+    else
       accepted && end.forall(_.isAfter(now)) // if end date is set, only active if it is after now; no end date - active
-    }
   }
 
   lazy val end: Option[DateTime] = {
     (canceledAt, cancelAtPeriodEnd) match {
-      case (Some(canceled), false) ⇒ Some(canceled) // has been cancelled with immediate effect
-      case (Some(canceled), true)  ⇒ Some(start.plus(math.ceil((canceled.getMillis - start.getMillis).toDouble / period.getMillis.toDouble).toLong * period.getMillis)) // finish at the end of period
-      case (None, false)           ⇒ None // rolling indefinitely
-      case (None, true)            ⇒ Some(start.plus(period)) // the validity period finished
+      case (Some(canceled), false) => Some(canceled) // has been cancelled with immediate effect
+      case (Some(canceled), true) =>
+        Some(
+          start.plus(
+            math
+              .ceil((canceled.getMillis - start.getMillis).toDouble / period.getMillis.toDouble)
+              .toLong * period.getMillis
+          )
+        ) // finish at the end of period
+      case (None, false) => None // rolling indefinitely
+      case (None, true) => Some(start.plus(period)) // the validity period finished
     }
   }
 }
@@ -178,29 +186,28 @@ case class DataDebit(
     requestClientLogoUrl: String,
     requestApplicationId: Option[String],
     requestDescription: Option[String] // High level description (may be empty) of what the Data Debit is about
-) {
+  ) {
 
-  private implicit def dateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isAfter _)
+  implicit private def dateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isAfter _)
 
   lazy val currentPermissions: Option[DataDebitPermissions] = permissions.sortBy(_.dateCreated).headOption
 
   lazy val activePermissions: Option[DataDebitPermissions] =
-    permissions.filter(_.active)
+    permissions
+      .filter(_.active)
       .sortBy(_.dateCreated)
       .headOption
 
   lazy val lastUpdated: LocalDateTime =
-    if (permissions.nonEmpty) {
+    if (permissions.nonEmpty)
       permissions.map(_.dateCreated).max
-    }
-    else {
+    else
       LocalDateTime.now()
-    }
 
-  lazy val accepted: Boolean = permissions.exists(_.accepted)
-  lazy val active: Boolean = activePermissions.exists(_.active)
-  lazy val start: Option[DateTime] = activePermissions.orElse(currentPermissions).map(p ⇒ p.start)
-  lazy val end: Option[DateTime] = activePermissions.orElse(currentPermissions).flatMap(p ⇒ p.end)
+  lazy val accepted: Boolean       = permissions.exists(_.accepted)
+  lazy val active: Boolean         = activePermissions.exists(_.active)
+  lazy val start: Option[DateTime] = activePermissions.orElse(currentPermissions).map(p => p.start)
+  lazy val end: Option[DateTime]   = activePermissions.orElse(currentPermissions).flatMap(p => p.end)
 }
 
 case class DataDebitSetupRequest(

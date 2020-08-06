@@ -29,13 +29,16 @@ object ComparisonOperators {
   //  case object dateHourGreaterThan extends ComparisonOperator
   //  case object dateHourLessThan extends ComparisonOperator
 
-  def fromString(value: String): ComparisonOperator = {
+  def fromString(value: String): ComparisonOperator =
     Vector(
-      equal, notEqual, greaterThan, lessThan, like //      dateGreaterThan, dateLessThan,
-    //      dateWeekdayGreaterThan, dateWeekdayLessThan,
-    //      dateHourGreaterThan, dateHourLessThan
+      equal,
+      notEqual,
+      greaterThan,
+      lessThan,
+      like //      dateGreaterThan, dateLessThan,
+      //      dateWeekdayGreaterThan, dateWeekdayLessThan,
+      //      dateHourGreaterThan, dateHourLessThan
     ).find(_.toString == value).get
-  }
 
   val comparisonOperators: Set[ComparisonOperator] = Set(equal, notEqual, greaterThan, lessThan, like)
   //    dateGreaterThan, dateLessThan, dateWeekdayGreaterThan, dateWeekdayLessThan, dateHourGreaterThan, dateHourLessThan)
@@ -82,11 +85,19 @@ case class ApiBundleCombination(
     operator: Option[ComparisonOperator])
 
 @Deprecated
-case class ApiBundleDataSourceField(name: String, description: String, fields: Option[List[ApiBundleDataSourceField]])
+case class ApiBundleDataSourceField(
+    name: String,
+    description: String,
+    fields: Option[List[ApiBundleDataSourceField]])
 @Deprecated
-case class ApiBundleDataSourceDataset(name: String, description: String, fields: List[ApiBundleDataSourceField])
+case class ApiBundleDataSourceDataset(
+    name: String,
+    description: String,
+    fields: List[ApiBundleDataSourceField])
 @Deprecated
-case class ApiBundleDataSourceStructure(source: String, datasets: List[ApiBundleDataSourceDataset])
+case class ApiBundleDataSourceStructure(
+    source: String,
+    datasets: List[ApiBundleDataSourceDataset])
 
 @Deprecated
 case class ApiBundleContextless(

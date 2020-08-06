@@ -47,7 +47,9 @@ case class DataCreditStats(
     time: LocalDateTime,
     user: User,
     dataTableStats: Option[Seq[DataTableStats]],
-    logEntry: String) extends DataStats with StatsForTables {
+    logEntry: String)
+    extends DataStats
+    with StatsForTables {
   final val statsType: String = "datacredit"
 }
 
@@ -55,7 +57,8 @@ case class DataCreditStats(
 case class DataStorageStats(
     time: LocalDateTime,
     dataTableStats: Seq[DataTableStats],
-    logEntry: String) extends DataStats {
+    logEntry: String)
+    extends DataStats {
   final val statsType: String = "storage"
 }
 
@@ -72,7 +75,9 @@ case class InboundDataStats(
     time: LocalDateTime,
     user: User,
     stats: Seq[EndpointStats],
-    logEntry: String) extends DataStats with RichDataStats {
+    logEntry: String)
+    extends DataStats
+    with RichDataStats {
   final val statsType: String = "inbound"
 }
 
@@ -81,7 +86,9 @@ case class OutboundDataStats(
     user: User,
     dataDebitId: String,
     stats: Seq[EndpointStats],
-    logEntry: String) extends DataStats with RichDataStats {
+    logEntry: String)
+    extends DataStats
+    with RichDataStats {
   final val statsType: String = "outbound"
 }
 
@@ -91,7 +98,8 @@ case class DataDebitEvent(
     operation: String,
     time: LocalDateTime,
     user: User,
-    logEntry: String) extends DataStats {
+    logEntry: String)
+    extends DataStats {
   final val statsType: String = "datadebitEvent"
 }
 
@@ -100,6 +108,7 @@ case class DataDebitOperation(
     operation: String,
     time: LocalDateTime,
     user: User,
-    logEntry: String) extends DataStats {
+    logEntry: String)
+    extends DataStats {
   final val statsType: String = "datadebit"
 }

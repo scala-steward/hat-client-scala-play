@@ -30,11 +30,10 @@ case class ApiDataRecord(
 
 @Deprecated
 object ApiDataRecord {
-  def flattenRecordValues(record: ApiDataRecord): Map[String, Any] = {
+  def flattenRecordValues(record: ApiDataRecord): Map[String, Any] =
     Map(record.tables.getOrElse(Seq()).map { table =>
       table.name -> ApiDataTable.flattenTableValues(table)
     }: _*)
-  }
 }
 
 @Deprecated
@@ -54,16 +53,15 @@ object ApiDataTable {
    */
   def flattenTableValues(dataTable: ApiDataTable): Map[String, Any] = {
     val fieldObjects = dataTable.fields.map { fields =>
-      Map[String, Any](
-        fields flatMap { field =>
-          val maybeValues = field.values match {
-            case Some(values) if values.isEmpty     => None
-            case Some(values) if values.length == 1 => Some(values.head.value)
-            case Some(values)                       => Some(values.map(_.value))
-            case None                               => None
-          }
-          maybeValues.map { values => field.name -> values }
-        }: _*)
+      Map[String, Any](fields flatMap { field =>
+        val maybeValues = field.values match {
+          case Some(values) if values.isEmpty     => None
+          case Some(values) if values.length == 1 => Some(values.head.value)
+          case Some(values)                       => Some(values.map(_.value))
+          case None                               => None
+        }
+        maybeValues.map(values => field.name -> values)
+      }: _*)
     }
 
     val subtableObjects = dataTable.subTables.map { subtables =>
@@ -77,14 +75,14 @@ object ApiDataTable {
 
   def extractValues(dataTable: ApiDataTable): List[ApiDataValue] = {
     val fieldValues = dataTable.fields.map { fields =>
-      fields.toList.flatMap { field =>
-        field.values.getOrElse(List())
-      }
-    } getOrElse List()
+        fields.toList.flatMap { field =>
+          field.values.getOrElse(List())
+        }
+      } getOrElse List()
 
     val subtableValues = dataTable.subTables.map { subtables =>
-      subtables.toList.flatMap(extractValues)
-    } getOrElse List()
+        subtables.toList.flatMap(extractValues)
+      } getOrElse List()
 
     fieldValues ++ subtableValues
   }
