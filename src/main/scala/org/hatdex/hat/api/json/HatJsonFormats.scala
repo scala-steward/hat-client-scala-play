@@ -35,8 +35,8 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
       )
   }
 
-  implicit val userReads         = Json.format[User]
-  implicit val accessTokenFormat = Json.format[AccessToken]
+  implicit val userReads: OFormat[User]         = Json.format[User]
+  implicit val accessTokenFormat: OFormat[AccessToken] = Json.format[AccessToken]
 
   implicit val ApiDataFieldFormat: Format[ApiDataField] = ((__ \ "id").formatNullable[Int] and
       (__ \ "dateCreated").formatNullable[LocalDateTime] and
@@ -79,7 +79,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
       Json.toJson(operator.toString)
   }
 
-  implicit val ApiRecordValuesFormat = Json.format[ApiRecordValues]
+  implicit val ApiRecordValuesFormat: OFormat[ApiRecordValues] = Json.format[ApiRecordValues]
 
   implicit val ApiBundleDataSourceFieldFormat: Format[ApiBundleDataSourceField] = ((__ \ "name").format[String] and
       (__ \ "description").format[String] and
@@ -88,12 +88,12 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     unlift(ApiBundleDataSourceField.unapply)
   )
 
-  implicit val ApiBundleDataSourceDatasetFormat   = Json.format[ApiBundleDataSourceDataset]
-  implicit val ApiBundleDataSourceStructureFormat = Json.format[ApiBundleDataSourceStructure]
-  implicit val ApiBundleContextlessFormat         = Json.format[ApiBundleContextless]
+  implicit val ApiBundleDataSourceDatasetFormat: OFormat[ApiBundleDataSourceDataset]   = Json.format[ApiBundleDataSourceDataset]
+  implicit val ApiBundleDataSourceStructureFormat: OFormat[ApiBundleDataSourceStructure] = Json.format[ApiBundleDataSourceStructure]
+  implicit val ApiBundleContextlessFormat: OFormat[ApiBundleContextless]         = Json.format[ApiBundleContextless]
 
-  implicit val ApiBundleContextPropertySelection     = Json.format[ApiBundleContextPropertySelection]
-  implicit val ApiBundleContextEntitySelectionFormat = Json.format[ApiBundleContextEntitySelection]
+  implicit val ApiBundleContextPropertySelection: OFormat[ApiBundleContextPropertySelection]     = Json.format[ApiBundleContextPropertySelection]
+  implicit val ApiBundleContextEntitySelectionFormat: OFormat[ApiBundleContextEntitySelection] = Json.format[ApiBundleContextEntitySelection]
 
   implicit val ApiBundleContextFormat: Format[ApiBundleContext] = ((__ \ "id").formatNullable[Int] and
       (__ \ "dateCreated").formatNullable[LocalDateTime] and
@@ -104,7 +104,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
                                                                                       unlift(ApiBundleContext.unapply)
   )
 
-  implicit val DataFieldStatsFormat = Json.format[DataFieldStats]
+  implicit val DataFieldStatsFormat: OFormat[DataFieldStats] = Json.format[DataFieldStats]
   implicit val DataTableStatsFormat: Format[DataTableStats] = ((__ \ "name").format[String] and
       (__ \ "source").format[String] and
       (__ \ "fields").format[Seq[DataFieldStats]] and

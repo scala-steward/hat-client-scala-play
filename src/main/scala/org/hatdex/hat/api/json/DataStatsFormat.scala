@@ -43,8 +43,8 @@ trait DataStatsFormat extends DataDebitFormats {
   implicit protected val dataStorageStatsFormat: Format[DataStorageStats]     = Json.format[DataStorageStats]
   implicit protected val inboundDataStatsFormat: Format[InboundDataStats]     = Json.format[InboundDataStats]
   implicit protected val outboundDataStatsFormat: Format[OutboundDataStats]   = Json.format[OutboundDataStats]
-  implicit protected val richDataDebitFormat                                  = RichDataJsonFormats.richDataDebitFormat
-  implicit protected val dataDebitFormat                                      = RichDataJsonFormats.dataDebitFormat
+  implicit protected val richDataDebitFormat: Format[RichDataDebit]                                  = RichDataJsonFormats.richDataDebitFormat
+  implicit protected val dataDebitFormat: Format[DataDebit]                                      = RichDataJsonFormats.dataDebitFormat
   implicit protected val dataDebitEventFormat: Format[DataDebitEvent]         = Json.format[DataDebitEvent]
   implicit protected val dataDebitOperationFormat: Format[DataDebitOperation] = Json.format[DataDebitOperation]
 
