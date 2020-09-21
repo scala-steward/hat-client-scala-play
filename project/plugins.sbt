@@ -7,7 +7,7 @@ libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.6")
 
 // Code Quality
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 
 // S3 based SBT resolver
 resolvers += Resolver.jcenterRepo
