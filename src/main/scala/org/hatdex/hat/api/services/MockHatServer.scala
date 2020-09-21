@@ -22,6 +22,7 @@ import play.api.routing.sird._
 import play.core.server.Server
 
 import scala.io.Source._
+import play.api.http.DefaultFileMimeTypes
 
 object MockHatServer {
 
@@ -31,11 +32,11 @@ object MockHatServer {
 
   protected val apiVersion: String = "v2.6"
 
-  implicit val fileMimeTypes = new DefaultFileMimeTypesProvider(
+  implicit val fileMimeTypes: DefaultFileMimeTypes = new DefaultFileMimeTypesProvider(
     FileMimeTypesConfiguration(Map("json" -> "application/json", "pem" -> "text/plain"))
   ).get
 
-  def withMockHatServerClient[T](block: WSClient => T): T =
+  def withMockHatServerClient[T](block: WSClient => T)(implicit ec: scala.concurrent.ExecutionContext): T =
     Server.withRouterFromComponents() { components =>
       import components.{ defaultActionBuilder => Action }
       {
@@ -130,7 +131,7 @@ object MockHatServer {
       }
     }
 
-  def withHatClient[T](block: HatClient => T): T =
+  def withHatClient[T](block: HatClient => T)(implicit ec: scala.concurrent.ExecutionContext): T =
     withMockHatServerClient { client =>
       block(new HatClient(client, "", "", "v2.6"))
     }

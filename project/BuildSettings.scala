@@ -47,12 +47,12 @@ object BuildSettings extends AutoPlugin {
         "-deprecation", // Emit warning and location for usages of deprecated APIs.
         "-feature", // Emit warning and location for usages of features that should be imported explicitly.
         "-unchecked", // Enable additional warnings where generated code depends on assumptions.
-        "-Xfatal-warnings", // Fail the compilation if there are any warnings.
+        //"-Xfatal-warnings", // Fail the compilation if there are any warnings.
         "-Xlint", // Enable recommended additional warnings.
-        "-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver.
+        //"-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver.
         "-Ywarn-dead-code", // Warn when dead code is identified.
-        "-Ywarn-inaccessible", // Warn about inaccessible types in method signatures.
-        "-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
+        //"-Ywarn-inaccessible", // Warn about inaccessible types in method signatures.
+        //"-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
         "-language:postfixOps", // Allow postfix operators
         "-Ywarn-numeric-widen" // Warn when numerics are widened.
       ),
@@ -66,19 +66,5 @@ object BuildSettings extends AutoPlugin {
       // See https://github.com/sbt/sbt/issues/653
       // and https://github.com/travis-ci/travis-ci/issues/3775
       javaOptions += "-Xmx1G"
-    ) ++ scalariformPrefs
-
-  // Scalariform settings for automatic code reformatting
-  import com.typesafe.sbt.SbtScalariform._
-  import scalariform.formatter.preferences._
-
-  lazy val scalariformPrefs = Seq(
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-      .setPreference(FormatXml, false)
-      .setPreference(DoubleIndentClassDeclaration, true)
-      .setPreference(DoubleIndentConstructorArguments, true)
-      .setPreference(AlignSingleLineCaseStatements, true)
-      .setPreference(CompactControlReadability, true)
-      .setPreference(DanglingCloseParenthesis, Prevent)
-  )
+    )
 }

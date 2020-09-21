@@ -167,7 +167,8 @@ trait HatApplications {
   }
 
   private def transitionApplication(
-      implicit ec: ExecutionContext,
+      implicit
+      ec: ExecutionContext,
       request: WSRequest): Future[Boolean] = {
     val eventualResponse: Future[WSResponse] = request.get()
 

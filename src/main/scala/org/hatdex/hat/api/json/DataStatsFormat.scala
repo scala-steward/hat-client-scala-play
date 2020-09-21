@@ -16,57 +16,74 @@ import play.api.libs.json._
 import scala.collection.immutable.HashMap
 
 trait DataStatsFormat extends DataDebitFormats {
-  implicit val mapReads: Reads[HashMap[String, Long]] = new Reads[HashMap[String, Long]] {
-    def reads(jv: JsValue): JsResult[HashMap[String, Long]] = {
-      val fields: Seq[(String, Long)] = jv.as[JsObject].fields.map {
-        case (k, v) =>
-          k -> v.as[Long]
-      }
-      JsSuccess(HashMap[String, Long](fields: _*))
-    }
-  }
+  implicit protected val dataCreditStatsFormat: Format[DataCreditStats]       = Json.format[DataCreditStats]
+  implicit protected val dataStorageStatsFormat: Format[DataStorageStats]     = Json.format[DataStorageStats]
+  implicit protected val inboundDataStatsFormat: Format[InboundDataStats]     = Json.format[InboundDataStats]
+  implicit protected val outboundDataStatsFormat: Format[OutboundDataStats]   = Json.format[OutboundDataStats]
+  implicit protected val richDataDebitFormat: Format[RichDataDebit]                                  = RichDataJsonFormats.richDataDebitFormat
+  implicit protected val dataDebitFormat: Format[DataDebit]                                      = RichDataJsonFormats.dataDebitFormat
+  implicit protected val dataDebitEventFormat: Format[DataDebitEvent]         = Json.format[DataDebitEvent]
+  implicit protected val dataDebitOperationFormat: Format[DataDebitOperation] = Json.format[DataDebitOperation]
 
-  implicit val mapWrites: Writes[HashMap[String, Long]] = new Writes[HashMap[String, Long]] {
-    def writes(map: HashMap[String, Long]): JsValue =
-      Json.obj(map.map {
-        case (s, o) =>
-          val ret: (String, JsValueWrapper) = s.toString -> JsNumber(o)
-          ret
-      }.toSeq: _*)
-  }
+  implicit val mapReads: Reads[scala.collection.immutable.HashMap[String, Long]] =
+    new Reads[scala.collection.immutable.HashMap[String, Long]] {
+      def reads(jv: JsValue): JsResult[scala.collection.immutable.HashMap[String, Long]] = {
+        val fields = jv.as[JsObject].fields
+
+        val s: collection.immutable.Seq[(String, Long)] = fields.map {
+          case (k, v) => k -> v.as[Long]
+        }.toSeq
+
+        // jv.as[JsObject].fields.map {
+        //   case (k, v) =>
+        //     k -> v.as[Long]
+        // }
+        JsSuccess(scala.collection.immutable.HashMap[String, Long](s: _*))
+      }
+    }
+
+  implicit val mapWrites: Writes[scala.collection.immutable.HashMap[String, Long]] =
+    new Writes[scala.collection.immutable.HashMap[String, Long]] {
+      def writes(map: scala.collection.immutable.HashMap[String, Long]): JsValue =
+        Json.obj(map.map {
+          case (s, o) =>
+            val ret: (String, JsValueWrapper) = s.toString -> JsNumber(o)
+            ret
+        }.toSeq: _*)
+    }
 
   implicit val mapFormat: Format[HashMap[String, Long]] = Format(mapReads, mapWrites)
 
   implicit val endpointStatsFormat: Format[EndpointStats] = Json.format[EndpointStats]
 
-  implicit protected val dataCreditStatsFormat: Format[DataCreditStats]       = Json.format[DataCreditStats]
-  implicit protected val dataStorageStatsFormat: Format[DataStorageStats]     = Json.format[DataStorageStats]
-  implicit protected val inboundDataStatsFormat: Format[InboundDataStats]     = Json.format[InboundDataStats]
-  implicit protected val outboundDataStatsFormat: Format[OutboundDataStats]   = Json.format[OutboundDataStats]
-  implicit protected val richDataDebitFormat                                  = RichDataJsonFormats.richDataDebitFormat
-  implicit protected val dataDebitFormat                                      = RichDataJsonFormats.dataDebitFormat
-  implicit protected val dataDebitEventFormat: Format[DataDebitEvent]         = Json.format[DataDebitEvent]
-  implicit protected val dataDebitOperationFormat: Format[DataDebitOperation] = Json.format[DataDebitOperation]
+  // implicit protected val dataCreditStatsFormat: Format[DataCreditStats] = Json.format[DataCreditStats]
+  // implicit protected val dataStorageStatsFormat: Format[DataStorageStats] = Json.format[DataStorageStats]
+  // implicit protected val inboundDataStatsFormat: Format[InboundDataStats] = Json.format[InboundDataStats]
+  // implicit protected val outboundDataStatsFormat: Format[OutboundDataStats] = Json.format[OutboundDataStats]
+  // implicit protected val richDataDebitFormat = RichDataJsonFormats.richDataDebitFormat
+  // implicit protected val dataDebitFormat = RichDataJsonFormats.dataDebitFormat
+  // implicit protected val dataDebitEventFormat: Format[DataDebitEvent] = Json.format[DataDebitEvent]
+  // implicit protected val dataDebitOperationFormat: Format[DataDebitOperation] = Json.format[DataDebitOperation]
 
   implicit val dataStatsFormat: Format[DataStats] = new Format[DataStats] {
     def reads(json: JsValue): JsResult[DataStats] =
       (json \ "statsType").as[String] match {
-        case "datacredit" => Json.fromJson[DataCreditStats](json)(dataCreditStatsFormat)
-        case "storage" => Json.fromJson[DataStorageStats](json)(dataStorageStatsFormat)
-        case "inbound" => Json.fromJson[InboundDataStats](json)(inboundDataStatsFormat)
-        case "outbound" => Json.fromJson[OutboundDataStats](json)(outboundDataStatsFormat)
+        case "datacredit"     => Json.fromJson[DataCreditStats](json)(dataCreditStatsFormat)
+        case "storage"        => Json.fromJson[DataStorageStats](json)(dataStorageStatsFormat)
+        case "inbound"        => Json.fromJson[InboundDataStats](json)(inboundDataStatsFormat)
+        case "outbound"       => Json.fromJson[OutboundDataStats](json)(outboundDataStatsFormat)
         case "datadebitEvent" => Json.fromJson[DataDebitEvent](json)(dataDebitEventFormat)
-        case "datadebit" => Json.fromJson[DataDebitOperation](json)(dataDebitOperationFormat)
-        case statsType => JsError(s"Unexpected JSON value $statsType in $json")
+        case "datadebit"      => Json.fromJson[DataDebitOperation](json)(dataDebitOperationFormat)
+        case statsType        => JsError(s"Unexpected JSON value $statsType in $json")
       }
 
     def writes(stats: DataStats): JsValue = {
       val statsJson = stats match {
-        case ds: DataCreditStats => Json.toJson(ds)(dataCreditStatsFormat)
-        case ds: DataStorageStats => Json.toJson(ds)(dataStorageStatsFormat)
-        case ds: InboundDataStats => Json.toJson(ds)(inboundDataStatsFormat)
-        case ds: OutboundDataStats => Json.toJson(ds)(outboundDataStatsFormat)
-        case ds: DataDebitEvent => Json.toJson(ds)(dataDebitEventFormat)
+        case ds: DataCreditStats    => Json.toJson(ds)(dataCreditStatsFormat)
+        case ds: DataStorageStats   => Json.toJson(ds)(dataStorageStatsFormat)
+        case ds: InboundDataStats   => Json.toJson(ds)(inboundDataStatsFormat)
+        case ds: OutboundDataStats  => Json.toJson(ds)(outboundDataStatsFormat)
+        case ds: DataDebitEvent     => Json.toJson(ds)(dataDebitEventFormat)
         case ds: DataDebitOperation => Json.toJson(ds)(dataDebitOperationFormat)
       }
       statsJson.as[JsObject].+(("statsType", Json.toJson(stats.statsType)))
