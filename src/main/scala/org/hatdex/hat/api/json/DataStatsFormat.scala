@@ -20,8 +20,8 @@ trait DataStatsFormat extends DataDebitFormats {
   implicit protected val dataStorageStatsFormat: Format[DataStorageStats]     = Json.format[DataStorageStats]
   implicit protected val inboundDataStatsFormat: Format[InboundDataStats]     = Json.format[InboundDataStats]
   implicit protected val outboundDataStatsFormat: Format[OutboundDataStats]   = Json.format[OutboundDataStats]
-  implicit protected val richDataDebitFormat: Format[RichDataDebit]                                  = RichDataJsonFormats.richDataDebitFormat
-  implicit protected val dataDebitFormat: Format[DataDebit]                                      = RichDataJsonFormats.dataDebitFormat
+  implicit protected val richDataDebitFormat: Format[RichDataDebit]           = RichDataJsonFormats.richDataDebitFormat
+  implicit protected val dataDebitFormat: Format[DataDebit]                   = RichDataJsonFormats.dataDebitFormat
   implicit protected val dataDebitEventFormat: Format[DataDebitEvent]         = Json.format[DataDebitEvent]
   implicit protected val dataDebitOperationFormat: Format[DataDebitOperation] = Json.format[DataDebitOperation]
 
@@ -34,10 +34,6 @@ trait DataStatsFormat extends DataDebitFormats {
           case (k, v) => k -> v.as[Long]
         }.toSeq
 
-        // jv.as[JsObject].fields.map {
-        //   case (k, v) =>
-        //     k -> v.as[Long]
-        // }
         JsSuccess(scala.collection.immutable.HashMap[String, Long](s: _*))
       }
     }
@@ -55,15 +51,6 @@ trait DataStatsFormat extends DataDebitFormats {
   implicit val mapFormat: Format[HashMap[String, Long]] = Format(mapReads, mapWrites)
 
   implicit val endpointStatsFormat: Format[EndpointStats] = Json.format[EndpointStats]
-
-  // implicit protected val dataCreditStatsFormat: Format[DataCreditStats] = Json.format[DataCreditStats]
-  // implicit protected val dataStorageStatsFormat: Format[DataStorageStats] = Json.format[DataStorageStats]
-  // implicit protected val inboundDataStatsFormat: Format[InboundDataStats] = Json.format[InboundDataStats]
-  // implicit protected val outboundDataStatsFormat: Format[OutboundDataStats] = Json.format[OutboundDataStats]
-  // implicit protected val richDataDebitFormat = RichDataJsonFormats.richDataDebitFormat
-  // implicit protected val dataDebitFormat = RichDataJsonFormats.dataDebitFormat
-  // implicit protected val dataDebitEventFormat: Format[DataDebitEvent] = Json.format[DataDebitEvent]
-  // implicit protected val dataDebitOperationFormat: Format[DataDebitOperation] = Json.format[DataDebitOperation]
 
   implicit val dataStatsFormat: Format[DataStats] = new Format[DataStats] {
     def reads(json: JsValue): JsResult[DataStats] =

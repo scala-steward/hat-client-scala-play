@@ -12,7 +12,7 @@ package org.hatdex.hat.api.json
 import play.api.libs.json._
 
 import scala.util.Try
-import java.{util => ju}
+import java.{ util => ju }
 
 trait UuidMarshalling {
   object UUIDReads extends Reads[java.util.UUID] {

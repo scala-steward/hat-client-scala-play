@@ -28,5 +28,5 @@ class HatClient(
       ws: WSClient,
       hatAddress: String) = this(ws, hatAddress, "https://", "v2.6")
   override val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
-  val logger: Logger                = play.api.Logger(this.getClass)
+  val logger: Logger        = play.api.Logger(this.getClass)
 }
