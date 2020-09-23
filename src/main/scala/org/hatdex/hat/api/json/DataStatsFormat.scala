@@ -30,7 +30,8 @@ trait DataStatsFormat extends DataDebitFormats {
       def reads(jv: JsValue): JsResult[scala.collection.immutable.HashMap[String, Long]] = {
         val fields = jv.as[JsObject].fields
 
-        val s: collection.immutable.Seq[(String, Long)] = fields.map {
+        // scala.Seq is an alias for migrating from 2.12 to 2.13
+        val s: scala.Seq[(String, Long)] = fields.map {
           case (k, v) => k -> v.as[Long]
         }.toSeq
 
