@@ -35,30 +35,31 @@ sealed abstract class UserRole(roleTitle: String) extends Serializable {
 object UserRole {
   //noinspection ScalaStyle
   def userRoleDeserialize(
-      userRole: String,
-      roleExtra: Option[String]): UserRole =
+    userRole: String,
+    roleExtra: Option[String]): UserRole =
     (userRole, roleExtra) match {
       case (role, None) =>
         role match {
-          case "owner" => Owner()
-          case "platform" => Platform()
-          case "validate" => Validate()
-          case "datadebit" => DataDebitOwner("")
-          case "datacredit" => DataCredit("")
+          case "owner"           => Owner()
+          case "platform"        => Platform()
+          case "validate"        => Validate()
+          case "datadebit"       => DataDebitOwner("")
+          case "datacredit"      => DataCredit("")
           case "applicationlist" => ApplicationList()
-          case _ => UnknownRole()
+          case _                 => UnknownRole()
         }
       case (role, Some(extra)) =>
         role match {
-          case "datadebit" => DataDebitOwner(extra)
-          case "datacredit" => DataCredit(extra)
-          case "namespacewrite" => NamespaceWrite(extra)
-          case "namespaceread" => NamespaceRead(extra)
+          case "datadebit"                => DataDebitOwner(extra)
+          case "datacredit"               => DataCredit(extra)
+          case "namespacewrite"           => NamespaceWrite(extra)
+          case "namespaceread"            => NamespaceRead(extra)
           case "retrieveapplicationtoken" => RetrieveApplicationToken(extra)
-          case "applicationmanage" => ApplicationManage(extra)
-          case "applicationstatusread" => ApplicationStatusRead(extra)
-          case "managefiles" => ManageFiles(extra)
-          case _ => UnknownRole()
+          case "applicationmanage"        => ApplicationManage(extra)
+          case "applicationstatusread"    => ApplicationStatusRead(extra)
+          case "managefiles"              => ManageFiles(extra)
+          case "emailverified"            => EmailVerified(extra)
+          case _                          => UnknownRole()
         }
     }
 }
@@ -106,4 +107,8 @@ case class NamespaceRead(namespace: String) extends UserRole("namespaceread") {
 
 case class ManageFiles(source: String) extends UserRole("managefiles") {
   override def extra: Option[String] = Some(source)
+}
+
+case class EmailVerified(dateAsString: String) extends UserRole("emailverified") {
+  override def extra: Option[String] = Some(dateAsString)
 }
