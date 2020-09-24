@@ -25,8 +25,9 @@ import scala.io.Source._
 import play.api.http.DefaultFileMimeTypes
 
 object MockHatServer {
-
   import org.hatdex.hat.api.json.RichDataJsonFormats._
+
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   private val logger = Logger(this.getClass)
 
@@ -36,7 +37,7 @@ object MockHatServer {
     FileMimeTypesConfiguration(Map("json" -> "application/json", "pem" -> "text/plain"))
   ).get
 
-  def withMockHatServerClient[T](block: WSClient => T)(implicit ec: scala.concurrent.ExecutionContext): T =
+  def withMockHatServerClient[T](block: WSClient => T): T =
     Server.withRouterFromComponents() { components =>
       import components.{ defaultActionBuilder => Action }
       {
@@ -131,7 +132,7 @@ object MockHatServer {
       }
     }
 
-  def withHatClient[T](block: HatClient => T)(implicit ec: scala.concurrent.ExecutionContext): T =
+  def withHatClient[T](block: HatClient => T): T =
     withMockHatServerClient { client =>
       block(new HatClient(client, "", "", "v2.6"))
     }

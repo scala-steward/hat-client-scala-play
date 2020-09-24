@@ -12,13 +12,13 @@ package org.hatdex.hat.api.json
 import play.api.libs.json._
 
 import scala.util.Try
-import java.{ util => ju }
+import java.util.UUID
 
 trait UuidMarshalling {
-  object UUIDReads extends Reads[java.util.UUID] {
-    def parseUUID(s: String): Option[java.util.UUID] = Try(java.util.UUID.fromString(s)).toOption
+  object UUIDReads extends Reads[UUID] {
+    def parseUUID(s: String): Option[UUID] = Try(UUID.fromString(s)).toOption
 
-    def reads(json: JsValue): JsResult[ju.UUID] =
+    def reads(json: JsValue): JsResult[UUID] =
       json match {
         case JsString(s) =>
           parseUUID(s)
@@ -29,9 +29,9 @@ trait UuidMarshalling {
       }
   }
 
-  object UUIDWrites extends Writes[java.util.UUID] {
-    def writes(uuid: java.util.UUID): JsValue = JsString(uuid.toString)
+  object UUIDWrites extends Writes[UUID] {
+    def writes(uuid: UUID): JsValue = JsString(uuid.toString)
   }
 
-  implicit val uuidFormat: Format[java.util.UUID] = Format(UUIDReads, UUIDWrites)
+  implicit val uuidFormat: Format[UUID] = Format(UUIDReads, UUIDWrites)
 }
