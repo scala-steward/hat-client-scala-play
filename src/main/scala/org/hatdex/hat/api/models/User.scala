@@ -109,4 +109,4 @@ case class ManageFiles(source: String) extends UserRole("managefiles") {
   override def extra: Option[String] = Some(source)
 }
 
-case class EmailVerified(dateAsString: String) extends UserRole("emailverified")
+case class EmailVerified() extends UserRole("emailverified")
