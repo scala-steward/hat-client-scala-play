@@ -22,6 +22,7 @@ import play.api.routing.sird._
 import play.core.server.Server
 
 import scala.io.Source._
+import play.api.http.DefaultFileMimeTypes
 
 object MockHatServer {
 
@@ -31,7 +32,7 @@ object MockHatServer {
 
   protected val apiVersion: String = "v2.6"
 
-  implicit val fileMimeTypes = new DefaultFileMimeTypesProvider(
+  implicit val fileMimeTypes: DefaultFileMimeTypes = new DefaultFileMimeTypesProvider(
     FileMimeTypesConfiguration(Map("json" -> "application/json", "pem" -> "text/plain"))
   ).get
 

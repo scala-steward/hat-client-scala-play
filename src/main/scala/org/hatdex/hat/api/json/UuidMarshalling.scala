@@ -12,12 +12,13 @@ package org.hatdex.hat.api.json
 import play.api.libs.json._
 
 import scala.util.Try
+import java.{util => ju}
 
 trait UuidMarshalling {
   object UUIDReads extends Reads[java.util.UUID] {
     def parseUUID(s: String): Option[java.util.UUID] = Try(java.util.UUID.fromString(s)).toOption
 
-    def reads(json: JsValue) =
+    def reads(json: JsValue): JsResult[ju.UUID] =
       json match {
         case JsString(s) =>
           parseUUID(s)

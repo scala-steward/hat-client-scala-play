@@ -8,7 +8,6 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.6")
 
 // Code Quality
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
-addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.8.2")
 
 // S3 based SBT resolver
 resolvers += Resolver.jcenterRepo
@@ -19,5 +18,10 @@ addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4")
 
 resolvers += "HAT Library Artifacts Snapshots" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-snapshots.hubofallthings.com"
 resolvers += "HAT Library Artifacts Releases" at "https://s3-eu-west-1.amazonaws.com/library-artifacts-releases.hubofallthings.com"
+
+// scalafmt
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.3.4")
 addSbtPlugin("io.dataswift" % "sbt-scalafmt-common" % "0.1.1")
+
+// scalafix
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.19")

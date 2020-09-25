@@ -66,19 +66,7 @@ object BuildSettings extends AutoPlugin {
       // See https://github.com/sbt/sbt/issues/653
       // and https://github.com/travis-ci/travis-ci/issues/3775
       javaOptions += "-Xmx1G"
-    ) ++ scalariformPrefs
-
-  // Scalariform settings for automatic code reformatting
-  import com.typesafe.sbt.SbtScalariform._
-  import scalariform.formatter.preferences._
-
-  lazy val scalariformPrefs = Seq(
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-      .setPreference(FormatXml, false)
-      .setPreference(DoubleIndentClassDeclaration, true)
-      .setPreference(DoubleIndentConstructorArguments, true)
-      .setPreference(AlignSingleLineCaseStatements, true)
-      .setPreference(CompactControlReadability, true)
-      .setPreference(DanglingCloseParenthesis, Prevent)
-  )
+    ) 
 }
+
+

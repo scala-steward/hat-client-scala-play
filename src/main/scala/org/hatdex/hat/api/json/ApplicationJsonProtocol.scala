@@ -8,9 +8,9 @@ import scala.util.Try
 
 trait ApplicationJsonProtocol extends DataFeedItemJsonProtocol {
 
-  implicit val paginationParamsFormat = Json.format[PaginationParameters]
-  implicit val filtersFormat          = Json.format[ApplicationFilters]
-  implicit val payloadWrapperFormat   = Json.format[PayloadWrapper]
+  implicit val paginationParamsFormat: OFormat[PaginationParameters] = Json.format[PaginationParameters]
+  implicit val filtersFormat: OFormat[ApplicationFilters]          = Json.format[ApplicationFilters]
+  implicit val payloadWrapperFormat: OFormat[PayloadWrapper]   = Json.format[PayloadWrapper]
 
   implicit val drawableFormat: Format[Drawable] = Json.format[Drawable]
   implicit val applicationGraphicsFormat: Format[ApplicationGraphics] =
