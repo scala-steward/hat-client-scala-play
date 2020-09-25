@@ -12,14 +12,15 @@ package org.hatdex.hat.api.services
 import java.util.UUID
 
 import org.hatdex.hat.api.json.HatJsonFormats
-import org.hatdex.hat.api.models.User
+import org.hatdex.hat.api.models.{PdaEmailVerificationRequest, User}
 import org.hatdex.hat.api.services.Errors.ApiException
 import play.api.Logger
 import play.api.http.Status._
+import play.api.i18n.Lang
 import play.api.libs.json._
 import play.api.libs.ws._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait HatAuthentication {
   protected val logger: Logger
@@ -30,6 +31,7 @@ trait HatAuthentication {
   protected val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
 
   import HatJsonFormats._
+  import org.hatdex.hat.api.models.ApiAuthenticationFormats._
 
   def retrievePublicKey()(implicit ec: ExecutionContext): Future[String] = {
     val request: WSRequest = ws
@@ -47,9 +49,8 @@ trait HatAuthentication {
   }
 
   def authenticateForToken(
-      username: String,
-      password: String
-    )(implicit ec: ExecutionContext): Future[String] = {
+    username: String,
+    password: String)(implicit ec: ExecutionContext): Future[String] = {
     val request: WSRequest = ws
       .url(s"$schema$hatAddress/users/access_token")
       .withVirtualHost(host)
@@ -80,9 +81,8 @@ trait HatAuthentication {
   }
 
   def createAccount(
-      access_token: String,
-      hatUser: User
-    )(implicit ec: ExecutionContext): Future[UUID] = {
+    access_token: String,
+    hatUser: User)(implicit ec: ExecutionContext): Future[UUID] = {
     val request: WSRequest = ws
       .url(s"$schema$hatAddress/users/user")
       .withVirtualHost(host)
@@ -103,9 +103,8 @@ trait HatAuthentication {
   }
 
   def updateAccount(
-      access_token: String,
-      hatUser: User
-    )(implicit ec: ExecutionContext): Future[UUID] = {
+    access_token: String,
+    hatUser: User)(implicit ec: ExecutionContext): Future[UUID] = {
     val request: WSRequest = ws
       .url(s"$schema$hatAddress/users/user/${hatUser.userId}/update")
       .withVirtualHost(host)
@@ -126,9 +125,8 @@ trait HatAuthentication {
   }
 
   def enableAccount(
-      access_token: String,
-      userId: UUID
-    )(implicit ec: ExecutionContext): Future[Boolean] = {
+    access_token: String,
+    userId: UUID)(implicit ec: ExecutionContext): Future[Boolean] = {
     val request: WSRequest = ws
       .url(s"$schema$hatAddress/users/user/$userId/enable")
       .withVirtualHost(host)
@@ -148,19 +146,18 @@ trait HatAuthentication {
     }
   }
 
-  def triggerHatClaim(
-      email: String,
-      applicationId: String,
-      lang: String = "en"
-    )(implicit ec: ExecutionContext): Future[String] = {
+  def requestEmailVerification(
+    email: String,
+    applicationId: String,
+    )(implicit ec: ExecutionContext, lang: Lang): Future[String] = {
     val request: WSRequest = ws
-      .url(s"$schema$hatAddress/control/v2/auth/claim")
+      .url(s"$schema$hatAddress/control/v2/auth/request-verification")
       .withVirtualHost(host)
-      .withQueryStringParameters("lang" -> lang)
+      .withQueryStringParameters("lang" -> lang.language)
       .withHttpHeaders("Accept" -> "application/json")
 
     logger.debug(s"Trigger HAT claim process on $hatAddress")
-    val eventualResponse = request.post(Json.obj("email" -> email, "applicationId" -> applicationId))
+    val eventualResponse = request.post(Json.toJson(PdaEmailVerificationRequest(email, applicationId)))
 
     eventualResponse.flatMap { response =>
       response.status match {
