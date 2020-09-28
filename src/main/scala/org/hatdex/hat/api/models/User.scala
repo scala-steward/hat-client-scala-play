@@ -58,13 +58,7 @@ object UserRole {
           case "applicationmanage"        => ApplicationManage(extra)
           case "applicationstatusread"    => ApplicationStatusRead(extra)
           case "managefiles"              => ManageFiles(extra)
-          // Use Verified as a generic indicator of verification.
-          // The `extra` field can differentiate the type of verification
-          // These "stack" as well, so a user can have multiple Verified roles.
-          case "verifiedviaemail"         => Verified("email")
-          case "verifiedviamobile"        => Verified("mobile")
-          case "verifiedvia2fa"           => Verified("twofactor")
-          
+          case "verified"                 => Verified(extra)
           case _                          => UnknownRole()
         }
     }
