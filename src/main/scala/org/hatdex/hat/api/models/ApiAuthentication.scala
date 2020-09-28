@@ -4,7 +4,8 @@ import play.api.libs.json._
 
 case class PdaEmailVerificationRequest(
     email: String,
-    applicationId: String)
+    applicationId: String,
+    redirectUri: String)
 
 object ApiAuthenticationFormats {
   implicit val passwordResetRequestFormat: OFormat[PdaEmailVerificationRequest] = Json.format[PdaEmailVerificationRequest]

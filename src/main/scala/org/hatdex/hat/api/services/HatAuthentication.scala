@@ -149,6 +149,7 @@ trait HatAuthentication {
   def requestEmailVerification(
     email: String,
     applicationId: String,
+    redirectUri: String
     )(implicit ec: ExecutionContext, lang: Lang): Future[String] = {
     val request: WSRequest = ws
       .url(s"$schema$hatAddress/control/v2/auth/request-verification")
@@ -157,7 +158,7 @@ trait HatAuthentication {
       .withHttpHeaders("Accept" -> "application/json")
 
     logger.debug(s"Trigger HAT claim process on $hatAddress")
-    val eventualResponse = request.post(Json.toJson(PdaEmailVerificationRequest(email, applicationId)))
+    val eventualResponse = request.post(Json.toJson(PdaEmailVerificationRequest(email, applicationId, redirectUri)))
 
     eventualResponse.flatMap { response =>
       response.status match {
