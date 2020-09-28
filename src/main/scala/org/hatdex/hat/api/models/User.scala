@@ -58,7 +58,7 @@ object UserRole {
           case "applicationmanage"        => ApplicationManage(extra)
           case "applicationstatusread"    => ApplicationStatusRead(extra)
           case "managefiles"              => ManageFiles(extra)
-          case "emailverified"            => EmailVerified()
+          case "verified"                 => Verified(extra)
           case _                          => UnknownRole()
         }
     }
@@ -109,4 +109,6 @@ case class ManageFiles(source: String) extends UserRole("managefiles") {
   override def extra: Option[String] = Some(source)
 }
 
-case class EmailVerified() extends UserRole("emailverified")
+case class Verified(verificationType: String) extends UserRole("verified") {
+  override def extra: Option[String] = Some(verificationType)
+}
