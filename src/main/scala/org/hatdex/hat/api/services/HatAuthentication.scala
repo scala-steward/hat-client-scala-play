@@ -175,4 +175,29 @@ trait HatAuthentication {
     }
   }
 
+  @Deprecated
+  def legacyHatClaimTrigger(email: String, applicationId: String, lang: String = "en")(implicit ec: ExecutionContext): Future[String] = {
+    val request: WSRequest = ws.url(s"$schema$hatAddress/control/v2/auth/claim")
+      .withVirtualHost(host)
+      .withQueryStringParameters("lang" -> lang)
+      .withHttpHeaders("Accept" -> "application/json")
+
+    logger.debug(s"Trigger HAT claim process on $hatAddress")
+    val eventualResponse = request.post(Json.obj("email" -> email, "applicationId" -> applicationId))
+
+    eventualResponse.flatMap { response =>
+      response.status match {
+        case OK =>
+          logger.debug(s"Claim trigger on $hatAddress")
+          val message = (response.json \ "message").validate[String].getOrElse("")
+
+          Future.successful(message)
+
+        case _ =>
+          logger.error(s"Failed to trigger claim on $hatAddress. HAT response: ${response.body}")
+          Future.failed(new ApiException(s"Failed to trigger claim on $hatAddress."))
+      }
+    }
+  }
+
 }
