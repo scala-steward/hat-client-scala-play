@@ -30,9 +30,9 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
   "HAT Authentication client" should {
     "retrieve public key" in {
       withHatClient { client =>
-        client.retrievePublicKey() map { result =>
-          result must startWith("-----BEGIN PUBLIC KEY-----")
-        } await (1, 20.seconds)
+        val eventuallyResult = client.retrievePublicKey()
+        val result = scala.concurrent.Await(eventuallyResult, 20.seconds)
+        result must startWith("-----BEGIN PUBLIC KEY-----")
       }
     }
 

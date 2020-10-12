@@ -7,6 +7,7 @@
  *
  */
 
+
 import sbt.Keys._
 import sbt._
 
@@ -37,7 +38,29 @@ object BuildSettings extends AutoPlugin {
         "-language:postfixOps", // Allow postfix operators
         "-Ywarn-numeric-widen" // Warn when numerics are widened.
     )
-     
+    
+  // val buildSettings212 =
+  //   inThisBuild(
+  //     List(
+  //       scalaVersion := "2.12.12",
+  //       scalafixScalaBinaryVersion := "2.12",
+  //       semanticdbEnabled := true,
+  //       semanticdbVersion := scalafixSemanticdb.revision
+  //     )
+  //   )
+
+  // val buildSettings213 =
+  //   inThisBuild(
+  //   List(
+  //     scalaVersion := "2.13.3",
+  //     scalafixScalaBinaryVersion := "2.13",
+  //     semanticdbEnabled := true,
+  //     semanticdbVersion := scalafixSemanticdb.revision
+  // )
+  // )
+
+  
+
   override def trigger: PluginTrigger = allRequirements
 
   override def projectSettings: Seq[Def.Setting[_]] =

@@ -1,5 +1,6 @@
 import Dependencies._
 
+
 libraryDependencies ++= Seq(
   Library.Play.ws,
   Library.Play.test,
@@ -18,9 +19,17 @@ publishTo := {
 
 inThisBuild(
   List(
-    scalaVersion := "2.13.3",
-    scalafixScalaBinaryVersion := "2.13",
     semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision
+    semanticdbVersion := scalafixSemanticdb.revision,
   )
+)
+
+addCommandAlias(
+  "scalafix213", 
+  "set scalaVersion := \"2.13.3\"; set scalafixScalaBinaryVersion := \"2.13\"; compile:scalafix"
+)
+
+addCommandAlias(
+  "scalafix212", 
+  "set scalaVersion := \"2.12.12\"; set scalafixScalaBinaryVersion := \"2.12\"; compile:scalafix"
 )

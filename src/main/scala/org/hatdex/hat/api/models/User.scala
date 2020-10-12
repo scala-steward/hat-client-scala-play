@@ -58,6 +58,7 @@ object UserRole {
           case "applicationmanage"        => ApplicationManage(extra)
           case "applicationstatusread"    => ApplicationStatusRead(extra)
           case "managefiles"              => ManageFiles(extra)
+          case "emailverified"            => EmailVerified(extra)
           case _                          => UnknownRole()
         }
     }
@@ -107,3 +108,9 @@ case class NamespaceRead(namespace: String) extends UserRole("namespaceread") {
 case class ManageFiles(source: String) extends UserRole("managefiles") {
   override def extra: Option[String] = Some(source)
 }
+
+case class EmailVerified(dateAsString: String) extends UserRole("emailverified") {
+  override def extra: Option[String] = Some(dateAsString)
+  def canEqual(a: Any): Boolean = a.isInstanceOf[EmailVerified]
+}
+
