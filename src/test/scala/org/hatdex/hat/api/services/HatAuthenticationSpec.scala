@@ -16,7 +16,7 @@ import org.specs2.matcher.MatchResult
 import org.specs2.mutable.Specification
 import play.api.mvc.Results
 
-import scala.concurrent.Future
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.io.Source._
 
@@ -31,7 +31,7 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
     "retrieve public key" in {
       withHatClient { client =>
         val eventuallyResult = client.retrievePublicKey()
-        val result = scala.concurrent.Await(eventuallyResult, 20.seconds)
+        val result           = Await.result(eventuallyResult, 20.seconds)
         result must startWith("-----BEGIN PUBLIC KEY-----")
       }
     }
