@@ -111,6 +111,5 @@ case class ManageFiles(source: String) extends UserRole("managefiles") {
 
 case class EmailVerified(dateAsString: String) extends UserRole("emailverified") {
   override def extra: Option[String] = Some(dateAsString)
-  def canEqual(a: Any): Boolean = a.isInstanceOf[EmailVerified]
+  def canEqual(a: Any): Boolean      = a.isInstanceOf[EmailVerified]
 }
-

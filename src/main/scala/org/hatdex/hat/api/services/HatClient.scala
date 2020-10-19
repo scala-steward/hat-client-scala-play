@@ -23,7 +23,7 @@ class HatClient(
     with HatDataDebits
     with HatApplications
     with HatRichData
-    with HatSystem 
+    with HatSystem
     with Logging {
   @Inject def this(
       ws: WSClient,
