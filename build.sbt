@@ -8,7 +8,8 @@ libraryDependencies ++= Seq(
   Library.Specs2.matcherExtra,
   Library.Specs2.mock,
   Library.Specs2.core,
-  Library.Utils.jodaTime
+  Library.Utils.jodaTime,
+  Library.Play.playAkkaHttpServer
 )
 
 publishTo := {

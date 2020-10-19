@@ -19,17 +19,17 @@ object Dependencies {
   val resolvers = Seq(
     "Atlassian Releases" at "https://maven.atlassian.com/public/",
     "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
-
     "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
   )
 
   object Library {
     object Play {
-      val version  = "2.8.2"
-      val ws       = "com.typesafe.play" %% "play-ahc-ws"    % version
-      val test     = "com.typesafe.play" %% "play-test"      % version % "compile" // Used by the MockHatServer
-      val json     = "com.typesafe.play" %% "play-json"      % "2.9.1"
-      val jsonJoda = "com.typesafe.play" %% "play-json-joda" % "2.9.1"
+      val version            = "2.8.2"
+      val ws                 = "com.typesafe.play" %% "play-ahc-ws"           % version
+      val test               = "com.typesafe.play" %% "play-test"             % version % "compile" // Used by the MockHatServer
+      val json               = "com.typesafe.play" %% "play-json"             % "2.9.1"
+      val jsonJoda           = "com.typesafe.play" %% "play-json-joda"        % "2.9.1"
+      val playAkkaHttpServer = "com.typesafe.play" %% "play-akka-http-server" % version % Test
     }
 
     object Specs2 {
