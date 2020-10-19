@@ -3,6 +3,7 @@ dist: trusty
 sudo: false
 scala:
 - 2.13.3
+- 2.12.12
 jdk:
 - openjdk8
 cache:
