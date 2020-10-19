@@ -38,7 +38,6 @@ object BuildSettings extends AutoPlugin {
       "-Ywarn-numeric-widen" // Warn when numerics are widened.
     )
 
-
   override def trigger: PluginTrigger = allRequirements
 
   override def projectSettings: Seq[Def.Setting[_]] =
@@ -85,6 +84,6 @@ object BuildSettings extends AutoPlugin {
       // in Travis with `sudo: false`.
       // See https://github.com/sbt/sbt/issues/653
       // and https://github.com/travis-ci/travis-ci/issues/3775
-      javaOptions += "-Xmx1G"<<<<<<< scala-2.13
+      javaOptions += "-Xmx1G"
     )
 }

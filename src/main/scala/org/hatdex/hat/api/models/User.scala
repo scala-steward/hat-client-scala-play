@@ -35,8 +35,8 @@ sealed abstract class UserRole(roleTitle: String) extends Serializable {
 object UserRole {
   //noinspection ScalaStyle
   def userRoleDeserialize(
-    userRole: String,
-    roleExtra: Option[String]): UserRole =
+      userRole: String,
+      roleExtra: Option[String]): UserRole =
     (userRole, roleExtra) match {
       case (role, None) =>
         role match {
@@ -58,7 +58,7 @@ object UserRole {
           case "applicationmanage"        => ApplicationManage(extra)
           case "applicationstatusread"    => ApplicationStatusRead(extra)
           case "managefiles"              => ManageFiles(extra)
-          case "emailverified"            => EmailVerified(extra)
+          case "verified"                 => Verified(extra)
           case _                          => UnknownRole()
         }
     }
