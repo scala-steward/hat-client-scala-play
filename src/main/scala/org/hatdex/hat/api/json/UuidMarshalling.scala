@@ -18,6 +18,7 @@ trait UuidMarshalling {
   object UUIDReads extends Reads[UUID] {
     def parseUUID(s: String): Option[UUID] = Try(UUID.fromString(s)).toOption
 
+
     def reads(json: JsValue): JsResult[UUID] =
       json match {
         case JsString(s) =>

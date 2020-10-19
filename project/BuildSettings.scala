@@ -38,32 +38,13 @@ object BuildSettings extends AutoPlugin {
       "-Ywarn-numeric-widen" // Warn when numerics are widened.
     )
 
-  // val buildSettings212 =
-  //   inThisBuild(
-  //     Seq(
-  //       scalaVersion := "2.12.12",
-  //       scalafixScalaBinaryVersion := "2.12",
-  //       semanticdbEnabled := true,
-  //       semanticdbVersion := scalafixSemanticdb.revision
-  //     )
-  //   )
-
-  // val buildSettings213 =
-  //   inThisBuild(
-  //     Seq(
-  //       scalaVersion := "2.13.3",
-  //       scalafixScalaBinaryVersion := "2.13",
-  //       semanticdbEnabled := true,
-  //       semanticdbVersion := scalafixSemanticdb.revision
-  //     )
-  //   )
 
   override def trigger: PluginTrigger = allRequirements
 
   override def projectSettings: Seq[Def.Setting[_]] =
     Seq(
       organization := "org.hatdex",
-      version := "2.6.13",
+      version := "2.6.17",
       resolvers ++= Dependencies.resolvers,
       scalaVersion := Dependencies.Versions.scalaVersion,
       crossScalaVersions := Dependencies.Versions.crossScala,
@@ -104,6 +85,6 @@ object BuildSettings extends AutoPlugin {
       // in Travis with `sudo: false`.
       // See https://github.com/sbt/sbt/issues/653
       // and https://github.com/travis-ci/travis-ci/issues/3775
-      javaOptions += "-Xmx1G"
+      javaOptions += "-Xmx1G"<<<<<<< scala-2.13
     )
 }

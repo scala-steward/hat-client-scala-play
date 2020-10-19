@@ -35,8 +35,8 @@ sealed abstract class UserRole(roleTitle: String) extends Serializable {
 object UserRole {
   //noinspection ScalaStyle
   def userRoleDeserialize(
-      userRole: String,
-      roleExtra: Option[String]): UserRole =
+    userRole: String,
+    roleExtra: Option[String]): UserRole =
     (userRole, roleExtra) match {
       case (role, None) =>
         role match {
@@ -109,7 +109,6 @@ case class ManageFiles(source: String) extends UserRole("managefiles") {
   override def extra: Option[String] = Some(source)
 }
 
-case class EmailVerified(dateAsString: String) extends UserRole("emailverified") {
-  override def extra: Option[String] = Some(dateAsString)
-  def canEqual(a: Any): Boolean      = a.isInstanceOf[EmailVerified]
+case class Verified(verificationType: String) extends UserRole("verified") {
+  override def extra: Option[String] = Some(verificationType)
 }

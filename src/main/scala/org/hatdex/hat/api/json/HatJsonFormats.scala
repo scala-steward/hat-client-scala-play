@@ -88,6 +88,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     unlift(ApiBundleDataSourceField.unapply)
   )
 
+
   implicit val ApiBundleDataSourceDatasetFormat: OFormat[ApiBundleDataSourceDataset] =
     Json.format[ApiBundleDataSourceDataset]
   implicit val ApiBundleDataSourceStructureFormat: OFormat[ApiBundleDataSourceStructure] =

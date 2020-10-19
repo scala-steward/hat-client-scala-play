@@ -12,6 +12,7 @@ package org.hatdex.hat.api.services
 import javax.inject.Inject
 
 import play.api.libs.ws.WSClient
+
 import play.api.Logging
 
 class HatClient(
