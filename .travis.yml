@@ -39,5 +39,5 @@ after_success:
 deploy:
 - provider: script
   script:
-  - sbt publish
+  - sbt +publish
   skip_cleanup: true
