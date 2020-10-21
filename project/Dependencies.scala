@@ -24,7 +24,7 @@ object Dependencies {
 
   object Library {
     object Play {
-      val version            = "2.8.2"
+      private val version    = play.core.PlayVersion.current
       val ws                 = "com.typesafe.play" %% "play-ahc-ws"           % version
       val test               = "com.typesafe.play" %% "play-test"             % version % "compile" // Used by the MockHatServer
       val json               = "com.typesafe.play" %% "play-json"             % "2.9.1"

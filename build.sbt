@@ -13,12 +13,13 @@ libraryDependencies ++= Seq(
 )
 
 publishTo := {
-  val prefix = if (isSnapshot.value) "snapshots" else "releases"
+  val prefix               = if (isSnapshot.value) "snapshots" else "releases"
+  val s3BucketFriendlyName = "HAT Library Artifacts"
+  val s3BucketName         = "library-artifacts-"
+  val s3DomainSuffix       = ".hubofallthings.com"
   Some(
     s3resolver
-      .value("HAT Library Artifacts " + prefix,
-             s3("library-artifacts-" + prefix + ".hubofallthings.com")
-      ) withMavenPatterns
+      .value(List(s3BucketName, prefix).mkString(""), s3(s3BucketName + prefix + s3DomainSuffix)) withMavenPatterns
   )
 }
 
