@@ -19,6 +19,7 @@ import org.specs2.specification.Scope
 import play.api.Logger
 import play.api.libs.json.{ JsArray, Json }
 import play.api.mvc.Results
+import java.net.ConnectException
 
 import scala.concurrent.{ Await }
 import scala.concurrent.duration._
@@ -57,6 +58,10 @@ class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDat
           case rce: RemotelyClosedException =>
             logger.info(s"We expected an UnauthorizedActionException, but received a RemotelyClosedException")
             println(s"We expected an UnauthorizedActionException, but received a RemotelyClosedException")
+            ok
+          case cre: ConnectException =>
+            logger.info(s"We expected an UnauthorizedActionException, but received a ConnectException")
+            println(s"We expected an UnauthorizedActionException, but received a ConnectException")
             ok
           case e =>
             logger.info(s"We expected an UnauthorizedActionException, but received a ${e}")
