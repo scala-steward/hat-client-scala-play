@@ -19,6 +19,7 @@ import play.api.Logger
 import play.api.libs.json.{ JsArray, Json }
 import play.api.mvc.Results
 
+import scala.concurrent.{ Await }
 import scala.concurrent.duration._
 import scala.io.Source._
 
@@ -31,18 +32,18 @@ class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDat
     "post new records in batch" in {
       withHatClient { client =>
         logger.debug(s"Saving records: ${jsonData}")
-        client.saveData(validAccessToken, "rumpel", "locations", jsonData) map { record =>
-          logger.debug(s"Received records: ${record}")
-          record.length must beEqualTo(data.length)
-        } await (1, 20.seconds)
+        val eventuallyRecord = client.saveData(validAccessToken, "rumpel", "locations", jsonData)
+        val record           = Await.result(eventuallyRecord, 20.seconds)
+        logger.debug(s"Received records: ${record}")
+        record.length must beEqualTo(data.length)
       }
     }
 
     "get data for permitted endpoints" in {
       withHatClient { client =>
-        client.getData(validAccessToken, "rumpel", "locations") map { record =>
-          record.length must beEqualTo(data.length)
-        } await (1, 20.seconds)
+        val eventuallyRecord = client.getData(validAccessToken, "rumpel", "locations")
+        val record           = Await.result(eventuallyRecord, 20.seconds)
+        record.length must beEqualTo(data.length)
       }
     }
 
@@ -52,7 +53,7 @@ class RichDataSpec(implicit ee: ExecutionEnv) extends Specification with RichDat
           res must beEqualTo("")
         } recover {
           case e => e must beAnInstanceOf[UnauthorizedActionException]
-        } await (1, 20.seconds)
+        }
       }
     }
   }

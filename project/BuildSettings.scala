@@ -62,10 +62,10 @@ object BuildSettings extends AutoPlugin {
       homepage := Some(url("https://hubofallthings.com")),
       developers := List(
             Developer(
-              id = "AndriusA",
-              name = "Andrius Aucinas",
-              email = "andrius@smart-e.org",
-              url = url("http://smart-e.org")
+              id = "dataswifty",
+              name = "Tyler Weir",
+              email = "tyler.weir@dataswift.io",
+              url = url("https://www.dataswift.io")
             )
           ),
       scalacOptions ++= {
