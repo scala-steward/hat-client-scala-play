@@ -25,8 +25,9 @@ import scala.io.Source._
 import play.api.http.DefaultFileMimeTypes
 
 object MockHatServer {
-
   import org.hatdex.hat.api.json.RichDataJsonFormats._
+
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   private val logger = Logger(this.getClass)
 

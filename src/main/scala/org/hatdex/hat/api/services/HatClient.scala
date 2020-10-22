@@ -12,7 +12,8 @@ package org.hatdex.hat.api.services
 import javax.inject.Inject
 
 import play.api.libs.ws.WSClient
-import play.api.Logger
+
+import play.api.Logging
 
 class HatClient(
     val ws: WSClient,
@@ -23,10 +24,10 @@ class HatClient(
     with HatDataDebits
     with HatApplications
     with HatRichData
-    with HatSystem {
+    with HatSystem
+    with Logging {
   @Inject def this(
       ws: WSClient,
       hatAddress: String) = this(ws, hatAddress, "https://", "v2.6")
   override val host: String = if (hatAddress.isEmpty) "mock" else hatAddress
-  val logger: Logger                = play.api.Logger(this.getClass)
 }

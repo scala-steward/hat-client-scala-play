@@ -172,7 +172,7 @@ case class DataDebitPermissions(
           )
         ) // finish at the end of period
       case (None, false) => None // rolling indefinitely
-      case (None, true) => Some(start.plus(period)) // the validity period finished
+      case (None, true)  => Some(start.plus(period)) // the validity period finished
     }
   }
 }

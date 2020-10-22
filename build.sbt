@@ -8,14 +8,25 @@ libraryDependencies ++= Seq(
   Library.Specs2.matcherExtra,
   Library.Specs2.mock,
   Library.Specs2.core,
-  Library.Utils.jodaTime
+  Library.Utils.jodaTime,
+  Library.Play.playAkkaHttpServer
 )
 
 publishTo := {
-  val prefix = if (isSnapshot.value) "snapshots" else "releases"
-  Some(s3resolver.value("HAT Library Artifacts " + prefix, s3("library-artifacts-" + prefix + ".hubofallthings.com")) withMavenPatterns)
+  val prefix               = if (isSnapshot.value) "snapshots" else "releases"
+  val s3BucketFriendlyName = "HAT Library Artifacts"
+  val s3BucketName         = "library-artifacts-"
+  val s3DomainSuffix       = ".hubofallthings.com"
+  Some(
+    s3resolver
+      .value(List(s3BucketName, prefix).mkString(""), s3(s3BucketName + prefix + s3DomainSuffix)) withMavenPatterns
+  )
 }
 
-semanticdbEnabled := true
-semanticdbVersion := scalafixSemanticdb.revision
-scalafixScalaBinaryVersion in ThisBuild := CrossVersion.binaryScalaVersion(scalaVersion.value)
+inThisBuild(
+  List(
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision,
+    scalafixScalaBinaryVersion := "2.13"
+  )
+)

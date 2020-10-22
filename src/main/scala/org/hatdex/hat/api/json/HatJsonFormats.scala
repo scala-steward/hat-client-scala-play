@@ -35,7 +35,7 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
       )
   }
 
-  implicit val userReads: OFormat[User]         = Json.format[User]
+  implicit val userReads: OFormat[User]                = Json.format[User]
   implicit val accessTokenFormat: OFormat[AccessToken] = Json.format[AccessToken]
 
   implicit val ApiDataFieldFormat: Format[ApiDataField] = ((__ \ "id").formatNullable[Int] and
@@ -88,12 +88,17 @@ trait HatJsonFormats extends HatJsonUtilities with UuidMarshalling with LocalDat
     unlift(ApiBundleDataSourceField.unapply)
   )
 
-  implicit val ApiBundleDataSourceDatasetFormat: OFormat[ApiBundleDataSourceDataset]   = Json.format[ApiBundleDataSourceDataset]
-  implicit val ApiBundleDataSourceStructureFormat: OFormat[ApiBundleDataSourceStructure] = Json.format[ApiBundleDataSourceStructure]
-  implicit val ApiBundleContextlessFormat: OFormat[ApiBundleContextless]         = Json.format[ApiBundleContextless]
 
-  implicit val ApiBundleContextPropertySelection: OFormat[ApiBundleContextPropertySelection]     = Json.format[ApiBundleContextPropertySelection]
-  implicit val ApiBundleContextEntitySelectionFormat: OFormat[ApiBundleContextEntitySelection] = Json.format[ApiBundleContextEntitySelection]
+  implicit val ApiBundleDataSourceDatasetFormat: OFormat[ApiBundleDataSourceDataset] =
+    Json.format[ApiBundleDataSourceDataset]
+  implicit val ApiBundleDataSourceStructureFormat: OFormat[ApiBundleDataSourceStructure] =
+    Json.format[ApiBundleDataSourceStructure]
+  implicit val ApiBundleContextlessFormat: OFormat[ApiBundleContextless] = Json.format[ApiBundleContextless]
+
+  implicit val ApiBundleContextPropertySelection: OFormat[ApiBundleContextPropertySelection] =
+    Json.format[ApiBundleContextPropertySelection]
+  implicit val ApiBundleContextEntitySelectionFormat: OFormat[ApiBundleContextEntitySelection] =
+    Json.format[ApiBundleContextEntitySelection]
 
   implicit val ApiBundleContextFormat: Format[ApiBundleContext] = ((__ \ "id").formatNullable[Int] and
       (__ \ "dateCreated").formatNullable[LocalDateTime] and

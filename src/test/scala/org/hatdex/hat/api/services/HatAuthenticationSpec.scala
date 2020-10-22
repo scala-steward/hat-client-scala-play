@@ -16,13 +16,12 @@ import org.specs2.matcher.MatchResult
 import org.specs2.mutable.Specification
 import play.api.mvc.Results
 
-import scala.concurrent.Future
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.io.Source._
 
 class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
 
-  //  def awaiting[T]: Future[MatchResult[T]] => Result = { _.await }
   def awaiting[T]: Future[MatchResult[T]] => Result = _.await
 
   sequential
@@ -30,20 +29,20 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
   "HAT Authentication client" should {
     "retrieve public key" in {
       withHatClient { client =>
-        client.retrievePublicKey() map { result =>
-          result must startWith("-----BEGIN PUBLIC KEY-----")
-        } await (1, 20.seconds)
+        val eventuallyResult = client.retrievePublicKey()
+        val result           = Await.result(eventuallyResult, 20.seconds)
+        result must startWith("-----BEGIN PUBLIC KEY-----")
       }
     }
 
     "return access token on sucessful login" in {
       withHatClient { client =>
-        client.authenticateForToken("user", "pa55") map { result =>
-          val validAccessToken = fromInputStream(
-            Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")
-          ).mkString
-          result must beEqualTo(validAccessToken)
-        } await (1, 20.seconds)
+        val eventuallyResult = client.authenticateForToken("user", "pa55")
+        val validAccessToken = fromInputStream(
+          Results.getClass.getClassLoader.getResourceAsStream("hat-test-messages/validAccessToken")
+        ).mkString
+        val result = Await.result(eventuallyResult, 20.seconds)
+        result must beEqualTo(validAccessToken)
       }
     }
 
@@ -54,7 +53,7 @@ class HatAuthenticationSpec(implicit ee: ExecutionEnv) extends Specification {
         } recover {
           case e =>
             e.getMessage must beEqualTo("Unauthorized")
-        } await (1, 20.seconds)
+        }
       }
     }
   }
