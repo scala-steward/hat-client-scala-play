@@ -37,8 +37,8 @@ object Dependencies {
       private val version    = play.core.PlayVersion.current
       val ws                 = "com.typesafe.play" %% "play-ahc-ws"           % version
       val test               = "com.typesafe.play" %% "play-test"             % version % "compile" // Used by the MockHatServer
-      val json               = "com.typesafe.play" %% "play-json"             % "2.9.1"
-      val jsonJoda           = "com.typesafe.play" %% "play-json-joda"        % "2.9.1"
+      val json               = "com.typesafe.play" %% "play-json"             % "2.9.2"
+      val jsonJoda           = "com.typesafe.play" %% "play-json-joda"        % "2.9.2"
       val playAkkaHttpServer = "com.typesafe.play" %% "play-akka-http-server" % version % Test
     }
 
