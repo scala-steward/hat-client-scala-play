@@ -12,7 +12,7 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val crossScala    = Seq("2.13.3", "2.12.12")
+    val crossScala    = Seq("2.13.5", "2.12.12")
     val scalaVersion  = crossScala.head
     val playVersion   = play.core.PlayVersion.current
     val testCommon    = "0.2.3"
