@@ -16,7 +16,7 @@ object Dependencies {
     val scalaVersion  = crossScala.head
     val playVersion   = play.core.PlayVersion.current
     val testCommon    = "0.2.3"
-    val jodaTime      = "2.10"
+    val jodaTime      = "2.10.10"
     val modelsVersion = "2.0.4"
     val playJson = "2.9.1"
   }
