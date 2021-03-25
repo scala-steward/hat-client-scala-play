@@ -18,7 +18,7 @@ object Dependencies {
     val testCommon    = "0.2.3"
     val jodaTime      = "2.10.10"
     val modelsVersion = "2.2.0"
-    val playJson      = "2.9.1"
+    val playJson      = "2.9.2"
   }
 
   val resolvers = Seq(
