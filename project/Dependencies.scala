@@ -14,7 +14,7 @@ object Dependencies {
   object Version {
     val Play         = play.core.PlayVersion.current
     val JodaTime     = "2.10.10"
-    val PlayJson     = "2.9.1"
+    val PlayJson     = "2.9.2"
     val DsTestCommon = "0.2.3"
     val DsBackend    = "2.2.1"
   }
