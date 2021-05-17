@@ -22,7 +22,7 @@ publishTo := {
 
 inThisBuild(
   List(
-    scalaVersion := "2.13.5",
+    scalaVersion := "2.13.6",
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
     scalafixScalaBinaryVersion := "2.13",
